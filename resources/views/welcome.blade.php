@@ -1,304 +1,9 @@
-<!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+@extends('layouts.app')
 
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title>{{ config('app.name', 'Laravel') }}</title>
-
-    <!-- Scripts -->
-    <script src="{{ mix('js/app.js') }}" defer></script>
-
-
-    <!-- External CSS libraries -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/animate.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-submenu.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-select.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/leaflet.css') }}" type="text/css">
-    <link rel="stylesheet" href="{{ asset('css/map.css') }}" type="text/css">
-    <link rel="stylesheet" type="text/css" href="{{ asset('fonts/font-awesome/css/font-awesome.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('fonts/flaticon/font/flaticon.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('fonts/linearicons/style.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/jquery.mCustomScrollbar.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/dropzone.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/magnific-popup.css') }}">
-
-    <!-- Custom stylesheet -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
-    <link rel="stylesheet" type="text/css" id="style_sheet" href="{{ asset('css/skins/default.css') }}">
-
-    <!-- Favicon icon -->
-    <link rel="shortcut icon"
-          href="https://storage.googleapis.com/theme-vessel/template-images/nest-html/assets/img/favicon.ico"
-          type="image/x-icon">
-
-    <!-- Google fonts -->
-    <link rel="stylesheet" type="text/css"
-          href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800%7CPlayfair+Display:400,700%7CRoboto:100,300,400,400i,500,700">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700;900&amp;family=Roboto:wght@400;500;700&amp;display=swap"
-        rel="stylesheet">
-
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/ie10-viewport-bug-workaround.css') }}">
-
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-<!--[if lt IE 9]>
-    <script type="text/javascript" src="{{ asset('js/html5shiv.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/respond.min.js') }}"></script>
-    <![endif]-->
-</head>
-<body>
-
-<!-- End Google Tag Manager (noscript) -->
-{{--<div class="page_loader"></div>--}}
-
-<div id="app">
-    <!-- Option Panel -->
-    <div class="option-panel option-panel-collased">
-        <h2>Change Color</h2>
-        <div class="color-plate default-plate" data-color="default"></div>
-        <div class="color-plate blue-plate" data-color="blue"></div>
-        <div class="color-plate yellow-plate" data-color="yellow"></div>
-        <div class="color-plate red-plate" data-color="red"></div>
-        <div class="color-plate green-light-plate" data-color="green-light"></div>
-        <div class="color-plate orange-plate" data-color="orange"></div>
-        <div class="color-plate yellow-light-plate" data-color="yellow-light"></div>
-        <div class="color-plate green-light-2-plate" data-color="green-light-2"></div>
-        <div class="color-plate olive-plate" data-color="olive"></div>
-        <div class="color-plate purple-plate" data-color="purple"></div>
-        <div class="color-plate blue-light-plate" data-color="blue-light"></div>
-        <div class="color-plate brown-plate" data-color="brown"></div>
-        <div class="setting-button">
-            <i class="fa fa-gear"></i>
-        </div>
-    </div>
-    <!-- /Option Panel -->
-
-    <!-- Top header start -->
-    <header class="top-header hidden-xs" id="top">
-        <div class="container">
-            <div class="row">
-                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                    <div class="list-inline">
-                        <a href="tel:1-8X0-666-8X88"><i class="fa fa-phone"></i>1-8X0-666-8X88</a>
-                        <a href="tel:info@themevessel.com"><i class="fa fa-envelope"></i>info@themevessel.com</a>
-                    </div>
-                </div>
-                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                    <ul class="top-social-media pull-right">
-                        <li>
-                            <a href="login.html" class="sign-in"><i class="fa fa-sign-in"></i> Login</a>
-                        </li>
-                        <li>
-                            <a href="signup.html" class="sign-in"><i class="fa fa-user"></i> Register</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </header>
-    <!-- Top header end -->
-
-    <!-- Main header start -->
-    <header class="main-header">
-        <div class="container">
-            <nav class="navbar navbar-default">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                            data-target="#app-navigation" aria-expanded="false">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a href="index-2.html" class="logo">
-                        <img src="img/logos/logo.png" alt="logo">
-                    </a>
-                </div>
-                <!-- Collect the nav links, forms, and other content for toggling -->
-                <div class="navbar-collapse collapse" role="navigation" aria-expanded="true" id="app-navigation">
-                    <ul class="nav navbar-nav">
-                        <li class="dropdown active">
-                            <a tabindex="0" href="#" data-toggle="dropdown" data-submenu="" aria-expanded="false">
-                                Home<span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a href="index-2.html">Home 1</a></li>
-                                <li><a href="index-3.html">Home 2</a></li>
-                                <li><a href="index-4.html">Home 3</a></li>
-                                <li><a href="index-5.html">Home 4</a></li>
-                                <li><a href="index-6.html">Home 5</a></li>
-                                <li><a href="index-7.html">Home 6</a></li>
-                            </ul>
-                        </li>
-                        <li class="dropdown">
-                            <a tabindex="0" href="#" data-toggle="dropdown" data-submenu="" aria-expanded="false">
-                                Properties<span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li class="dropdown-submenu">
-                                    <a tabindex="0">List Layout</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="properties-list-rightside.html">Right Sidebar</a></li>
-                                        <li><a href="properties-list-leftside.html">Left Sidebar</a></li>
-                                        <li><a href="properties-list-fullwidth.html">Fullwidth</a></li>
-                                    </ul>
-                                </li>
-                                <li class="dropdown-submenu">
-                                    <a tabindex="0">Grid Layout</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="properties-grid-rightside.html">Right Sidebar</a></li>
-                                        <li><a href="properties-grid-leftside.html">Left Sidebar</a></li>
-                                        <li><a href="properties-grid-fullwidth.html">Fullwidth</a></li>
-                                    </ul>
-                                </li>
-                                <li class="dropdown-submenu">
-                                    <a tabindex="0">Map View</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="properties-map-leftside-list.html">Map List 1</a></li>
-                                        <li><a href="properties-map-rightside-list.html">Map List 2</a></li>
-                                        <li><a href="properties-map-leftside-grid.html">Map Grid 1</a></li>
-                                        <li><a href="properties-map-rightside-grid.html">Map Grid 2</a></li>
-                                        <li><a href="properties-map-full.html">Map FullWidth</a></li>
-                                    </ul>
-                                </li>
-                                <li class="dropdown-submenu">
-                                    <a tabindex="0">Property Detail</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="properties-details.html">Property Detail 1</a></li>
-                                        <li><a href="properties-details-2.html">Property Detail 2</a></li>
-                                        <li><a href="properties-details-3.html">Property Detail 3</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="dropdown">
-                            <a tabindex="0" href="#" data-toggle="dropdown" data-submenu="" aria-expanded="false">
-                                Agents<span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a href="agent-listing-grid.html">Agent grid</a></li>
-                                <li><a href="agent-listing-grid-sidebar.html">Agent Grid sidebarbar</a></li>
-                                <li><a href="agent-listing-row.html">Agent list</a></li>
-                                <li><a href="agent-listing-row-sidebar.html">Agent List Sidebarbar</a></li>
-                                <li><a href="agent-single.html">Agent Detail</a></li>
-                            </ul>
-                        </li>
-                        <li class="dropdown mega-dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                Pages <span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu mega-dropdown-menu row">
-                                <li class="col-lg-3 col-md-3 col-sm-6">
-                                    <ul>
-                                        <li class="dropdown-header dh2">Pages</li>
-                                        <li><a href="about.html">About 1</a></li>
-                                        <li><a href="about-2.html">About 2</a></li>
-                                        <li><a href="services-1.html">Services 1</a></li>
-                                        <li><a href="services-2.html">Services 2</a></li>
-                                        <li><a href="pricing-tables.html">Pricing Tables 1</a></li>
-                                        <li><a href="pricing-tables-2.html">Pricing Tables 2</a></li>
-                                        <li><a href="pricing-tables-3.html">Pricing Tables 3</a></li>
-                                    </ul>
-                                </li>
-                                <li class="col-lg-3 col-md-3 col-sm-6">
-                                    <ul>
-                                        <li class="dropdown-header dh2">Pages</li>
-                                        <li><a href="faq.html">Faq 1</a></li>
-                                        <li><a href="faq-2.html">Faq 2</a></li>
-                                        <li><a href="gallery-1.html">Gallery 1</a></li>
-                                        <li><a href="gallery-2.html">Gallery 2</a></li>
-                                        <li><a href="gallery-3.html">Gallery 3</a></li>
-                                        <li><a href="properties-comparison.html">Properties Comparison</a></li>
-                                        <li><a href="search-brand.html">Search Brand</a></li>
-                                    </ul>
-                                </li>
-                                <li class="col-lg-3 col-md-3 col-sm-6">
-                                    <ul>
-                                        <li class="dropdown-header dh2">Pages</li>
-                                        <li><a href="contact.html">Contact 1</a></li>
-                                        <li><a href="contact-2.html">Contact 2</a></li>
-                                        <li><a href="contact-3.html">Contact 3</a></li>
-                                        <li><a href="typography.html">Typography</a></li>
-                                        <li><a href="elements.html">Elements</a></li>
-                                        <li><a href="icon.html">Icon</a></li>
-                                        <li><a href="404.html">Pages 404</a></li>
-
-                                    </ul>
-                                </li>
-                                <li class="col-lg-3 col-md-3 col-sm-6">
-                                    <ul>
-                                        <li class="dropdown-header dh2">Pages</li>
-                                        <li><a href="user-profile.html">User profile</a></li>
-                                        <li><a href="my-properties.html">My Properties</a></li>
-                                        <li><a href="favorited-properties.html">Favorited properties</a></li>
-                                        <li><a href="submit-property.html">Submit Property</a></li>
-                                        <li><a href="login.html">Login</a></li>
-                                        <li><a href="signup.html">Signup</a></li>
-                                        <li><a href="forgot-password.html">Forgot Password</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="dropdown">
-                            <a tabindex="0" href="#" data-toggle="dropdown" data-submenu="" aria-expanded="false">
-                                Blog<span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li class="dropdown-submenu">
-                                    <a tabindex="0">Classic</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="blog-classic-sidebar-right.html">Right
-                                                Sidebar</a></li>
-                                        <li><a class="dropdown-item" href="blog-classic-sidebar-left.html">Left
-                                                Sidebar</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="dropdown-submenu">
-                                    <a tabindex="0">Columns</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="blog-columns-2col.html">2 Columns</a></li>
-                                        <li><a class="dropdown-item" href="blog-columns-3col.html">3 Columns</a></li>
-                                    </ul>
-                                </li>
-                                <li class="dropdown-submenu">
-                                    <a tabindex="0">Blog Details</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="blog-single-sidebar-right.html">Right
-                                                Sidebar</a>
-                                        </li>
-                                        <li><a class="dropdown-item" href="blog-single-sidebar-left.html">Left
-                                                Sidebar</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                    <ul class="nav navbar-nav navbar-right rightside-navbar">
-                        <li>
-                            <a href="submit-property.html" class="button">
-                                Submit Property
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-        </div>
-    </header>
-    <!-- Main header end -->
-
-    <!-- Banner start -->
+@section('content')
     <div class="banner b6">
         <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-            <!-- Wrapper for slides -->
+
             <div class="carousel-inner" role="listbox">
                 <div class="item item-100vh active">
                     <img src="img/banner/img-2.jpg" alt="banner-slider-1">
@@ -519,9 +224,8 @@
             </div>
         </div>
     </div>
-    <!-- Banner end -->
 
-    <!-- Search area start -->
+
     <div class="search-area hidden-lg hidden-md">
         <div class="container">
             <div class="search-area-inner">
@@ -631,31 +335,1109 @@
             </div>
         </div>
     </div>
-</div>
-<!-- Search area start -->
 
+    <div class="content-area featured-properties">
+        <div class="container">
 
-<script src="{{ asset('js/jquery-2.2.0.min.js') }}"></script>
-<script src="{{ asset('js/bootstrap.min.js') }}"></script>
-<script src="{{ asset('js/bootstrap-submenu.js') }}"></script>
-<script src="{{ asset('js/rangeslider.js') }}"></script>
-<script src="{{ asset('js/wow.min.js') }}"></script>
-<script src="{{ asset('js/bootstrap-select.min.js') }}"></script>
-<script src="{{ asset('js/jquery.easing.1.3.js') }}"></script>
-<script src="{{ asset('js/jquery.scrollUp.js') }}"></script>
-<script src="{{ asset('js/jquery.mCustomScrollbar.concat.min.js') }}"></script>
-<script src="{{ asset('js/leaflet.js') }}"></script>
-<script src="{{ asset('js/leaflet-providers.js') }}"></script>
-<script src="{{ asset('js/leaflet.markercluster.js') }}"></script>
-<script src="{{ asset('js/jquery.filterizr.js') }}"></script>
-<script src="{{ asset('js/jquery.magnific-popup.min.js') }}"></script>
-<script src="{{ asset('js/maps.js') }}"></script>
-<script src="{{ asset('js/main.js') }}"></script>
+            <div class="main-title">
+                <h1>Featured Properties</h1>
+            </div>
+            <ul class="list-inline-listing filters filters-listing-navigation">
+                <li class="active btn filtr-button filtr" data-filter="all">All</li>
+                <li data-filter="1" class="btn btn-inline filtr-button filtr">House</li>
+                <li data-filter="2" class="btn btn-inline filtr-button filtr">Office</li>
+                <li data-filter="3" class="btn btn-inline filtr-button filtr">Apartment</li>
+                <li data-filter="4" class="btn btn-inline filtr-button filtr">Residential</li>
+            </ul>
+            <div class="row wow fadeInUp delay-04s">
+                <div class="filtr-container">
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12  filtr-item" data-category="1, 2, 3">
+                        <div class="property">
 
-<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-<script src="{{ asset('js/ie10-viewport-bug-workaround.js') }}"></script>
-<!-- Custom javascript -->
+                            <div class="property-img">
+                                <div class="property-tag button alt featured">Featured</div>
+                                <div class="property-tag button sale">For Sale</div>
+                                <div class="property-price">$72.000</div>
+                                <img src="img/properties/properties-1.jpg" alt="fp" class="img-responsive">
+                                <div class="property-overlay">
+                                    <a href="properties-details.html" class="overlay-link">
+                                        <i class="fa fa-link"></i>
+                                    </a>
+                                    <a class="overlay-link property-video" title="Lexus GS F">
+                                        <i class="fa fa-video-camera"></i>
+                                    </a>
+                                    <div class="property-magnify-gallery">
+                                        <a href="https://storage.googleapis.com/theme-vessel/template-images/nest-html/assets/img/properties/properties-1.jpg"
+                                           class="overlay-link">
+                                            <i class="fa fa-expand"></i>
+                                        </a>
 
-</body>
+                                        <a href="https://storage.googleapis.com/theme-vessel/template-images/nest-html/assets/img/properties/properties-2.jpg"
+                                           class="hidden"></a>
+                                        <a href="https://storage.googleapis.com/theme-vessel/template-images/nest-html/assets/img/properties/properties-3.jpg"
+                                           class="hidden"></a>
+                                    </div>
+                                </div>
+                            </div>
 
-</html>
+                            <div class="property-content">
+
+                                <div class="info">
+
+                                    <h1 class="title">
+                                        <a href="properties-details.html">Beautiful Single Home</a>
+                                    </h1>
+
+                                    <h3 class="property-address">
+                                        <a href="properties-details.html">
+                                            <i class="fa fa-map-marker"></i>123 Kathal St. Tampa City,
+                                        </a>
+                                    </h3>
+
+                                    <ul class="facilities-list clearfix">
+                                        <li>
+                                            <i class="flaticon-square-layouting-with-black-square-in-east-area"></i>
+                                            <span>4800 sq ft</span>
+                                        </li>
+                                        <li>
+                                            <i class="flaticon-bed"></i>
+                                            <span>3 Beds</span>
+                                        </li>
+                                        <li>
+                                            <i class="flaticon-monitor"></i>
+                                            <span>TV </span>
+                                        </li>
+                                        <li>
+                                            <i class="flaticon-holidays"></i>
+                                            <span> 2 Baths</span>
+                                        </li>
+                                        <li>
+                                            <i class="flaticon-vehicle"></i>
+                                            <span>1 Garage</span>
+                                        </li>
+                                        <li>
+                                            <i class="flaticon-building"></i>
+                                            <span> 3 Balcony</span>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="property-footer">
+                                <span class="left">
+                                    <a href="#"><i class="fa fa-user"></i>Jhon Doe</a>
+                                </span>
+                                    <span class="right">
+                                    <i class="fa fa-calendar"></i>5 Days ago
+                                </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12  filtr-item" data-category="1">
+                        <div class="property">
+
+                            <div class="property-img">
+                                <div class="property-tag button alt featured">Featured</div>
+                                <div class="property-tag button sale">For Sale</div>
+                                <div class="property-price">$72.000</div>
+                                <img src="img/properties/properties-2.jpg" alt="fp" class="img-responsive">
+                                <div class="property-overlay">
+                                    <a href="properties-details.html" class="overlay-link">
+                                        <i class="fa fa-link"></i>
+                                    </a>
+                                    <a class="overlay-link property-video" title="Lexus GS F">
+                                        <i class="fa fa-video-camera"></i>
+                                    </a>
+                                    <div class="property-magnify-gallery">
+                                        <a href="https://storage.googleapis.com/theme-vessel/template-images/nest-html/assets/img/properties/properties-2.jpg"
+                                           class="overlay-link">
+                                            <i class="fa fa-expand"></i>
+                                        </a>
+                                        <a href="https://storage.googleapis.com/theme-vessel/template-images/nest-html/assets/img/properties/properties-4.jpg"
+                                           class="hidden"></a>
+                                        <a href="https://storage.googleapis.com/theme-vessel/template-images/nest-html/assets/img/properties/properties-3.jpg"
+                                           class="hidden"></a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="property-content">
+
+                                <div class="info">
+
+                                    <h1 class="title">
+                                        <a href="properties-details.html">Modern Family Home</a>
+                                    </h1>
+
+                                    <h3 class="property-address">
+                                        <a href="properties-details.html">
+                                            <i class="fa fa-map-marker"></i>123 Kathal St. Tampa City,
+                                        </a>
+                                    </h3>
+
+                                    <ul class="facilities-list clearfix">
+                                        <li>
+                                            <i class="flaticon-square-layouting-with-black-square-in-east-area"></i>
+                                            <span>4800 sq ft</span>
+                                        </li>
+                                        <li>
+                                            <i class="flaticon-bed"></i>
+                                            <span>3 Beds</span>
+                                        </li>
+                                        <li>
+                                            <i class="flaticon-monitor"></i>
+                                            <span>TV </span>
+                                        </li>
+                                        <li>
+                                            <i class="flaticon-holidays"></i>
+                                            <span> 2 Baths</span>
+                                        </li>
+                                        <li>
+                                            <i class="flaticon-vehicle"></i>
+                                            <span>1 Garage</span>
+                                        </li>
+                                        <li>
+                                            <i class="flaticon-building"></i>
+                                            <span> 3 Balcony</span>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="property-footer">
+                                <span class="left">
+                                    <a href="#"><i class="fa fa-user"></i>Jhon Doe</a>
+                                </span>
+                                    <span class="right">
+                                    <i class="fa fa-calendar"></i>5 Days ago
+                                </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12  filtr-item" data-category="2, 3">
+                        <div class="property">
+
+                            <div class="property-img">
+                                <div class="property-tag button alt featured">Featured</div>
+                                <div class="property-tag button sale">For Sale</div>
+                                <div class="property-price">$72.000</div>
+                                <img src="img/properties/properties-3.jpg" alt="fp" class="img-responsive">
+                                <div class="property-overlay">
+                                    <a href="properties-details.html" class="overlay-link">
+                                        <i class="fa fa-link"></i>
+                                    </a>
+                                    <a class="overlay-link property-video" title="Lexus GS F">
+                                        <i class="fa fa-video-camera"></i>
+                                    </a>
+                                    <div class="property-magnify-gallery">
+                                        <a href="https://storage.googleapis.com/theme-vessel/template-images/nest-html/assets/img/properties/properties-3.jpg"
+                                           class="overlay-link">
+                                            <i class="fa fa-expand"></i>
+                                        </a>
+                                        <a href="https://storage.googleapis.com/theme-vessel/template-images/nest-html/assets/img/properties/properties-2.jpg"
+                                           class="hidden"></a>
+                                        <a href="https://storage.googleapis.com/theme-vessel/template-images/nest-html/assets/img/properties/properties-1.jpg"
+                                           class="hidden"></a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="property-content">
+
+                                <div class="info">
+
+                                    <h1 class="title">
+                                        <a href="properties-details.html">Sweet Family Home</a>
+                                    </h1>
+
+                                    <h3 class="property-address">
+                                        <a href="properties-details.html">
+                                            <i class="fa fa-map-marker"></i>123 Kathal St. Tampa City,
+                                        </a>
+                                    </h3>
+
+                                    <ul class="facilities-list clearfix">
+                                        <li>
+                                            <i class="flaticon-square-layouting-with-black-square-in-east-area"></i>
+                                            <span>4800 sq ft</span>
+                                        </li>
+                                        <li>
+                                            <i class="flaticon-bed"></i>
+                                            <span>3 Beds</span>
+                                        </li>
+                                        <li>
+                                            <i class="flaticon-monitor"></i>
+                                            <span>TV </span>
+                                        </li>
+                                        <li>
+                                            <i class="flaticon-holidays"></i>
+                                            <span> 2 Baths</span>
+                                        </li>
+                                        <li>
+                                            <i class="flaticon-vehicle"></i>
+                                            <span>1 Garage</span>
+                                        </li>
+                                        <li>
+                                            <i class="flaticon-building"></i>
+                                            <span> 3 Balcony</span>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="property-footer">
+                                <span class="left">
+                                    <a href="#"><i class="fa fa-user"></i>Jhon Doe</a>
+                                </span>
+                                    <span class="right">
+                                    <i class="fa fa-calendar"></i>5 Days ago
+                                </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12  filtr-item" data-category="3, 4">
+                        <div class="property">
+
+                            <div class="property-img">
+                                <div class="property-tag button alt featured">Featured</div>
+                                <div class="property-tag button sale">For Sale</div>
+                                <div class="property-price">$72.000</div>
+                                <img src="img/properties/properties-4.jpg" alt="fp" class="img-responsive">
+                                <div class="property-overlay">
+                                    <a href="properties-details.html" class="overlay-link">
+                                        <i class="fa fa-link"></i>
+                                    </a>
+                                    <a class="overlay-link property-video" title="Lexus GS F">
+                                        <i class="fa fa-video-camera"></i>
+                                    </a>
+                                    <div class="property-magnify-gallery">
+                                        <a href="https://storage.googleapis.com/theme-vessel/template-images/nest-html/assets/img/properties/properties-4.jpg"
+                                           class="overlay-link">
+                                            <i class="fa fa-expand"></i>
+                                        </a>
+                                        <a href="https://storage.googleapis.com/theme-vessel/template-images/nest-html/assets/img/properties/properties-2.jpg"
+                                           class="hidden"></a>
+                                        <a href="https://storage.googleapis.com/theme-vessel/template-images/nest-html/assets/img/properties/properties-3.jpg"
+                                           class="hidden"></a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="property-content">
+
+                                <div class="info">
+
+                                    <h1 class="title">
+                                        <a href="properties-details.html">Big Head House</a>
+                                    </h1>
+
+                                    <h3 class="property-address">
+                                        <a href="properties-details.html">
+                                            <i class="fa fa-map-marker"></i>123 Kathal St. Tampa City,
+                                        </a>
+                                    </h3>
+
+                                    <ul class="facilities-list clearfix">
+                                        <li>
+                                            <i class="flaticon-square-layouting-with-black-square-in-east-area"></i>
+                                            <span>4800 sq ft</span>
+                                        </li>
+                                        <li>
+                                            <i class="flaticon-bed"></i>
+                                            <span>3 Beds</span>
+                                        </li>
+                                        <li>
+                                            <i class="flaticon-monitor"></i>
+                                            <span>TV </span>
+                                        </li>
+                                        <li>
+                                            <i class="flaticon-holidays"></i>
+                                            <span> 2 Baths</span>
+                                        </li>
+                                        <li>
+                                            <i class="flaticon-vehicle"></i>
+                                            <span>1 Garage</span>
+                                        </li>
+                                        <li>
+                                            <i class="flaticon-building"></i>
+                                            <span> 3 Balcony</span>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="property-footer">
+                                <span class="left">
+                                    <a href="#"><i class="fa fa-user"></i>Jhon Doe</a>
+                                </span>
+                                    <span class="right">
+                                    <i class="fa fa-calendar"></i>5 Days ago
+                                </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12  filtr-item" data-category="4">
+                        <div class="property">
+
+                            <div class="property-img">
+                                <div class="property-tag button alt featured">Featured</div>
+                                <div class="property-tag button sale">For Sale</div>
+                                <div class="property-price">$72.000</div>
+                                <img src="img/properties/properties-5.jpg" alt="fp" class="img-responsive">
+                                <div class="property-overlay">
+                                    <a href="properties-details.html" class="overlay-link">
+                                        <i class="fa fa-link"></i>
+                                    </a>
+                                    <a class="overlay-link property-video" title="Lexus GS F">
+                                        <i class="fa fa-video-camera"></i>
+                                    </a>
+                                    <div class="property-magnify-gallery">
+                                        <a href="https://storage.googleapis.com/theme-vessel/template-images/nest-html/assets/img/properties/properties-5.jpg"
+                                           class="overlay-link">
+                                            <i class="fa fa-expand"></i>
+                                        </a>
+                                        <a href="https://storage.googleapis.com/theme-vessel/template-images/nest-html/assets/img/properties/properties-2.jpg"
+                                           class="hidden"></a>
+                                        <a href="https://storage.googleapis.com/theme-vessel/template-images/nest-html/assets/img/properties/properties-3.jpg"
+                                           class="hidden"></a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="property-content">
+
+                                <div class="info">
+
+                                    <h1 class="title">
+                                        <a href="properties-details.html">Park Avenue</a>
+                                    </h1>
+
+                                    <h3 class="property-address">
+                                        <a href="properties-details.html">
+                                            <i class="fa fa-map-marker"></i>123 Kathal St. Tampa City,
+                                        </a>
+                                    </h3>
+
+                                    <ul class="facilities-list clearfix">
+                                        <li>
+                                            <i class="flaticon-square-layouting-with-black-square-in-east-area"></i>
+                                            <span>4800 sq ft</span>
+                                        </li>
+                                        <li>
+                                            <i class="flaticon-bed"></i>
+                                            <span>3 Beds</span>
+                                        </li>
+                                        <li>
+                                            <i class="flaticon-monitor"></i>
+                                            <span>TV </span>
+                                        </li>
+                                        <li>
+                                            <i class="flaticon-holidays"></i>
+                                            <span> 2 Baths</span>
+                                        </li>
+                                        <li>
+                                            <i class="flaticon-vehicle"></i>
+                                            <span>1 Garage</span>
+                                        </li>
+                                        <li>
+                                            <i class="flaticon-building"></i>
+                                            <span> 3 Balcony</span>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="property-footer">
+                                <span class="left">
+                                    <a href="#"><i class="fa fa-user"></i>Jhon Doe</a>
+                                </span>
+                                    <span class="right">
+                                    <i class="fa fa-calendar"></i>5 Days ago
+                                </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12  filtr-item" data-category="1">
+                        <div class="property">
+
+                            <div class="property-img">
+                                <div class="property-tag button alt featured">Featured</div>
+                                <div class="property-tag button sale">For Sale</div>
+                                <div class="property-price">$72.000</div>
+                                <img src="img/properties/properties-6.jpg" alt="fp" class="img-responsive">
+                                <div class="property-overlay">
+                                    <a href="properties-details.html" class="overlay-link">
+                                        <i class="fa fa-link"></i>
+                                    </a>
+                                    <a class="overlay-link property-video" title="Lexus GS F">
+                                        <i class="fa fa-video-camera"></i>
+                                    </a>
+                                    <div class="property-magnify-gallery">
+                                        <a href="https://storage.googleapis.com/theme-vessel/template-images/nest-html/assets/img/properties/properties-6.jpg"
+                                           class="overlay-link">
+                                            <i class="fa fa-expand"></i>
+                                        </a>
+                                        <a href="https://storage.googleapis.com/theme-vessel/template-images/nest-html/assets/img/properties/properties-2.jpg"
+                                           class="hidden"></a>
+                                        <a href="https://storage.googleapis.com/theme-vessel/template-images/nest-html/assets/img/properties/properties-3.jpg"
+                                           class="hidden"></a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="property-content">
+
+                                <div class="info">
+
+                                    <h1 class="title">
+                                        <a href="properties-details.html">Masons Villas</a>
+                                    </h1>
+
+                                    <h3 class="property-address">
+                                        <a href="properties-details.html">
+                                            <i class="fa fa-map-marker"></i>123 Kathal St. Tampa City,
+                                        </a>
+                                    </h3>
+
+                                    <ul class="facilities-list clearfix">
+                                        <li>
+                                            <i class="flaticon-square-layouting-with-black-square-in-east-area"></i>
+                                            <span>4800 sq ft</span>
+                                        </li>
+                                        <li>
+                                            <i class="flaticon-bed"></i>
+                                            <span>3 Beds</span>
+                                        </li>
+                                        <li>
+                                            <i class="flaticon-monitor"></i>
+                                            <span>TV </span>
+                                        </li>
+                                        <li>
+                                            <i class="flaticon-holidays"></i>
+                                            <span> 2 Baths</span>
+                                        </li>
+                                        <li>
+                                            <i class="flaticon-vehicle"></i>
+                                            <span>1 Garage</span>
+                                        </li>
+                                        <li>
+                                            <i class="flaticon-building"></i>
+                                            <span> 3 Balcony</span>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="property-footer">
+                                <span class="left">
+                                    <a href="#"><i class="fa fa-user"></i>Jhon Doe</a>
+                                </span>
+                                    <span class="right">
+                                    <i class="fa fa-calendar"></i>5 Days ago
+                                </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="services content-area-11 clearfix">
+        <div class="container">
+
+            <div class="main-title">
+                <h1>What Are you Looking For?</h1>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-6 wow fadeInLeft delay-04s">
+                    <div class="service-info">
+                        <div class="number">01</div>
+                        <div class="icon">
+                            <i class="flaticon-people-1"></i>
+                        </div>
+                        <div class="detail">
+                            <h3>Trusted By Thousands</h3>
+                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
+                                has been the industry's standard dummy text ever since the 1500s, when an unknown.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 wow fadeInUp delay-04s">
+                    <div class="service-info">
+                        <div class="number">02</div>
+                        <div class="icon">
+                            <i class="flaticon-symbol-1"></i>
+                        </div>
+                        <div class="detail">
+                            <h3>Financing Made Easy</h3>
+                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
+                                has been the industry's standard dummy text ever since the 1500s, when an unknown.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 wow fadeInRight delay-04s">
+                    <div class="service-info">
+                        <div class="number">03</div>
+                        <div class="icon">
+                            <i class="flaticon-apartment"></i>
+                        </div>
+                        <div class="detail">
+                            <h3>Wide Renge Of Properties</h3>
+                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
+                                has been the industry's standard dummy text ever since the 1500s, when an unknown.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-sm-12 text-center wow fadeInUp delay-04s">
+                    <a href="services-1.html" class="btn read-more-2 button-theme text-center">Read More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="counters2 overview-bgi">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-5 col-md-4 col-sm-12 col-xs-12 wow fadeInLeft delay-04s">
+                    <div class="sec-title-three">
+                        <h2>Counters</h2>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    </div>
+                </div>
+                <div class="col-lg-7 col-md-8 col-sm-12 col-xs-12 wow fadeInRight delay-04s">
+                    <div class="media counter-box">
+                        <div class="media-left">
+                            <i class="flaticon-tag"></i>
+                        </div>
+                        <div class="media-body">
+                            <h1 class="counter">967</h1>
+                            <p>Listings For Sale</p>
+                        </div>
+                    </div>
+                    <div class="media counter-box">
+                        <div class="media-left">
+                            <i class="flaticon-symbol-1"></i>
+                        </div>
+                        <div class="media-body">
+                            <h1 class="counter">967</h1>
+                            <p>Listings For Rent</p>
+                        </div>
+                    </div>
+                    <div class="media counter-box">
+                        <div class="media-left">
+                            <i class="flaticon-people"></i>
+                        </div>
+                        <div class="media-body">
+                            <h1 class="counter">396</h1>
+                            <p>Agents</p>
+                        </div>
+                    </div>
+                    <div class="media counter-box">
+                        <div class="media-left">
+                            <i class="flaticon-people-1"></i>
+                        </div>
+                        <div class="media-body">
+                            <h1 class="counter">177</h1>
+                            <p>Brokers</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="categories content-area-12">
+        <div class="container">
+
+            <div class="main-title">
+                <h1>Popular Places</h1>
+            </div>
+            <div class="clearfix"></div>
+            <div class="row wow">
+                <div class="col-lg-8 col-md-7 col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-6 col-pad wow fadeInLeft delay-04s">
+                            <div class="category cey2">
+                                <div class="category_bg_box cat-1-bg">
+                                    <div class="category-overlay">
+                                        <div class="cc3">
+                                            <div class="category-subtitle">14 Properties</div>
+                                            <div class="info">
+                                                <h4>
+                                                    <a href="#">Florida</a>
+                                                </h4>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+                                                    eiusmod</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-pad wow fadeInLeft delay-04s">
+                            <div class="category cey2">
+                                <div class="category_bg_box cat-2-bg">
+                                    <div class="category-overlay">
+                                        <div class="cc3">
+                                            <div class="category-subtitle">27 Properties</div>
+                                            <div class="info">
+                                                <h4>
+                                                    <a href="#">California</a>
+                                                </h4>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+                                                    eiusmod</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-pad wow fadeInUp delay-04s">
+                            <div class="category cey2">
+                                <div class="category_bg_box cat-7-bg">
+                                    <div class="category-overlay">
+                                        <div class="cc3">
+                                            <div class="category-subtitle">21 Properties</div>
+                                            <div class="info">
+                                                <h4>
+                                                    <a href="#">New York City</a>
+                                                </h4>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+                                                    eiusmod</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-pad wow fadeInUp delay-04s">
+                            <div class="category cey2">
+                                <div class="category_bg_box cat-6-bg">
+                                    <div class="category-overlay">
+                                        <div class="cc3">
+                                            <div class="category-subtitle">12 Properties</div>
+                                            <div class="info">
+                                                <h4>
+                                                    <a href="#">San Francisco</a>
+                                                </h4>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+                                                    eiusmod</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-5 col-sm-12 col-pad wow fadeInRight delay-04s">
+                    <div class="category cey2">
+                        <div class="category_bg_box category_long_bg cat-3-bg">
+                            <div class="category-overlay">
+                                <div class="cc3">
+                                    <div class="category-subtitle">02 Properties</div>
+                                    <div class="info">
+                                        <h4>
+                                            <a href="#">Tokyo</a>
+                                        </h4>
+                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="agent-section mb-70">
+        <div class="container">
+
+            <div class="main-title">
+                <h1>Our Agent</h1>
+            </div>
+            <div class="row">
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 wow fadeInLeft delay-04s">
+
+                    <div class="agent-1">
+
+                        <div class="photo">
+                            <a href="properties-details.html" class="agent-img">
+                                <img src="img/team/team-6.jpg" alt="team-1" class="img-responsive">
+                            </a>
+                            <div class="icon">
+                                <div class="icon-inner"></div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <ul class="social-list clearfix">
+                                <li>
+                                    <a href="#" class="facebook-bg">
+                                        <i class="fa fa-facebook"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="twitter-bg">
+                                        <i class="fa fa-twitter"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="linkedin-bg">
+                                        <i class="fa fa-linkedin"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="google-bg">
+                                        <i class="fa fa-google-plus"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="agent-content">
+                            <h5><a href="agent-single.html">John Antony</a></h5>
+                            <h6>Web Developer</h6>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 wow fadeInLeft delay-04s">
+
+                    <div class="agent-1">
+
+                        <div class="photo">
+                            <a href="properties-details.html" class="agent-img">
+                                <img src="img/team/team-5.jpg" alt="team-1" class="img-responsive">
+                            </a>
+                            <div class="icon">
+                                <div class="icon-inner"></div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <ul class="social-list clearfix">
+                                <li>
+                                    <a href="#" class="facebook-bg">
+                                        <i class="fa fa-facebook"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="twitter-bg">
+                                        <i class="fa fa-twitter"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="linkedin-bg">
+                                        <i class="fa fa-linkedin"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="google-bg">
+                                        <i class="fa fa-google-plus"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="agent-content">
+                            <h5><a href="agent-single.html">Karen Paran</a></h5>
+                            <h6>Creative Director</h6>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 wow fadeInRight delay-04s">
+
+                    <div class="agent-1">
+
+                        <div class="photo">
+                            <a href="properties-details.html" class="agent-img">
+                                <img src="img/team/team-7.jpg" alt="team-1" class="img-responsive">
+                            </a>
+                            <div class="icon">
+                                <div class="icon-inner"></div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <ul class="social-list clearfix">
+                                <li>
+                                    <a href="#" class="facebook-bg">
+                                        <i class="fa fa-facebook"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="twitter-bg">
+                                        <i class="fa fa-twitter"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="linkedin-bg">
+                                        <i class="fa fa-linkedin"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="google-bg">
+                                        <i class="fa fa-google-plus"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="agent-content">
+                            <h5><a href="agent-single.html">John Maikel</a></h5>
+                            <h6>Office Manager</h6>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 wow fadeInRight delay-04s">
+
+                    <div class="agent-1">
+
+                        <div class="photo">
+                            <a href="properties-details.html" class="agent-img">
+                                <img src="img/team/team-8.jpg" alt="team-1" class="img-responsive">
+                            </a>
+                            <div class="icon">
+                                <div class="icon-inner"></div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <ul class="social-list clearfix">
+                                <li>
+                                    <a href="#" class="facebook-bg">
+                                        <i class="fa fa-facebook"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="twitter-bg">
+                                        <i class="fa fa-twitter"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="linkedin-bg">
+                                        <i class="fa fa-linkedin"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="google-bg">
+                                        <i class="fa fa-google-plus"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="agent-content">
+                            <h5><a href="agent-single.html">Eliane Pereira</a></h5>
+                            <h6>Support Manager</h6>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="testimonials-3 overview-bgi">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div id="carouse3-example-generic" class="carousel slide" data-ride="carousel">
+                        <h1>Our Testimonial</h1>
+
+                        <div class="carousel-inner wow fadeInUp delay-04s" role="listbox">
+                            <div class="item content clearfix active">
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                        <div class="avatar">
+                                            <img src="img/avatar/avatar-1.jpg" alt="avatar-1" class="img-responsive">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                                        <div class="testimonials-info">
+                                            <div class="text">
+                                                <sup>
+                                                    <i class="fa fa-quote-left"></i>
+                                                </sup>
+                                                Aliquam dictum elit vitae mauris facilisis, at dictum urna dignissim.
+                                                Donec vel lectus vel felis lacinia luctus vitae iaculis arcu. Mauris
+                                                mattis, massa eu porta ultricies.
+                                                <sub>
+                                                    <i class="fa fa-quote-right"></i>
+                                                </sub>
+                                            </div>
+                                            <div class="author-name">
+                                                John Antony
+                                            </div>
+                                            <ul class="rating">
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star-half-full"></i>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item content clearfix">
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                        <div class="avatar">
+                                            <img src="img/avatar/avatar-2.jpg" alt="avatar-2" class="img-responsive">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                                        <div class="testimonials-info">
+                                            <div class="text">
+                                                <sup>
+                                                    <i class="fa fa-quote-left"></i>
+                                                </sup>
+                                                Aliquam dictum elit vitae mauris facilisis, at dictum urna dignissim.
+                                                Donec vel lectus vel felis lacinia luctus vitae iaculis arcu. Mauris
+                                                mattis, massa eu porta ultricies.
+                                                <sub>
+                                                    <i class="fa fa-quote-right"></i>
+                                                </sub>
+                                            </div>
+                                            <div class="author-name">
+                                                John Mery
+                                            </div>
+                                            <ul class="rating">
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star-half-full"></i>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item content clearfix">
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                        <div class="avatar">
+                                            <img src="img/avatar/avatar-4.jpg" alt="avatar-4" class="img-responsive">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                                        <div class="testimonials-info">
+                                            <div class="text">
+                                                <sup>
+                                                    <i class="fa fa-quote-left"></i>
+                                                </sup>
+                                                Aliquam dictum elit vitae mauris facilisis, at dictum urna dignissim.
+                                                Donec vel lectus vel felis lacinia luctus vitae iaculis arcu. Mauris
+                                                mattis, massa eu porta ultricies.
+                                                <sub>
+                                                    <i class="fa fa-quote-right"></i>
+                                                </sub>
+                                            </div>
+                                            <div class="author-name">
+                                                John Top
+                                            </div>
+                                            <ul class="rating">
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star-half-full"></i>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item content clearfix">
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                        <div class="avatar">
+                                            <img src="img/avatar/avatar-3.jpg" alt="avatar-3" class="img-responsive">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 ">
+                                        <div class="testimonials-info">
+                                            <div class="text">
+                                                <sup>
+                                                    <i class="fa fa-quote-left"></i>
+                                                </sup>
+                                                Aliquam dictum elit vitae mauris facilisis, at dictum urna dignissim.
+                                                Donec vel lectus vel felis lacinia luctus vitae iaculis arcu. Mauris
+                                                mattis, massa eu porta ultricies.
+                                                <sup>
+                                                    <i class="fa fa-quote-right"></i>
+                                                </sup>
+                                            </div>
+                                            <div class="author-name">
+                                                John Pitarshon
+                                            </div>
+                                            <ul class="rating">
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-star-half-full"></i>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <a class="left carousel-control" href="#carouse3-example-generic" role="button"
+                           data-slide="prev">
+                        <span class="slider-mover-left t-slider-l" aria-hidden="true">
+                            <i class="fa fa-angle-left"></i>
+                        </span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="right carousel-control" href="#carouse3-example-generic" role="button"
+                           data-slide="next">
+                        <span class="slider-mover-right t-slider-r" aria-hidden="true">
+                            <i class="fa fa-angle-right"></i>
+                        </span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection

@@ -55,11 +55,7 @@
 {{--<div class="page_loader"></div>--}}
 
 <div id="app">
-    @include('partials._header')
-
     @yield('content')
-
-    @include('partials._footer')
 </div>
 
 
