@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\PropertyController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,3 +23,13 @@ Route::get('/contact-us', [PageController::class, 'contactUs'])->name('contact-u
 Auth::routes();
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+/**
+ * Property routes
+ */
+Route::group([
+    'prefix' => 'properties',
+    'as' => 'properties.',
+], function () {
+    Route::get('/', [PropertyController::class, 'index'])->name('index');
+});

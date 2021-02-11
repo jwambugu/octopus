@@ -8992,5 +8992,8 @@ input[type=number] {
     color: #000000;
 }
 
+.pagination > .active > span {
+    background-color: #96C51E;
+}
 
 
