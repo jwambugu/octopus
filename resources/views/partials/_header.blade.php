@@ -54,7 +54,7 @@
                         </a>
                     </li>
                     <li class="dropdown">
-                        <a href="{{ route('about-us') }}">
+                        <a href="{{ route('properties.index') }}">
                             Properties
                         </a>
                     </li>
