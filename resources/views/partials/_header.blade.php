@@ -14,12 +14,15 @@
             </div>
             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                 <ul class="top-social-media pull-right">
-                    <li>
-                        <a href="{{ route('login') }}" class="sign-in"><i class="fa fa-sign-in"></i> Login</a>
-                    </li>
-                    <li>
-                        <a href="{{ route('register') }}" class="sign-in"><i class="fa fa-user"></i> Register</a>
-                    </li>
+                    @guest
+                        <li>
+                            <a href="{{ route('login') }}" class="sign-in"><i class="fa fa-sign-in"></i> Login</a>
+                        </li>
+                        <li>
+                            <a href="{{ route('register') }}" class="sign-in"><i class="fa fa-user"></i> Register</a>
+                        </li>
+                    @else
+                    @endguest
                 </ul>
             </div>
         </div>
@@ -62,13 +65,27 @@
                     </li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right rightside-navbar">
-                    <li>
-                        <a href="{{ route('login') }}" class="button">
-                            Login Now
-                        </a>
-                    </li>
+                    @guest
+                        <li>
+                            <a href="{{ route('login') }}" class="button">
+                                Login Now
+                            </a>
+                        </li>
+                    @else
+                        <li>
+                            <a href="{{ route('logout') }}"
+                               onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();" class="button">
+                                Logout
+                            </a>
+                        </li>
+                    @endif
                 </ul>
             </div>
         </nav>
     </div>
 </header>
+
+<form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+    @csrf
+</form>

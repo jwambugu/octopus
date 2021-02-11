@@ -3,7 +3,6 @@
 @section('content')
     <div class="banner b6">
         <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-
             <div class="carousel-inner" role="listbox">
                 <div class="item item-100vh active">
                     <img src="img/banner/img-2.jpg" alt="banner-slider-1">
