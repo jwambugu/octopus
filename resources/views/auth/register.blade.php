@@ -12,22 +12,60 @@
                 </div>
                 <div class="clearfix"></div>
                 <h3>Create an account</h3>
-                <form>
+
+                <form method="POST" action="{{ route('register') }}">
+                    @csrf
                     <div class="form-group">
                         <label for="name" class="hidden"></label>
-                        <input type="text" id="name" class="input-text" placeholder="Full Name">
+                        <input type="text" name="name" id="name" class="input-text error-message-txt" autofocus
+                               value="{{ old('name') }}" placeholder="Full Name">
+
+                        @error('name')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
                     </div>
+
                     <div class="form-group">
                         <label for="email" class="hidden"></label>
-                        <input type="email" id="email" class="input-text" placeholder="Email Address">
+                        <input type="email" name="email" id="email" class="input-text error-message-txt"
+                               value="{{ old('email') }}" placeholder="Email Address">
+
+                        @error('email')
+                        <span class="invalid-feedback text-danger" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
                     </div>
+
+                    <div class="form-group">
+                        <label for="phone_number" class="hidden"></label>
+                        <input type="number" name="phone_number" id="phone_number" class="input-text error-message-txt"
+                               value="{{ old('phone_number') }}" placeholder="Phone Number">
+
+                        @error('phone_number')
+                        <span class="invalid-feedback text-danger" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+
                     <div class="form-group">
                         <label for="password" class="hidden"></label>
-                        <input type="password" id="password" class="input-text" placeholder="Password">
+                        <input type="password" name="password" id="password" class="input-text error-message-txt"
+                               placeholder="Password">
+
+                        @error('password')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
                     </div>
                     <div class="form-group">
                         <label for="password_confirmation" class="hidden"></label>
-                        <input type="password" id="password_confirmation" class="input-text"
+                        <input type="password" name="password_confirmation" id="password_confirmation"
+                               class="input-text"
                                placeholder="Confirm Password">
                     </div>
                     <div class="form-group">
@@ -36,12 +74,12 @@
                         </button>
                     </div>
                 </form>
-                <ul class="social-list clearfix">
-                    <li><a href="#" class="facebook-bg"><i class="fa fa-facebook"></i></a></li>
-                    <li><a href="#" class="twitter-bg"><i class="fa fa-twitter"></i></a></li>
-                    <li><a href="#" class="google-bg"><i class="fa fa-google"></i></a></li>
-                    <li><a href="#" class="linkedin-bg"><i class="fa fa-linkedin"></i></a></li>
-                </ul>
+                {{--                <ul class="social-list clearfix">--}}
+                {{--                    <li><a href="#" class="facebook-bg"><i class="fa fa-facebook"></i></a></li>--}}
+                {{--                    <li><a href="#" class="twitter-bg"><i class="fa fa-twitter"></i></a></li>--}}
+                {{--                    <li><a href="#" class="google-bg"><i class="fa fa-google"></i></a></li>--}}
+                {{--                    <li><a href="#" class="linkedin-bg"><i class="fa fa-linkedin"></i></a></li>--}}
+                {{--                </ul>--}}
             </div>
             <div class="footer">
                 <span>
