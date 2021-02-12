@@ -32,4 +32,5 @@ Route::group([
     'as' => 'properties.',
 ], function () {
     Route::get('/', [PropertyController::class, 'index'])->name('index');
+    Route::get('/fetch-properties', [PropertyController::class, 'getProperties'])->name('fetch-properties');
 });
