@@ -5,11 +5,13 @@ const state = {
     currentPage: 0,
     links: "",
     page: 1,
+    isListView: false,
 };
 
 const getters = {
     getProperties: (state) => state.properties,
     getPaginationLinks: (state) => state.links,
+    getIsListView: (state) => state.isListView,
 };
 
 const mutations = {
@@ -21,6 +23,7 @@ const mutations = {
         state.links = data.links;
         state.page = data.page;
     },
+    setIsListView: (state, isListView) => (state.isListView = isListView),
 };
 
 const actions = {
@@ -36,6 +39,11 @@ const actions = {
                 commit("setProperties", data.data);
                 console.log(data);
             });
+    },
+    SET_IS_LIST_VIEW: ({ commit }, payload) => {
+        const { isListView } = payload;
+
+        commit("setIsListView", isListView);
     },
 };
 

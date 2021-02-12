@@ -5,11 +5,22 @@
 
             <div class="clearfix"></div>
 
+            <!--     List view       -->
             <property-list-card
                 v-for="(property, index) in properties"
                 :property="property"
                 :key="index"
+                v-if="isListView"
             ></property-list-card>
+
+            <!--     Grid view       -->
+            <div class="row" v-if="!isListView">
+                <property-grid-card
+                    v-for="(property, index) in properties"
+                    :key="index"
+                    :property="property"
+                ></property-grid-card>
+            </div>
 
             <div class="text-center">
                 <span v-html="links"></span>
@@ -22,10 +33,12 @@
 import PropertiesFilter from "./PropertiesFilter";
 import PropertyListCard from "./PropertyListCard";
 import { mapGetters } from "vuex";
+import PropertyGridCard from "./PropertyGridCard";
 
 export default {
     name: "PropertiesList",
     components: {
+        PropertyGridCard,
         PropertyListCard,
         PropertiesFilter,
     },
@@ -33,6 +46,7 @@ export default {
         ...mapGetters({
             links: "getPaginationLinks",
             properties: "getProperties",
+            isListView: "getIsListView",
         }),
     },
 };
