@@ -237,68 +237,11 @@
                 <div class="main-title-2">
                     <h1>Recent Properties</h1>
                 </div>
-                <div class="media">
-                    <div class="media-left">
-                        <img
-                            class="media-object"
-                            src="img/properties/small-properties-1.jpg"
-                            alt="small-properties-1"
-                        />
-                    </div>
-                    <div class="media-body">
-                        <h3 class="media-heading">
-                            <a href="properties-details.html"
-                                >Sweet Family Home</a
-                            >
-                        </h3>
-                        <div class="listing-post-meta">
-                            Aug 18, 2020 | <a href="#">$485,00</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="media">
-                    <div class="media-left">
-                        <img
-                            class="media-object"
-                            src="img/properties/small-properties-2.jpg"
-                            alt="small-properties-2"
-                        />
-                    </div>
-                    <div class="media-body align-self-center">
-                        <h3 class="media-heading">
-                            <a href="properties-details.html"
-                                >Modern Family Home</a
-                            >
-                        </h3>
-                        <div class="listing-post-meta">
-                            Feb 27, 2020 | <a href="#">$199,00</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="media mb-0">
-                    <div class="media-left">
-                        <img
-                            class="media-object"
-                            src="img/properties/small-properties-3.jpg"
-                            alt="small-properties-3"
-                        />
-                    </div>
-                    <div class="media-body">
-                        <h3 class="media-heading">
-                            <a href="properties-details.html"
-                                >Beautiful Single Home</a
-                            >
-                        </h3>
-                        <div class="listing-post-meta">
-                            Nov 07, 2020 | <a href="#">$897,00</a>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <div class="sidebar-widget helping-box clearfix">
                 <div class="main-title-2">
-                    <h1>Helping Center</h1>
+                    <h1>Help Center</h1>
                 </div>
                 <div class="helping-center">
                     <div class="icon">
@@ -315,52 +258,6 @@
                     <p>
                         <a href="tel:+55-417-634-7071">+55 417 634 7071</a>
                     </p>
-                </div>
-            </div>
-
-            <div class="sidebar-widget latest-reviews mb-30">
-                <div class="main-title-2">
-                    <h1>Latest Reviews</h1>
-                </div>
-                <div class="media">
-                    <div class="media-left">
-                        <a href="#">
-                            <img
-                                class="media-object"
-                                src="img/avatar/avatar-1.jpg"
-                                alt="avatar-1"
-                            />
-                        </a>
-                    </div>
-                    <div class="media-body">
-                        <h3 class="media-heading">
-                            <a href="#">John Antony</a>
-                        </h3>
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing
-                            elit. Etiamrisus tortor, accumsan at nisi et,
-                        </p>
-                    </div>
-                </div>
-                <div class="media mb-0">
-                    <div class="media-left">
-                        <a href="#">
-                            <img
-                                class="media-object"
-                                src="img/avatar/avatar-2.jpg"
-                                alt="avatar-2"
-                            />
-                        </a>
-                    </div>
-                    <div class="media-body">
-                        <h3 class="media-heading">
-                            <a href="#">Karen Paran</a>
-                        </h3>
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing
-                            elit. Etiamrisus tortor, accumsan at nisi et,
-                        </p>
-                    </div>
                 </div>
             </div>
         </div>

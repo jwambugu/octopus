@@ -33,4 +33,5 @@ Route::group([
 ], function () {
     Route::get('/', [PropertyController::class, 'index'])->name('index');
     Route::get('/fetch-properties', [PropertyController::class, 'getProperties'])->name('fetch-properties');
+    Route::get('/{property:slug}', [PropertyController::class, 'show'])->name('show');
 });

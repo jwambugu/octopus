@@ -1,22 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-
-    <div class="sub-banner overview-bgi">
-        <div class="overlay">
-            <div class="container">
-                <div class="breadcrumb-area">
-                    <h1>Contact Us</h1>
-                    <ul class="breadcrumbs">
-                        <li><a href="{{ route('contact-us') }}">Home</a></li>
-                        <li class="active">Contact Us</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="contact-1 content-area-7">
+    <div class="contact-1 content-area-7" style="margin-top: -60px">
         <div class="container">
             <div class="main-title">
                 <h1>Contact Us</h1>

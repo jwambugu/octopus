@@ -4,7 +4,7 @@
         <div class="footer-info">
             <div class="row">
 
-                <div class="col-lg-4 col-md-3 col-sm-6 col-xs-12">
+                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
                     <div class="footer-item fi2">
                         <div class="main-title-2">
                             <h1>Contact Us</h1>
@@ -34,7 +34,7 @@
                     </div>
                 </div>
 
-                <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
+                <div class="col-lg-4 col-md-3 col-sm-6 col-xs-12">
                     <div class="footer-item">
                         <div class="main-title-2">
                             <h1>Links</h1>
@@ -65,56 +65,6 @@
                                 <a href="properties-details.html">Properties Details</a>
                             </li>
                         </ul>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                    <div class="footer-item popular-posts">
-                        <div class="main-title-2">
-                            <h1>Popular Posts</h1>
-                        </div>
-                        <div class="media">
-                            <div class="media-left">
-                                <img class="media-object" src="img/properties/small-properties-1.jpg"
-                                     alt="small-properties-1">
-                            </div>
-                            <div class="media-body">
-                                <h3 class="media-heading">
-                                    <a href="properties-details.html">Sweet Family Home</a>
-                                </h3>
-                                <div class="listing-post-meta">
-                                    Aug 18, 2020 | <a href="#">$485,00</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="media">
-                            <div class="media-left">
-                                <img class="media-object" src="img/properties/small-properties-2.jpg"
-                                     alt="small-properties-2">
-                            </div>
-                            <div class="media-body align-self-center">
-                                <h3 class="media-heading">
-                                    <a href="properties-details.html">Modern Family Home</a>
-                                </h3>
-                                <div class="listing-post-meta">
-                                    Feb 27, 2020 | <a href="#">$199,00</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="media">
-                            <div class="media-left">
-                                <img class="media-object" src="img/properties/small-properties-3.jpg"
-                                     alt="small-properties-3">
-                            </div>
-                            <div class="media-body">
-                                <h3 class="media-heading">
-                                    <a href="properties-details.html">Beautiful Single Home</a>
-                                </h3>
-                                <div class="listing-post-meta">
-                                    Nov 07, 2020 | <a href="#">$897,00</a>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>

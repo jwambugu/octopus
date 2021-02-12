@@ -67,7 +67,7 @@ export default {
     },
     computed: {
         propertyLink() {
-            return "";
+            return `/properties/${this.property.slug}`;
         },
         amenities() {
             return this.property.amenities.slice(0, 3);

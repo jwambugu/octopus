@@ -1,22 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-
-    <div class="sub-banner overview-bgi">
-        <div class="overlay">
-            <div class="container">
-                <div class="breadcrumb-area">
-                    <h1>About Us</h1>
-                    <ul class="breadcrumbs">
-                        <li><a href="{{ route('index') }}">Home</a></li>
-                        <li class="active">About Us</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="about-city-estate">
+    <div class="about-city-estate" style="margin-top: -80px">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -37,7 +22,7 @@
         </div>
     </div>
 
-    <div class="counters overview-bgi">
+    <div class="counters overview-bgi" style="margin-top:15px">
         <div class="container">
             <div class="row">
                 <div class="col-md-3 col-sm-6">
