@@ -61,6 +61,8 @@ class Property extends Model
      * @var array
      */
     protected $casts = [
+        'location' => 'object',
+        'is_available' => 'boolean',
     ];
 
     /**
