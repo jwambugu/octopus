@@ -20,14 +20,20 @@
                                 <option>Properties (Low To High)</option>
                             </select>
                         </label>
-                        <a href="" class="change-view-btn active-view-btn"
-                            ><i class="fa fa-th-list"></i
-                        ></a>
-                        <!--                        <a-->
-                        <!--                            href="properties-grid-rightside.html"-->
-                        <!--                            class="change-view-btn"-->
-                        <!--                        ><i class="fa fa-th-large"></i-->
-                        <!--                        ></a>-->
+                        <button
+                            class="change-view-btn active-view-btn"
+                            v-if="isListView"
+                            @click="changeView(false)"
+                        >
+                            <i class="fa fa-th-list"></i>
+                        </button>
+                        <button
+                            class="change-view-btn"
+                            v-else
+                            @click="changeView(true)"
+                        >
+                            <i class="fa fa-th-large"></i>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -36,8 +42,26 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
     name: "PropertiesFilter",
+    computed: {
+        ...mapGetters({
+            isListView: "getIsListView",
+        }),
+    },
+    methods: {
+        changeView(isListView) {
+            if (isListView === this.isListView) {
+                return;
+            }
+
+            this.$store.dispatch("SET_IS_LIST_VIEW", {
+                isListView: isListView,
+            });
+        },
+    },
 };
 </script>
 
