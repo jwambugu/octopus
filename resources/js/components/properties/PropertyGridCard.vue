@@ -1,26 +1,23 @@
 <template>
-    <div>
-        <div class="property clearfix wow fadeInUp delay-03s">
-            <div class="col-lg-5 col-md-5 col-sm-5 col-xs-12 col-pad">
-                <div class="property-img">
-                    <div class="property-tag button alt featured">Featured</div>
-                    <div class="property-tag button sale">Available</div>
-                    <div class="property-price">
-                        KES {{ property.cost_per_night | numberFormat }}
-                    </div>
-                    <img
-                        :src="image"
-                        alt="fp-list"
-                        class="img-responsive hp-1"
-                    />
-                    <div class="property-overlay">
-                        <a :href="propertyLink" class="overlay-link">
-                            <i class="fa fa-link"></i>
-                        </a>
-                    </div>
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+        <div class="property">
+            <div class="property-img">
+                <div class="property-tag button alt featured">Featured</div>
+                <div class="property-tag button sale">Available</div>
+                <div class="property-price">
+                    KES {{ property.cost_per_night | numberFormat }}
+                </div>
+
+                <img :src="image" :alt="property.slug" class="img-responsive" />
+
+                <div class="property-overlay">
+                    <a :href="propertyLink" class="overlay-link">
+                        <i class="fa fa-link"></i>
+                    </a>
                 </div>
             </div>
-            <div class="col-lg-7 col-md-7 col-sm-7 col-xs-12 property-content">
+
+            <div class="property-content">
                 <div class="info">
                     <h1 class="title">
                         <a :href="propertyLink">
@@ -61,11 +58,11 @@
 
 <script>
 export default {
-    name: "PropertyListCard",
+    name: "PropertyGridCard",
     props: {
         property: {
-            type: Object,
             required: true,
+            type: Object,
         },
     },
     computed: {
@@ -73,7 +70,7 @@ export default {
             return "";
         },
         amenities() {
-            return this.property.amenities;
+            return this.property.amenities.slice(0, 3);
         },
         images() {
             return this.property.images;

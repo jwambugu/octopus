@@ -70,8 +70,29 @@ class Property extends Model
     public function amenities(): HasMany
     {
         return $this->hasMany(PropertyAmenity::class)
-            ->with('amenity:id,name,slug,icon')->select([
+            ->with('amenity:id,name,slug,icon')
+            ->select([
                 'id', 'property_id', 'amenity_id'
             ]);
+    }
+
+    /**
+     * Returns the property images.
+     * @return HasMany
+     */
+    public function images(): HasMany
+    {
+        return $this->hasMany(PropertyImage::class)->select([
+            'id', 'public_url', 'property_id'
+        ]);
+    }
+
+    /**
+     * Returns the first property images
+     * @return HasMany
+     */
+    public function defaultImage(): HasMany
+    {
+        return $this->images()->take(1);
     }
 }

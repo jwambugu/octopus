@@ -26,7 +26,7 @@ class PropertyController extends Controller
     public function getProperties(Request $request): JsonResponse
     {
         // Get the properties that are available and have been approved.
-        $properties = Property::with('amenities')->where([
+        $properties = Property::with('amenities', 'images')->where([
             'is_available' => true,
             'status' => 'approved',
         ])->select([
