@@ -49,4 +49,13 @@ class PropertyController extends Controller
             ]
         ]);
     }
+
+    public function show(Request $request, Property $property)
+    {
+        $property = $property->load('images', 'amenities');
+
+        return view('properties.show')->with([
+            'property' => $property
+        ]);
+    }
 }
