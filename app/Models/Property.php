@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -64,10 +65,13 @@ class Property extends Model
 
     /**
      * Returns the properties amenities
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function amenities()
+    public function amenities(): HasMany
     {
-        return $this->hasMany(Amenity::class);
+        return $this->hasMany(PropertyAmenity::class)
+            ->with('amenity:id,name,slug,icon')->select([
+                'id', 'property_id', 'amenity_id'
+            ]);
     }
 }
