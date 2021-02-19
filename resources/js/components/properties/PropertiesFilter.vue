@@ -13,11 +13,19 @@
                 <div class="col-lg-6 col-md-7 col-sm-7 col-xs-10 cod-pad">
                     <div class="sorting-options">
                         <label>
-                            <select class="sorting">
-                                <option>New To Old</option>
-                                <option>Old To New</option>
-                                <option>Properties (High To Low)</option>
-                                <option>Properties (Low To High)</option>
+                            <select
+                                class="sorting"
+                                v-model="sortBy"
+                                @change="changeSortByOption"
+                            >
+                                <option value="">--Sort By--</option>
+                                <option
+                                    v-for="(sortOption, index) in sortOptions"
+                                    :key="index"
+                                    :value="sortOption.key"
+                                >
+                                    {{ sortOption.value }}
+                                </option>
                             </select>
                         </label>
                         <button
@@ -46,6 +54,29 @@ import { mapGetters } from "vuex";
 
 export default {
     name: "PropertiesFilter",
+    data() {
+        return {
+            sortOptions: [
+                {
+                    key: "_price_asc",
+                    value: "Cost Per Night (Low To High)",
+                },
+                {
+                    key: "_price_desc",
+                    value: "Cost Per Night (High To Low)",
+                },
+                {
+                    key: "_time_added_asc",
+                    value: "Old to New",
+                },
+                {
+                    key: "_time_added_desc",
+                    value: "New to Old",
+                },
+            ],
+            sortBy: "",
+        };
+    },
     computed: {
         ...mapGetters({
             isListView: "getIsListView",
@@ -59,6 +90,11 @@ export default {
 
             this.$store.dispatch("SET_IS_LIST_VIEW", {
                 isListView: isListView,
+            });
+        },
+        changeSortByOption() {
+            this.$store.dispatch("GET_PROPERTIES", {
+                sortBy: this.sortBy,
             });
         },
     },
