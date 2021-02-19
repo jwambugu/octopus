@@ -3,8 +3,14 @@
         <div class="properties-section-body content-area">
             <div class="container">
                 <div class="row">
+                    <properties-list-search-component
+                        :filters="filters"
+                        :page="page"
+                    ></properties-list-search-component>
+                </div>
+                <div class="row">
                     <properties-list></properties-list>
-                    <properties-list-search-component></properties-list-search-component>
+                    <popular-properties-list></popular-properties-list>
                 </div>
             </div>
         </div>
@@ -14,10 +20,12 @@
 <script>
 import PropertiesListSearchComponent from "./PropertiesListSearchComponent";
 import PropertiesList from "./PropertiesList";
+import PopularPropertiesList from "./popular/PopularPropertiesList";
 
 export default {
     name: "PropertiesListMainComponent",
     components: {
+        PopularPropertiesList,
         PropertiesList,
         PropertiesListSearchComponent,
     },
@@ -25,6 +33,10 @@ export default {
         page: {
             required: true,
             type: Number,
+        },
+        filters: {
+            required: true,
+            type: Object,
         },
     },
     created() {
