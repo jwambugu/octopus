@@ -28,7 +28,7 @@ const mutations = {
 
 const actions = {
     GET_PROPERTIES: ({ commit }, payload) => {
-        const { page, propertyTypes, bedrooms, city } = payload;
+        const { page, propertyTypes, bedrooms, city, sortBy } = payload;
         axios
             .get("/properties/fetch-properties", {
                 params: {
@@ -36,6 +36,7 @@ const actions = {
                     propertyTypes,
                     bedrooms,
                     city,
+                    sortBy,
                 },
             })
             .then(({ data }) => {
