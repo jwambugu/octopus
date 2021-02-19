@@ -5,7 +5,7 @@ const state = {
     currentPage: 0,
     links: "",
     page: 1,
-    isListView: false,
+    isListView: true,
 };
 
 const getters = {
@@ -28,16 +28,18 @@ const mutations = {
 
 const actions = {
     GET_PROPERTIES: ({ commit }, payload) => {
-        const { page } = payload;
+        const { page, propertyTypes, bedrooms, city } = payload;
         axios
             .get("/properties/fetch-properties", {
                 params: {
                     page,
+                    propertyTypes,
+                    bedrooms,
+                    city,
                 },
             })
             .then(({ data }) => {
                 commit("setProperties", data.data);
-                console.log(data);
             });
     },
     SET_IS_LIST_VIEW: ({ commit }, payload) => {
