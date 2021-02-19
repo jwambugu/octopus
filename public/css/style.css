@@ -8996,4 +8996,9 @@ input[type=number] {
     background-color: #96C51E;
 }
 
+.override-alert-text-transform {
+    text-transform: unset;
+    font-size: 1.3rem;
+}
+
 

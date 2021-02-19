@@ -87,6 +87,38 @@ class PropertyController extends Controller
     }
 
     /**
+     * Sorts the properties as per the filter applied.
+     * @param string $sortOption
+     * @param object $properties
+     * @return object
+     */
+    private function applySortingFilter(string $sortOption, object $properties): object
+    {
+        switch ($sortOption) {
+            case '_price_asc':
+            {
+                return $properties->orderBy('cost_per_night');
+            }
+            case '_price_desc':
+            {
+                return $properties->orderByDesc('cost_per_night');
+            }
+            case '_time_added_asc' :
+            {
+                return $properties->orderBy('created_at');
+            }
+            case '_time_added_desc' :
+            {
+                return $properties->orderByDesc('created_at');
+            }
+            default:
+            {
+                return $properties;
+            }
+        }
+    }
+
+    /**
      * Returns the data for the available properties.
      * @param Request $request
      * @return JsonResponse
@@ -94,7 +126,8 @@ class PropertyController extends Controller
     public function getProperties(Request $request): JsonResponse
     {
         // Remove all the empty route parameters
-        $request = collect(array_filter($_GET));
+        $cleanedRequest = collect(array_filter($request->all()));
+        $sortBy = $cleanedRequest->get('sortBy');
 
         // Get the properties that are available and have been approved.
         $properties = Property::with('amenities', 'images')->where([
@@ -102,11 +135,17 @@ class PropertyController extends Controller
             'status' => 'approved',
         ]);
 
-        $properties = $this->applyPropertyFiltersIfAny($request, $properties);
+        // Apply any filters if we have any
+        $properties = $this->applyPropertyFiltersIfAny($cleanedRequest, $properties);
+
+        if ($cleanedRequest->has('sortBy')) {
+            $properties = $this->applySortingFilter($sortBy, $properties);
+        }
+        // Sort the properties by the option provided
 
         $properties = $properties->select([
             'id', 'name', 'slug', 'address', 'cost_per_night', 'property_type_id'
-        ])->paginate(10)->appends($request->all());
+        ])->paginate(10)->appends($cleanedRequest->all());
 
         $apiRoute = route('properties.fetch-properties');
         $viewRoute = route('properties.index');
