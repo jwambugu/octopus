@@ -24,7 +24,7 @@ class PropertyController extends Controller
             ->get(['id', 'name', 'slug']);
 
         // Get the distinct bedrooms we have in the db
-        $bedrooms = \DB::table('properties')
+        $bedrooms = DB::table('properties')
             ->whereNull('deleted_at')
             ->distinct('bedrooms')
             ->orderBy('bedrooms')
@@ -138,11 +138,12 @@ class PropertyController extends Controller
         // Apply any filters if we have any
         $properties = $this->applyPropertyFiltersIfAny($cleanedRequest, $properties);
 
+        // Apply any sort filters if we have any
         if ($cleanedRequest->has('sortBy')) {
             $properties = $this->applySortingFilter($sortBy, $properties);
         }
-        // Sort the properties by the option provided
 
+        // Sort the properties by the option provided
         $properties = $properties->select([
             'id', 'name', 'slug', 'address', 'cost_per_night', 'property_type_id'
         ])->paginate(10)->appends($cleanedRequest->all());
@@ -164,11 +165,10 @@ class PropertyController extends Controller
 
     /**
      * Shows a single property
-     * @param Request $request
      * @param Property $property
      * @return Application|Factory|View
      */
-    public function show(Request $request, Property $property)
+    public function show(Property $property)
     {
         $property = $property->load('images', 'amenities');
 

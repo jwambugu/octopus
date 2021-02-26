@@ -66,7 +66,8 @@
                             </div>
                         </div>
                     </div>
-                    <properties-list-search-component></properties-list-search-component>
+
+                    <popular-properties-list></popular-properties-list>
                 </div>
             </div>
         </div>
@@ -76,10 +77,15 @@
 <script>
 import PropertiesListSearchComponent from "../PropertiesListSearchComponent";
 import PropertyDetailsPageSlider from "./PropertyDetailsPageSlider";
+import PopularPropertiesList from "../popular/PopularPropertiesList";
 
 export default {
     name: "PropertiesDetailsPageMainComponent",
-    components: { PropertyDetailsPageSlider, PropertiesListSearchComponent },
+    components: {
+        PopularPropertiesList,
+        PropertyDetailsPageSlider,
+        PropertiesListSearchComponent,
+    },
     props: {
         property: {
             required: true,
