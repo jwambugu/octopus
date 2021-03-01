@@ -171,7 +171,7 @@
                             disabled
                             v-else
                         >
-                            <i class="fa fa-spinner fa-spin fa-2x"></i>
+                            <i class="fa fa-spinner fa-spin fa-1x"></i>
                         </button>
                     </div>
                 </form>
@@ -211,11 +211,17 @@ export default {
     },
     methods: {
         bookProperty() {
-            // BOOK_PROPERTY
+            this.bookingProperty = true;
+            this.errorMessage = "";
+
             this.$store
                 .dispatch("BOOK_PROPERTY", this.bookingData)
-                .then(({ message }) => {
+                .then(({ message, next }) => {
                     this.successMessage = message;
+
+                    setTimeout(() => {
+                        window.location.replace(next);
+                    }, 2000);
                 })
                 .catch((error) => {
                     this.bookingProperty = false;
