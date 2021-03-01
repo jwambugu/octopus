@@ -47,4 +47,8 @@ Route::group([
     Route::get('/{property:slug}/book', [BookingController::class, 'showPropertyBookingView'])
         ->name('property.view');
     Route::post('/book-property', [BookingController::class, 'bookProperty'])->name('book.property');
+    Route::get('/{uuid}/lipa-na-mpesa', [BookingController::class, 'renderMpesaPaymentView'])
+        ->name('book.lipa-na-mpesa')->middleware('signed');
+    Route::post('/lipa-na-mpesa', [BookingController::class, 'processMpesaPaymentRequest'])
+        ->name('book.lipa-na-mpesa');
 });

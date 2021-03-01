@@ -23,6 +23,22 @@ const actions = {
                 .catch((error) => reject(errorHandler(error)));
         });
     },
+    MAKE_MPESA_PAYMENT: ({}, payload) => {
+        return new Promise((resolve, reject) => {
+            const { phoneNumber, payment_id } = payload;
+
+            axios
+                .post("/bookings/lipa-na-mpesa", {
+                    phone_number: phoneNumber,
+                    paymentID: payment_id,
+                })
+                .then(({ data }) => {
+                    console.log(data);
+                    resolve(data.data);
+                })
+                .catch((error) => reject(errorHandler(error)));
+        });
+    },
 };
 
 export default {
