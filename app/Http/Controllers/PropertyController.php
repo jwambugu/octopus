@@ -171,6 +171,9 @@ class PropertyController extends Controller
     public function show(Property $property)
     {
         $property = $property->load('images', 'amenities');
+        $property->booking_route = route('booking.property.view', [
+            'property' => $property->slug
+        ]);
 
         return view('properties.show')->with([
             'property' => $property

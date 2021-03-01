@@ -64,6 +64,22 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="row">
+                                <div class="col-md-6 col-md-offset-6">
+                                    <div
+                                        class="property-footer"
+                                        style="margin-bottom: 30px"
+                                    >
+                                        <a
+                                            :href="bookingRoute"
+                                            class="btn button-theme btn-lg pull-right"
+                                            style="color: #ffffff"
+                                            >Book Now</a
+                                        >
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -98,6 +114,9 @@ export default {
         },
         amenities() {
             return this.property.amenities;
+        },
+        bookingRoute() {
+            return this.property.booking_route;
         },
     },
 };
