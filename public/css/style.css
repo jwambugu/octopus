@@ -9001,4 +9001,9 @@ input[type=number] {
     font-size: 1.3rem;
 }
 
+.button-md {
+    text-transform: capitalize;
+    font-size: 1.4rem
+}
+
 
