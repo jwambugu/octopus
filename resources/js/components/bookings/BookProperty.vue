@@ -111,11 +111,27 @@
             </div>
 
             <div class="my-address">
+                <div
+                    class="alert alert-success text-center override-alert-text-transform"
+                    role="alert"
+                    v-if="successMessage"
+                >
+                    {{ successMessage }}
+                </div>
+
+                <div
+                    class="alert alert-danger text-center override-alert-text-transform"
+                    role="alert"
+                    v-if="errorMessage"
+                >
+                    {{ errorMessage }}
+                </div>
+
                 <div class="main-title-2">
                     <h1>Book Property</h1>
                 </div>
 
-                <form>
+                <form @submit.prevent="bookProperty">
                     <div class="form-group">
                         <label for="checkin_date">Checkin Date</label>
                         <input
@@ -124,6 +140,7 @@
                             class="input-text"
                             v-model="bookingData.checkin_date"
                             :min="minDate"
+                            required
                         />
                     </div>
 
@@ -135,12 +152,26 @@
                             class="input-text"
                             v-model="bookingData.checkout_date"
                             :min="minDate"
+                            required
                         />
                     </div>
 
                     <div class="form-group">
-                        <button class="btn button-md btn-block button-theme">
+                        <button
+                            type="submit"
+                            class="btn button-md btn-block button-theme"
+                            v-if="!bookingProperty"
+                        >
                             Book Property
+                        </button>
+
+                        <button
+                            type="submit"
+                            class="btn button-md btn-block button-theme"
+                            disabled
+                            v-else
+                        >
+                            <i class="fa fa-spinner fa-spin fa-2x"></i>
                         </button>
                     </div>
                 </form>
@@ -163,7 +194,11 @@ export default {
             bookingData: {
                 checkin_date: new Date().toISOString().slice(0, 10),
                 checkout_date: "",
+                property_id: this.property.id,
             },
+            errorMessage: "",
+            successMessage: "",
+            bookingProperty: false,
         };
     },
     computed: {
@@ -172,6 +207,20 @@ export default {
         },
         minDate() {
             return new Date().toISOString().slice(0, 10);
+        },
+    },
+    methods: {
+        bookProperty() {
+            // BOOK_PROPERTY
+            this.$store
+                .dispatch("BOOK_PROPERTY", this.bookingData)
+                .then(({ message }) => {
+                    this.successMessage = message;
+                })
+                .catch((error) => {
+                    this.bookingProperty = false;
+                    this.errorMessage = error;
+                });
         },
     },
 };

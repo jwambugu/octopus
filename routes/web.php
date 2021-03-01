@@ -41,9 +41,10 @@ Route::group([
  * Booking routes
  */
 Route::group([
-    'prefix' => 'booking',
+    'prefix' => 'bookings',
     'as' => 'booking.',
 ], function () {
     Route::get('/{property:slug}/book', [BookingController::class, 'showPropertyBookingView'])
         ->name('property.view');
+    Route::post('/book-property', [BookingController::class, 'bookProperty'])->name('book.property');
 });
