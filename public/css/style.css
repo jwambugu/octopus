@@ -6308,20 +6308,20 @@ a:hover {
 }
 
 .user-account-box .header {
-    padding: 40px 0 60px;
+    padding: 20px 0 20px;
     text-align: center;
     position: relative;
     border: none;
     margin: 0;
-    background: url(../img/client-bannr.jpg);
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: cover;
+    /*background: url(../img/client-bannr.jpg);*/
+    /*background-position: center center;*/
+    /*background-repeat: no-repeat;*/
+    /*background-size: cover;*/
 }
 
 .user-account-box .header h3 {
     margin: 0 0 5px;
-    color: #efefef;
+    color: #37414D;
     font-weight: 600;
     font-size: 17px;
     text-transform: uppercase;
@@ -6329,7 +6329,7 @@ a:hover {
 
 .user-account-box .header p {
     margin-bottom: 5px;
-    color: #efefef;
+    color: #37414D;
 }
 
 .user-account-box .social-list {

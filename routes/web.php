@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PropertyController;
@@ -34,4 +35,15 @@ Route::group([
     Route::get('/', [PropertyController::class, 'index'])->name('index');
     Route::get('/fetch-properties', [PropertyController::class, 'getProperties'])->name('fetch-properties');
     Route::get('/{property:slug}', [PropertyController::class, 'show'])->name('show');
+});
+
+/**
+ * Booking routes
+ */
+Route::group([
+    'prefix' => 'booking',
+    'as' => 'booking.',
+], function () {
+    Route::get('/{property:slug}/book', [BookingController::class, 'showPropertyBookingView'])
+        ->name('property.view');
 });

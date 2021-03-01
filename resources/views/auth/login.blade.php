@@ -18,7 +18,7 @@
                     <div class="form-group">
                         <label for="email" class="hidden"></label>
                         <input type="email" name="email" id="email" class="input-text error-message-txt" autofocus
-                               placeholder="Email Address">
+                               placeholder="Email Address" value="{{ old('email') }}">
 
                         @error('email')
                         <span class="invalid-feedback text-danger" role="alert">

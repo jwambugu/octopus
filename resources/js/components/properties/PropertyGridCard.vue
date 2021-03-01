@@ -40,17 +40,17 @@
                     </ul>
                 </div>
 
-                <div class="property-footer" style="margin-bottom: 30px">
-                    <span class="left"> </span>
-                    <span class="right">
-                        <a
-                            :href="propertyLink"
-                            class="btn button-theme btn-sm"
-                            style="color: #ffffff"
-                            >Book Now</a
-                        >
-                    </span>
-                </div>
+                <!--                <div class="property-footer" style="margin-bottom: 30px">-->
+                <!--                    <span class="left"> </span>-->
+                <!--                    <span class="right">-->
+                <!--                        <a-->
+                <!--                            :href="propertyLink"-->
+                <!--                            class="btn button-theme btn-sm"-->
+                <!--                            style="color: #ffffff"-->
+                <!--                            >Book Now</a-->
+                <!--                        >-->
+                <!--                    </span>-->
+                <!--                </div>-->
             </div>
         </div>
     </div>
