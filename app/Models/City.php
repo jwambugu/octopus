@@ -2,9 +2,12 @@
 
 namespace App\Models;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\City
@@ -13,20 +16,23 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $name
  * @property string $slug
  * @property int $is_active
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property string|null $deleted_at
- * @method static \Illuminate\Database\Eloquent\Builder|City newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|City newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|City query()
- * @method static \Illuminate\Database\Eloquent\Builder|City whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|City whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|City whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|City whereIsActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder|City whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|City whereSlug($value)
- * @method static \Illuminate\Database\Eloquent\Builder|City whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @method static Builder|City newModelQuery()
+ * @method static Builder|City newQuery()
+ * @method static Builder|City query()
+ * @method static Builder|City whereCreatedAt($value)
+ * @method static Builder|City whereDeletedAt($value)
+ * @method static Builder|City whereId($value)
+ * @method static Builder|City whereIsActive($value)
+ * @method static Builder|City whereName($value)
+ * @method static Builder|City whereSlug($value)
+ * @method static Builder|City whereUpdatedAt($value)
+ * @mixin Eloquent
+ * @method static \Illuminate\Database\Query\Builder|City onlyTrashed()
+ * @method static \Illuminate\Database\Query\Builder|City withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|City withoutTrashed()
  */
 class City extends Model
 {

@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\Property
@@ -25,31 +28,41 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int $city_id
  * @property int $property_type_id
  * @property int $admin_id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property string|null $deleted_at
- * @method static \Illuminate\Database\Eloquent\Builder|Property newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Property newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Property query()
- * @method static \Illuminate\Database\Eloquent\Builder|Property whereAddress($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Property whereAdminId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Property whereAdultsCount($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Property whereAmenities($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Property whereCityId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Property whereCostPerNight($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Property whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Property whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Property whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Property whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Property whereIsAvailable($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Property whereKidsCount($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Property whereLocation($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Property whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Property wherePropertyTypeId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Property whereSlug($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Property whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Property whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @method static Builder|Property newModelQuery()
+ * @method static Builder|Property newQuery()
+ * @method static Builder|Property query()
+ * @method static Builder|Property whereAddress($value)
+ * @method static Builder|Property whereAdminId($value)
+ * @method static Builder|Property whereAdultsCount($value)
+ * @method static Builder|Property whereAmenities($value)
+ * @method static Builder|Property whereCityId($value)
+ * @method static Builder|Property whereCostPerNight($value)
+ * @method static Builder|Property whereCreatedAt($value)
+ * @method static Builder|Property whereDeletedAt($value)
+ * @method static Builder|Property whereDescription($value)
+ * @method static Builder|Property whereId($value)
+ * @method static Builder|Property whereIsAvailable($value)
+ * @method static Builder|Property whereKidsCount($value)
+ * @method static Builder|Property whereLocation($value)
+ * @method static Builder|Property whereName($value)
+ * @method static Builder|Property wherePropertyTypeId($value)
+ * @method static Builder|Property whereSlug($value)
+ * @method static Builder|Property whereStatus($value)
+ * @method static Builder|Property whereUpdatedAt($value)
+ * @mixin Eloquent
+ * @property int $bedrooms
+ * @property-read int|null $amenities_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\PropertyImage[] $defaultImage
+ * @property-read int|null $default_image_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\PropertyImage[] $images
+ * @property-read int|null $images_count
+ * @method static \Illuminate\Database\Query\Builder|Property onlyTrashed()
+ * @method static Builder|Property whereBedrooms($value)
+ * @method static \Illuminate\Database\Query\Builder|Property withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|Property withoutTrashed()
  */
 class Property extends Model
 {
