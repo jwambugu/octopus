@@ -11,9 +11,9 @@ class BookPropertyRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,10 +21,11 @@ class BookPropertyRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            //
+            'checkin_date' => ['required', 'date'],
+            'checkout_date' => ['required', 'date'],
         ];
     }
 }
