@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * App\Models\Booking
@@ -31,5 +32,17 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Booking extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'checkin_date',
+        'checkout_date',
+        'property_id',
+        'user_id',
+    ];
 }
