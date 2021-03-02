@@ -78,7 +78,7 @@ class BookingController extends Controller
             'data' => [
                 'message' => 'Property booked successfully.',
                 'next' => URL::signedRoute('booking.book.lipa-na-mpesa', [
-                    'uuid' => $booking->uuid,
+                    'booking' => $booking->uuid,
                 ])
             ]
         ]);
@@ -87,7 +87,7 @@ class BookingController extends Controller
     /**
      * Renders the view for making mpesa payments
      * @param Request $request
-     * @param string $uuid
+     * @param Booking $booking
      * @return Application|Factory|View
      */
     public function renderMpesaPaymentView(Request $request, Booking $booking)
@@ -96,9 +96,7 @@ class BookingController extends Controller
         $user = $request->user();
 
         // Find the payment using the uuid
-        $booking = $booking->with('unsuccessfulPayments', 'property')->first([
-            'id', 'uuid', 'property_id'
-        ]);
+        $booking = $booking->load('unsuccessfulPayments', 'property');
 
         if (!$booking) {
             abort(404);
