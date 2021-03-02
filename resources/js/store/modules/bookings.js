@@ -25,15 +25,26 @@ const actions = {
     },
     MAKE_MPESA_PAYMENT: ({}, payload) => {
         return new Promise((resolve, reject) => {
-            const { phoneNumber, payment_id } = payload;
+            const { phoneNumber, paymentID } = payload;
 
             axios
                 .post("/bookings/lipa-na-mpesa", {
                     phone_number: phoneNumber,
-                    paymentID: payment_id,
+                    payment_id: paymentID,
                 })
                 .then(({ data }) => {
-                    console.log(data);
+                    resolve(data.data);
+                })
+                .catch((error) => reject(errorHandler(error)));
+        });
+    },
+    CONFIRM_MPESA_PAYMENT: ({}, payload) => {
+        return new Promise((resolve, reject) => {
+            const { uuid } = payload;
+
+            axios
+                .post(`/bookings/${uuid}/confirm-mpesa-payment`)
+                .then(({ data }) => {
                     resolve(data.data);
                 })
                 .catch((error) => reject(errorHandler(error)));
