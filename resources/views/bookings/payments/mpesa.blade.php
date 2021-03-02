@@ -7,7 +7,7 @@
             <div class="row">
                 @include('partials._profile-aside')
 
-                <mpesa-payment-view :payment="{{ $payment }}" :user="{{ $user}}"></mpesa-payment-view>
+                <mpesa-payment-view :booking="{{ $booking }}" :user="{{ $user}}"></mpesa-payment-view>
             </div>
         </div>
     </div>

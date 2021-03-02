@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BookPropertyRequest;
+use App\Http\Requests\MpesaPaymentRequest;
 use App\Models\Booking;
 use App\Models\Payment;
 use App\Models\Property;
@@ -10,10 +11,11 @@ use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Ramsey\Uuid\Uuid;
+use URL;
 
 class BookingController extends Controller
 {
@@ -43,47 +45,6 @@ class BookingController extends Controller
     }
 
     /**
-     * Crates a random alphanumeric string to be used as an account number
-     * @return false|string
-     */
-    private function generateAccountNumber()
-    {
-        $pool = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-        return substr(str_shuffle(str_repeat($pool, 6)), 0, 6);
-    }
-
-    /**
-     * Creates a new booking payment record.
-     * @param int $propertyID
-     * @param int $bookingID
-     * @param int $userID
-     * @return Payment|Model
-     */
-    private function createBookingPayment(int $propertyID, int $bookingID, int $userID)
-    {
-        // Get a new account number
-        $accountNumber = $this->generateAccountNumber();
-
-        // Get the property data
-        $property = Property::find($propertyID, [
-            'id', 'cost_per_night'
-        ]);
-
-        // Generate a new uuid
-        $uuid = Uuid::uuid4();
-
-        return Payment::create([
-            'uuid' => $uuid,
-            'account_number' => $accountNumber,
-            'amount' => $property->cost_per_night,
-            'booking_id' => $bookingID,
-            'property_id' => $property->id,
-            'user_id' => $userID,
-        ]);
-    }
-
-    /**
      * Process the request for booking a property
      * @param BookPropertyRequest $request
      * @return JsonResponse
@@ -95,8 +56,12 @@ class BookingController extends Controller
         $propertyID = $request['property_id'];
         $user = $request->user();
 
+        // Generate a new uuid
+        $uuid = Uuid::uuid4();
+
         try {
             $booking = Booking::create([
+                'uuid' => $uuid,
                 'checkin_date' => $request['checkin_date'],
                 'checkout_date' => $request['checkout_date'],
                 'property_id' => $propertyID,
@@ -104,7 +69,7 @@ class BookingController extends Controller
             ]);
 
             // Add payment
-            $payment = $this->createBookingPayment($propertyID, $booking->id, $user->id);
+            PaymentController::createBookingPayment($propertyID, $booking->id, $user->id);
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
@@ -112,8 +77,8 @@ class BookingController extends Controller
         return response()->json([
             'data' => [
                 'message' => 'Property booked successfully.',
-                'next' => \URL::signedRoute('booking.book.lipa-na-mpesa', [
-                    'uuid' => $payment->uuid,
+                'next' => URL::signedRoute('booking.book.lipa-na-mpesa', [
+                    'uuid' => $booking->uuid,
                 ])
             ]
         ]);
@@ -125,25 +90,98 @@ class BookingController extends Controller
      * @param string $uuid
      * @return Application|Factory|View
      */
-    public function renderMpesaPaymentView(Request $request, string $uuid)
+    public function renderMpesaPaymentView(Request $request, Booking $booking)
     {
         // Get the request data
         $user = $request->user();
 
         // Find the payment using the uuid
-        $payment = Payment::whereUuid($uuid)->with('property')->first();
+        $booking = $booking->with('unsuccessfulPayments', 'property')->first([
+            'id', 'uuid', 'property_id'
+        ]);
 
-        if (!$payment) {
+        if (!$booking) {
             abort(404);
         }
         return \view('bookings.payments.mpesa')->with([
-            'payment' => $payment,
+            'booking' => $booking,
             'user' => $user,
         ]);
     }
 
-    public function processMpesaPaymentRequest(Request $request)
+    /**
+     * Process the request for making a payment using mpesa.
+     * @param MpesaPaymentRequest $request
+     * @return JsonResponse
+     * @throws ValidationException
+     * @throws Exception
+     */
+    public function processMpesaPaymentRequest(MpesaPaymentRequest $request): JsonResponse
     {
-        return $request;
+        // Get the request data
+        $paymentID = $request['payment_id'];
+        $phoneNumber = $request['phone_number'];
+
+        // Find the payment using the id
+        $payment = Payment::find($paymentID, [
+            'id', 'account_number', 'amount', 'booking_id', 'property_id', 'user_id',
+        ]);
+
+        if (!$payment) {
+            throw ValidationException::withMessages([
+                'payment' => 'Invalid payment. Please try again.'
+            ]);
+        }
+
+        try {
+            // Initiate an STK push request
+            $isSuccessful = PaymentController::lipaNaMpesaOnline($phoneNumber, $payment);
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+
+        $message = $isSuccessful ?
+            'Payment request pushed successfully.' :
+            'Sorry. Something went wrong. Please try again.';
+
+        return response()->json([
+            'data' => [
+                'isSuccessful' => $isSuccessful,
+                'message' => $message,
+            ]
+        ]);
+    }
+
+    public function confirmBookingPayment(Booking $booking)
+    {
+        $payment = Payment::where([
+            'booking_id' => $booking->id,
+            'is_successful' => true
+        ])->latest()->first();
+
+        if (is_null($payment->callback_data)) {
+            return response()->json([
+                'data' => [
+                    'message' => 'Waiting for payment confirmation. Please wait..',
+                    'alertClass' => 'alert-info'
+                ]
+            ]);
+        }
+
+        if (!$payment->is_paid) {
+            return response()->json([
+                'data' => [
+                    'message' => 'Payment was unsuccessful. Please try again.',
+                    'alertClass' => 'alert-danger'
+                ]
+            ]);
+        }
+
+        return response()->json([
+            'data' => [
+                'message' => 'Payment processed successful.',
+                'alertClass' => 'alert-success'
+            ]
+        ]);
     }
 }
