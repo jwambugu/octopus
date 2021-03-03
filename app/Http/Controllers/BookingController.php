@@ -54,7 +54,16 @@ class BookingController extends Controller
 
     public function show(Booking $booking)
     {
-        return $booking;
+        // Get the booking data
+        $booking = $booking->load([
+            'property',
+            'property.amenities',
+            'payments:id,account_number,amount,is_paid,booking_id,created_at'
+        ]);
+
+        return \view('bookings.show')->with([
+            'booking' => $booking
+        ]);
     }
 
     /**

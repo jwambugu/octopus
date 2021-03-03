@@ -95,7 +95,7 @@ class Booking extends Model
         return $this->belongsTo(Property::class, 'property_id')
             ->with('defaultImage')
             ->select([
-                'id', 'name', 'slug', 'cost_per_night'
+                'id', 'name', 'slug', 'cost_per_night', 'address'
             ]);
     }
 
