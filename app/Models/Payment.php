@@ -34,6 +34,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
+ * @property-read Property $property
  * @method static \Illuminate\Database\Eloquent\Builder|Payment newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Payment newQuery()
  * @method static Builder|Payment onlyTrashed()
@@ -61,7 +62,6 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Payment withTrashed()
  * @method static Builder|Payment withoutTrashed()
  * @mixin Eloquent
- * @property-read \App\Models\Property $property
  */
 class Payment extends Model
 {
