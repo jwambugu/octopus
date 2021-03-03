@@ -101,10 +101,6 @@
                     {{ alertMessage }}
                 </div>
 
-                <div class="main-title-2">
-                    <h1>Confirm Payment</h1>
-                </div>
-
                 <form @submit.prevent="confirmPayment">
                     <div class="form-group">
                         <button
@@ -202,11 +198,15 @@ export default {
                 .dispatch("CONFIRM_MPESA_PAYMENT", {
                     uuid: this.booking.uuid,
                 })
-                .then(({ message, alertClass }) => {
+                .then(({ message, alertClass, next, status }) => {
                     this.alertClass = alertClass;
                     this.alertMessage = message;
 
                     this.confirmingPayment = false;
+
+                    if (status === "success") {
+                        window.location.reload(next);
+                    }
                 })
                 .catch((error) => {
                     this.confirmingPayment = false;

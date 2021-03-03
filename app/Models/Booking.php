@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Eloquent;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -40,6 +41,13 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Booking withTrashed()
  * @method static Builder|Booking withoutTrashed()
  * @mixin Eloquent
+ * @property int $is_paid
+ * @property-read Collection|Payment[] $payments
+ * @property-read int|null $payments_count
+ * @property-read Property $property
+ * @property-read Collection|Payment[] $unsuccessfulPayments
+ * @property-read int|null $unsuccessful_payments_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Booking whereIsPaid($value)
  */
 class Booking extends Model
 {
@@ -54,8 +62,19 @@ class Booking extends Model
         'uuid',
         'checkin_date',
         'checkout_date',
+        'is_paid',
         'property_id',
         'user_id',
+    ];
+
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'is_paid' => 'boolean',
     ];
 
     /**
@@ -73,9 +92,11 @@ class Booking extends Model
      */
     public function property(): BelongsTo
     {
-        return $this->belongsTo(Property::class, 'property_id')->select([
-            'id', 'name', 'slug', 'cost_per_night'
-        ]);
+        return $this->belongsTo(Property::class, 'property_id')
+            ->with('defaultImage')
+            ->select([
+                'id', 'name', 'slug', 'cost_per_night'
+            ]);
     }
 
     /**

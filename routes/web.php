@@ -44,6 +44,8 @@ Route::group([
     'prefix' => 'bookings',
     'as' => 'booking.',
 ], function () {
+    Route::get('/', [BookingController::class, 'index'])->name('index');
+    Route::get('/{booking:uuid}', [BookingController::class, 'show'])->name('show');
     Route::get('/{property:slug}/book', [BookingController::class, 'showPropertyBookingView'])
         ->name('property.view');
     Route::post('/book-property', [BookingController::class, 'bookProperty'])->name('book.property');
