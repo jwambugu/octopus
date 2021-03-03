@@ -7,6 +7,7 @@
             <div class="row">
                 @include('partials._profile-aside')
 
+                <my-bookings :bookings="{{ json_encode($bookings) }}" :links="{{ json_encode($links) }}"></my-bookings>
             </div>
         </div>
     </div>

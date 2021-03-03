@@ -30,6 +30,34 @@ class BookingController extends Controller
     }
 
     /**
+     * Render the view for showing the properties booked by the user.
+     * @param Request $request
+     * @return Application|Factory|View
+     */
+    public function index(Request $request)
+    {
+        // Get the auth user data
+        $user = $request->user();
+
+        // Get the user bookings
+        $bookings = Booking::whereUserId($user->id)->with('property')
+            ->orderByDesc('created_at')
+            ->paginate(10);
+
+        $links = (string)$bookings->links();
+
+        return \view('bookings.index')->with([
+            'bookings' => $bookings,
+            'links' => $links,
+        ]);
+    }
+
+    public function show(Booking $booking)
+    {
+        return $booking;
+    }
+
+    /**
      * Render the view for showing the property booking
      * @param Property $property
      * @return Application|Factory|View
@@ -150,8 +178,14 @@ class BookingController extends Controller
         ]);
     }
 
-    public function confirmBookingPayment(Booking $booking)
+    /**
+     * Processes the request for confirming a payment confirming request.
+     * @param Booking $booking
+     * @return JsonResponse
+     */
+    public function confirmBookingPayment(Booking $booking): JsonResponse
     {
+        // Get the booking payment that was recently created and was successful
         $payment = Payment::where([
             'booking_id' => $booking->id,
             'is_successful' => true
@@ -161,7 +195,9 @@ class BookingController extends Controller
             return response()->json([
                 'data' => [
                     'message' => 'Waiting for payment confirmation. Please wait..',
-                    'alertClass' => 'alert-info'
+                    'alertClass' => 'alert-info',
+                    'next' => route('booking.index'),
+                    'status' => 'waiting',
                 ]
             ]);
         }
@@ -170,7 +206,9 @@ class BookingController extends Controller
             return response()->json([
                 'data' => [
                     'message' => 'Payment was unsuccessful. Please try again.',
-                    'alertClass' => 'alert-danger'
+                    'alertClass' => 'alert-danger',
+                    'next' => route('booking.index'),
+                    'status' => 'failed',
                 ]
             ]);
         }
@@ -178,7 +216,9 @@ class BookingController extends Controller
         return response()->json([
             'data' => [
                 'message' => 'Payment processed successful.',
-                'alertClass' => 'alert-success'
+                'alertClass' => 'alert-success',
+                'next' => route('booking.index'),
+                'status' => 'success',
             ]
         ]);
     }

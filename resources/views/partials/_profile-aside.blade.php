@@ -17,8 +17,8 @@
                     </a>
                 </li>
                 <li>
-                    <a href="my-properties.html">
-                        <i class="flaticon-apartment"></i>My Properties
+                    <a href="{{ route('booking.index') }}">
+                        <i class="flaticon-apartment"></i>My Bookings
                     </a>
                 </li>
                 <li>

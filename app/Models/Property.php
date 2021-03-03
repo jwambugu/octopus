@@ -4,9 +4,11 @@ namespace App\Models;
 
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
@@ -55,9 +57,9 @@ use Illuminate\Support\Carbon;
  * @mixin Eloquent
  * @property int $bedrooms
  * @property-read int|null $amenities_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\PropertyImage[] $defaultImage
+ * @property-read Collection|PropertyImage[] $defaultImage
  * @property-read int|null $default_image_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\PropertyImage[] $images
+ * @property-read Collection|PropertyImage[] $images
  * @property-read int|null $images_count
  * @method static \Illuminate\Database\Query\Builder|Property onlyTrashed()
  * @method static Builder|Property whereBedrooms($value)
@@ -103,11 +105,11 @@ class Property extends Model
     }
 
     /**
-     * Returns the first property images
-     * @return HasMany
+     * Returns the first property image
+     * @return HasOne
      */
-    public function defaultImage(): HasMany
+    public function defaultImage(): HasOne
     {
-        return $this->images()->take(1);
+        return $this->hasOne(PropertyImage::class);
     }
 }
