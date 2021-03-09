@@ -42,6 +42,10 @@ Vue.filter("numberFormat", function (number) {
     return new Intl.NumberFormat().format(number);
 });
 
+Vue.filter("truncate", function (str, n) {
+    return str.length > n ? str.substr(0, n - 1) + "..." : str;
+});
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
