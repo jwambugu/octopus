@@ -128,7 +128,6 @@ export default {
     },
     methods: {
         bookProperty() {
-            return;
             this.bookingProperty = true;
             this.errorMessage = "";
 
