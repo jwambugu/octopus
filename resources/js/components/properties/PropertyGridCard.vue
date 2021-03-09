@@ -21,14 +21,14 @@
                 <div class="info">
                     <h1 class="title">
                         <a :href="propertyLink">
-                            {{ property.name }}
+                            {{ property.name | truncate(40) }}
                         </a>
                     </h1>
 
                     <h3 class="property-address">
                         <a :href="propertyLink">
                             <i class="fa fa-map-marker"></i>
-                            {{ property.address }}
+                            {{ property.address | truncate(40) }}
                         </a>
                     </h3>
 
@@ -40,17 +40,12 @@
                     </ul>
                 </div>
 
-                <!--                <div class="property-footer" style="margin-bottom: 30px">-->
-                <!--                    <span class="left"> </span>-->
-                <!--                    <span class="right">-->
-                <!--                        <a-->
-                <!--                            :href="propertyLink"-->
-                <!--                            class="btn button-theme btn-sm"-->
-                <!--                            style="color: #ffffff"-->
-                <!--                            >Book Now</a-->
-                <!--                        >-->
-                <!--                    </span>-->
-                <!--                </div>-->
+                <div class="property-footer" style="margin-bottom: 30px">
+                    <span class="left"> </span>
+                    <span class="right">
+                        <i class="fa fa-heart-o"></i> Add to favorites
+                    </span>
+                </div>
             </div>
         </div>
     </div>
