@@ -1,3 +1,5 @@
+import { errorHandler } from "../../utils";
+
 const state = {
     properties: [],
     total: 0,
@@ -6,12 +8,14 @@ const state = {
     links: "",
     page: 1,
     isListView: true,
+    loadingProperties: false,
 };
 
 const getters = {
     getProperties: (state) => state.properties,
     getPaginationLinks: (state) => state.links,
     getIsListView: (state) => state.isListView,
+    getLoadingProperties: (state) => state.loadingProperties,
 };
 
 const mutations = {
@@ -24,24 +28,35 @@ const mutations = {
         state.page = data.page;
     },
     setIsListView: (state, isListView) => (state.isListView = isListView),
+    setLoadingProperties: (state, loadingProperties) =>
+        (state.loadingProperties = loadingProperties),
 };
 
 const actions = {
     GET_PROPERTIES: ({ commit }, payload) => {
-        const { page, propertyTypes, bedrooms, city, sortBy } = payload;
-        axios
-            .get("/properties/fetch-properties", {
-                params: {
-                    page,
-                    propertyTypes,
-                    bedrooms,
-                    city,
-                    sortBy,
-                },
-            })
-            .then(({ data }) => {
-                commit("setProperties", data.data);
-            });
+        commit("setLoadingProperties", true);
+
+        return new Promise((resolve, reject) => {
+            const { page, propertyTypes, bedrooms, city, sortBy } = payload;
+
+            axios
+                .get("/properties/fetch-properties", {
+                    params: {
+                        page,
+                        propertyTypes,
+                        bedrooms,
+                        city,
+                        sortBy,
+                    },
+                })
+                .then(({ data }) => {
+                    commit("setProperties", data.data);
+                    commit("setLoadingProperties", false);
+
+                    resolve();
+                })
+                .catch((err) => reject(errorHandler(err)));
+        });
     },
     SET_IS_LIST_VIEW: ({ commit }, payload) => {
         const { isListView } = payload;

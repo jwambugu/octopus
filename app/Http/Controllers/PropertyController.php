@@ -146,7 +146,7 @@ class PropertyController extends Controller
         // Sort the properties by the option provided
         $properties = $properties->select([
             'id', 'name', 'slug', 'address', 'cost_per_night', 'property_type_id'
-        ])->paginate(10)->appends($cleanedRequest->all());
+        ])->paginate(30)->appends($cleanedRequest->all());
 
         $apiRoute = route('properties.fetch-properties');
         $viewRoute = route('properties.index');
