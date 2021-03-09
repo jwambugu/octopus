@@ -1,6 +1,11 @@
 <template>
     <div>
-        <div class="properties-section-body content-area">
+        <div
+            :class="
+                isListView ? 'properties-section-body' : 'properties-section'
+            "
+            class="content-area"
+        >
             <div class="container">
                 <div class="row">
                     <properties-list-search-component
@@ -70,6 +75,7 @@ export default {
     computed: {
         ...mapGetters({
             loading: "getLoadingProperties",
+            isListView: "getIsListView",
         }),
     },
     created() {

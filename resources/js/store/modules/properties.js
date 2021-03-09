@@ -7,7 +7,7 @@ const state = {
     currentPage: 0,
     links: "",
     page: 1,
-    isListView: true,
+    isListView: false,
     loadingProperties: false,
 };
 

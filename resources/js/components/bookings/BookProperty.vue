@@ -51,11 +51,21 @@
                         />
                     </div>
 
+                    <div class="form-group" v-if="bookingData.checkout_date">
+                        <span id="nights" class="">
+                            <i
+                                >Booking for {{ nightsBooked }}
+                                {{ nightsBooked === 1 ? "night" : "nights" }}.
+                            </i>
+                        </span>
+                    </div>
+
                     <div class="form-group">
                         <button
                             type="submit"
                             class="btn button-md btn-block button-theme"
                             v-if="!bookingProperty"
+                            :disabled="!bookingData.checkout_date"
                         >
                             Book Property
                         </button>
@@ -103,9 +113,22 @@ export default {
         minDate() {
             return new Date().toISOString().slice(0, 10);
         },
+        nightsBooked() {
+            const { checkin_date, checkout_date } = this.bookingData;
+            const checkinDate = new Date(checkin_date);
+            const checkoutDate = new Date(checkout_date);
+
+            const timeDifference = Math.abs(checkoutDate - checkinDate);
+            const daysBetween = Math.ceil(
+                timeDifference / (1000 * 60 * 60 * 24)
+            );
+
+            return daysBetween === 0 ? 1 : daysBetween;
+        },
     },
     methods: {
         bookProperty() {
+            return;
             this.bookingProperty = true;
             this.errorMessage = "";
 
