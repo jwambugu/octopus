@@ -77,6 +77,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'is_active' => 'boolean',
     ];
 
     /**
@@ -87,5 +88,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Booking::class)->orderByDesc('created_at')
             ->with('property');
+    }
+
+    /**
+     * Returns the properties owned by the user.
+     * @return HasMany
+     */
+    public function properties(): HasMany
+    {
+        return $this->hasMany(Property::class);
     }
 }

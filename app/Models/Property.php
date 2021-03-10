@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -110,6 +111,27 @@ class Property extends Model
      */
     public function defaultImage(): HasOne
     {
-        return $this->hasOne(PropertyImage::class);
+        return $this->hasOne(PropertyImage::class)->select([
+            'id', 'public_url', 'property_id'
+        ]);
+    }
+
+    /** Returns the owner of the property.
+     * @return BelongsTo
+     */
+    public function owner(): BelongsTo
+    {
+        return $this->belongsTo(Admin::class, 'admin_id');
+    }
+
+    /**
+     * Returns the city the property is in.
+     * @return BelongsTo
+     */
+    public function city(): BelongsTo
+    {
+        return $this->belongsTo(City::class, 'city_id')->select([
+            'id', 'name', 'slug'
+        ]);
     }
 }

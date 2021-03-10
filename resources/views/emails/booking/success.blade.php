@@ -303,9 +303,10 @@
                                                 style="font-size:0px;padding:0 20px 30px 20px;word-break:break-word;">
                                                 <div
                                                     style="font-family:Roboto, Helvetica, Arial, sans-serif;font-size:14px;font-weight:400;line-height:21px;text-align:left;color:#000000;">
-                                                    <strong>Howdy Joram</strong>,
-                                                    <p>Thank you for choosing to stay with us during your visit to {city
-                                                        name}.</p> Below are the details for your apartment for your
+                                                    <strong>Howdy {{ $booking->user->name }}</strong>,
+                                                    <p>Thank you for choosing to stay with us during your visit
+                                                        to {{ $booking->property->city->name }}.</p> Below are the
+                                                    details for your apartment for your
                                                     reference.
                                                 </div>
                                             </td>
@@ -346,9 +347,13 @@
     <div
         style="background:url(http://nimus.de/share/tpl-realestate/img-1.png) center top / cover no-repeat;background-position:center top;background-repeat:no-repeat;background-size:cover;margin:0px auto;max-width:600px;">
         <div style="line-height:0;font-size:0;">
-            <table align="center" background="http://nimus.de/share/tpl-realestate/img-1.png" border="0" cellpadding="0"
+            <table align="center"
+                   {{--                   background="http://nimus.de/share/tpl-realestate/img-1.png"--}}
+                   background="{{ $booking->property->defaultImage->public_url }}"
+                   border="0" cellpadding="0"
                    cellspacing="0" role="presentation"
-                   style="background:url(http://nimus.de/share/tpl-realestate/img-1.png) center top / cover no-repeat;background-position:center top;background-repeat:no-repeat;background-size:cover;width:100%;">
+                   {{--                   style="background:url(http://nimus.de/share/tpl-realestate/img-1.png) center top / cover no-repeat;background-position:center top;background-repeat:no-repeat;background-size:cover;width:100%;">--}}
+                   style="background:url({{ $booking->property->defaultImage->public_url }}) center top / cover no-repeat;background-position:center top;background-repeat:no-repeat;background-size:cover;width:100%;">
                 <tbody>
                 <tr>
                     <td style="direction:ltr;font-size:0px;padding:30px;text-align:center;">
@@ -374,7 +379,7 @@
                                                     style="font-size:0px;padding:40px 30px;word-break:break-word;">
                                                     <div
                                                         style="font-family:Alice, Helvetica, Arial, sans-serif;font-size:42px;font-weight:400;line-height:48px;text-align:center;color:#FFFFFF;">
-                                                        Property Name Here
+                                                        {{--                                                        {{ $booking->property->name }}--}}
                                                     </div>
                                                 </td>
                                             </tr>
@@ -432,7 +437,7 @@
                                                     style="font-size:0px;padding:10px 20px;word-break:break-word;">
                                                     <div
                                                         style="font-family:Roboto, Helvetica, Arial, sans-serif;font-size:22px;font-weight:400;line-height:30px;text-align:center;color:#000000;">
-                                                        KES 23,000
+                                                        KES {{ number_format($booking->property->cost_per_night) }}
                                                     </div>
                                                 </td>
                                             </tr>
@@ -455,7 +460,8 @@
                                                             <td align="center" bgcolor="#F44E3C" role="presentation"
                                                                 style="border:none;border-radius:20px;cursor:auto;mso-padding-alt:10px 25px;background:#F44E3C;"
                                                                 valign="middle">
-                                                                <a style="display:inline-block;background:#F44E3C;color:white;font-family:Roboto, Helvetica, Arial, sans-serif;font-size:13px;font-weight:normal;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:10px 25px;mso-padding-alt:0px;border-radius:20px;">
+                                                                <a href="{{ route('properties.show', $booking->property->slug) }}"
+                                                                   style="display:inline-block;background:#F44E3C;color:white;font-family:Roboto, Helvetica, Arial, sans-serif;font-size:13px;font-weight:normal;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:10px 25px;mso-padding-alt:0px;border-radius:20px;">
                                                                     View Property </a>
                                                             </td>
                                                         </tr>
@@ -747,29 +753,43 @@
                                                     style="font-family:Roboto, Helvetica, Arial, sans-serif;font-size:14px;font-weight:400;line-height:21px;text-align:left;color:#000000;">
 
                                                     <ul>
-                                                        <li>Property Name: {name}</li>
-                                                        <li>Property Name: {name}</li>
-                                                        <li>Property Name: {name}</li>
+                                                        <li>Property Name: {{ $booking->property->name }}</li>
+                                                        <li>Property Address: {{ $booking->property->address }}</li>
                                                     </ul>
                                                 </div>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td align="center" vertical-align="middle"
-                                                style="font-size:0px;padding:20px 20px 10px 20px;word-break:break-word;">
-                                                <table border="0" cellpadding="0" cellspacing="0" role="presentation"
-                                                       style="border-collapse:separate;line-height:100%;">
-                                                    <tr>
-                                                        <td align="center" bgcolor="#F44E3C" role="presentation"
-                                                            style="border:none;border-radius:20px;cursor:auto;mso-padding-alt:10px 25px;background:#F44E3C;"
-                                                            valign="middle">
-                                                            <a style="display:inline-block;background:#F44E3C;color:white;font-family:Roboto, Helvetica, Arial, sans-serif;font-size:13px;font-weight:normal;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:10px 25px;mso-padding-alt:0px;border-radius:20px;">
-                                                                View Property </a>
-                                                        </td>
-                                                    </tr>
-                                                </table>
+                                            <td align="left"
+                                                style="font-size:0px;padding:0 20px 30px 20px;word-break:break-word;">
+                                                <div
+                                                    style="font-family:Roboto, Helvetica, Arial, sans-serif;font-size:14px;font-weight:400;line-height:21px;text-align:left;color:#000000;">
+                                                    Your host during your stay
+                                                    is <a
+                                                        href="mailto:{{ $booking->property->owner->email }}"
+                                                        target="_blank"><strong>{{ $booking->property->owner->name }}</strong></a>.
+                                                    They
+                                                    will be in touch with you soon.
+                                                </div>
                                             </td>
                                         </tr>
+                                        {{--                                        <tr>--}}
+                                        {{--                                            <td align="center" vertical-align="middle"--}}
+                                        {{--                                                style="font-size:0px;padding:20px 20px 10px 20px;word-break:break-word;">--}}
+                                        {{--                                                <table border="0" cellpadding="0" cellspacing="0" role="presentation"--}}
+                                        {{--                                                       style="border-collapse:separate;line-height:100%;">--}}
+                                        {{--                                                    <tr>--}}
+                                        {{--                                                        <td align="center" bgcolor="#F44E3C" role="presentation"--}}
+                                        {{--                                                            style="border:none;border-radius:20px;cursor:auto;mso-padding-alt:10px 25px;background:#F44E3C;"--}}
+                                        {{--                                                            valign="middle">--}}
+                                        {{--                                                            <a href="{{ route('properties.show', $booking->property->slug) }}"--}}
+                                        {{--                                                               style="display:inline-block;background:#F44E3C;color:white;font-family:Roboto, Helvetica, Arial, sans-serif;font-size:13px;font-weight:normal;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:10px 25px;mso-padding-alt:0px;border-radius:20px;">--}}
+                                        {{--                                                                View Property </a>--}}
+                                        {{--                                                        </td>--}}
+                                        {{--                                                    </tr>--}}
+                                        {{--                                                </table>--}}
+                                        {{--                                            </td>--}}
+                                        {{--                                        </tr>--}}
                                     </table>
                                 </td>
                             </tr>
