@@ -26,6 +26,7 @@ Route::get('/contact-us', [PageController::class, 'contactUs'])->name('contact-u
 Auth::routes();
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::put('/update-profile', [HomeController::class, 'updateProfile'])->name('update-profile');
 
 /**
  * Property routes

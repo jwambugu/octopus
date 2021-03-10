@@ -7,6 +7,7 @@
             <div class="row">
                 @include('partials._profile-aside')
 
+                <edit-profile :user="{{ $user }}"></edit-profile>
             </div>
         </div>
     </div>
