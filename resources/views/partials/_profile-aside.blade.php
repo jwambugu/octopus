@@ -5,15 +5,15 @@
             <div class="edit-profile-photo">
                 <img src="{{ asset('images/avatar.png') }}" alt="agent-1" class="img-responsive">
             </div>
-            <h3>{{ auth()->user()->name }}</h3>
+            <h3 class="">{{ auth()->user()->name }}</h3>
             <p>{{ auth()->user()->email }}</p>
 
         </div>
         <div class="content">
             <ul>
                 <li>
-                    <a href="user-profile.html">
-                        <i class="flaticon-social"></i>Profile
+                    <a href="{{ route('home') }}">
+                        <i class="flaticon-social"></i>My Profile
                     </a>
                 </li>
                 <li>
@@ -24,11 +24,6 @@
                 <li>
                     <a href="favorited-properties.html">
                         <i class="fa fa-heart"></i>Favorited Properties
-                    </a>
-                </li>
-                <li>
-                    <a href="submit-property.html">
-                        <i class="fa fa-plus"></i>Submit New Property
                     </a>
                 </li>
                 <li>
