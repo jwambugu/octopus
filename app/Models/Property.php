@@ -66,6 +66,8 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Property whereBedrooms($value)
  * @method static \Illuminate\Database\Query\Builder|Property withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Property withoutTrashed()
+ * @property-read City $city
+ * @property-read Admin $owner
  */
 class Property extends Model
 {

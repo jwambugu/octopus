@@ -7,6 +7,7 @@ use App\Http\Requests\MpesaPaymentRequest;
 use App\Models\Booking;
 use App\Models\Payment;
 use App\Models\Property;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -92,6 +93,11 @@ class BookingController extends Controller
         // Get the request data
         $propertyID = $request['property_id'];
         $user = $request->user();
+        $checkinDate = $request['checkin_date'];
+        $checkoutDate = $request['checkout_date'];
+
+        $numberOfNights = Carbon::parse($checkoutDate)->diffInDays($checkinDate);
+        $numberOfNights = $numberOfNights == 0 ? 1 : $numberOfNights;
 
         // Generate a new uuid
         $uuid = Uuid::uuid4();
@@ -99,14 +105,15 @@ class BookingController extends Controller
         try {
             $booking = Booking::create([
                 'uuid' => $uuid,
-                'checkin_date' => $request['checkin_date'],
-                'checkout_date' => $request['checkout_date'],
+                'checkin_date' => $checkinDate,
+                'checkout_date' => $checkoutDate,
+                'number_of_nights' => $numberOfNights,
                 'property_id' => $propertyID,
                 'user_id' => auth()->id(),
             ]);
 
             // Add payment
-            PaymentController::createBookingPayment($propertyID, $booking->id, $user->id);
+            PaymentController::createBookingPayment($numberOfNights, $propertyID, $booking->id, $user->id);
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }

@@ -26,13 +26,14 @@ class PaymentController extends Controller
 
     /**
      * Creates a new booking payment record.
+     * @param int $numberOfNights
      * @param int $propertyID
      * @param int $bookingID
      * @param int $userID
      * @return Payment|Model
      * @throws Exception
      */
-    public static function createBookingPayment(int $propertyID, int $bookingID, int $userID)
+    public static function createBookingPayment(int $numberOfNights, int $propertyID, int $bookingID, int $userID)
     {
         // Get a new account number
         $accountNumber = (new PaymentController)->generateAccountNumber();
@@ -45,11 +46,16 @@ class PaymentController extends Controller
         // Generate a new uuid
         $uuid = Uuid::uuid4();
 
+        // Calculate the amount to be paid. This will be the total number of nights * cost_per_night
+        $amount = $property->cost_per_night * $numberOfNights;
+
+        // TODO: split the payments if value is greater than 70,000
+
         try {
             return Payment::create([
                 'uuid' => $uuid,
                 'account_number' => $accountNumber,
-                'amount' => $property->cost_per_night,
+                'amount' => $amount,
                 'booking_id' => $bookingID,
                 'property_id' => $property->id,
                 'user_id' => $userID,

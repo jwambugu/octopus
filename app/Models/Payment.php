@@ -62,6 +62,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Payment withTrashed()
  * @method static Builder|Payment withoutTrashed()
  * @mixin Eloquent
+ * @property-read Booking $booking
  */
 class Payment extends Model
 {
