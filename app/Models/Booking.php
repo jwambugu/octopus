@@ -20,11 +20,19 @@ use Illuminate\Support\Carbon;
  * @property string $uuid
  * @property string $checkin_date
  * @property string $checkout_date
+ * @property int $number_of_nights
+ * @property bool $is_paid
  * @property int $property_id
  * @property int $user_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
+ * @property-read Collection|Payment[] $payments
+ * @property-read int|null $payments_count
+ * @property-read Property $property
+ * @property-read Collection|Payment[] $unsuccessfulPayments
+ * @property-read int|null $unsuccessful_payments_count
+ * @property-read User $user
  * @method static \Illuminate\Database\Eloquent\Builder|Booking newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Booking newQuery()
  * @method static Builder|Booking onlyTrashed()
@@ -34,6 +42,8 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|Booking whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Booking whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Booking whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Booking whereIsPaid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Booking whereNumberOfNights($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Booking wherePropertyId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Booking whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Booking whereUserId($value)
@@ -41,13 +51,6 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Booking withTrashed()
  * @method static Builder|Booking withoutTrashed()
  * @mixin Eloquent
- * @property int $is_paid
- * @property-read Collection|Payment[] $payments
- * @property-read int|null $payments_count
- * @property-read Property $property
- * @property-read Collection|Payment[] $unsuccessfulPayments
- * @property-read int|null $unsuccessful_payments_count
- * @method static \Illuminate\Database\Eloquent\Builder|Booking whereIsPaid($value)
  */
 class Booking extends Model
 {
@@ -62,6 +65,7 @@ class Booking extends Model
         'uuid',
         'checkin_date',
         'checkout_date',
+        'number_of_nights',
         'is_paid',
         'property_id',
         'user_id',

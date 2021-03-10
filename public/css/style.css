@@ -9006,4 +9006,8 @@ input[type=number] {
     font-size: 1.4rem
 }
 
+.override-text-transform {
+    text-transform: unset !important;
+}
+
 
