@@ -18,7 +18,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [PageController::class, 'index'])->name('index');
+
 Route::get('/about-us', [PageController::class, 'aboutUs'])->name('about-us');
+
 Route::get('/contact-us', [PageController::class, 'contactUs'])->name('contact-us');
 
 Auth::routes();
@@ -33,7 +35,9 @@ Route::group([
     'as' => 'properties.',
 ], function () {
     Route::get('/', [PropertyController::class, 'index'])->name('index');
+
     Route::get('/fetch-properties', [PropertyController::class, 'getProperties'])->name('fetch-properties');
+
     Route::get('/{property:slug}', [PropertyController::class, 'show'])->name('show');
 });
 
@@ -45,14 +49,20 @@ Route::group([
     'as' => 'booking.',
 ], function () {
     Route::get('/', [BookingController::class, 'index'])->name('index');
+
     Route::get('/{booking:uuid}', [BookingController::class, 'show'])->name('show');
+
     Route::get('/{property:slug}/book', [BookingController::class, 'showPropertyBookingView'])
         ->name('property.view');
+
     Route::post('/book-property', [BookingController::class, 'bookProperty'])->name('book.property');
+
     Route::get('/{booking:uuid}/lipa-na-mpesa', [BookingController::class, 'renderMpesaPaymentView'])
         ->name('book.lipa-na-mpesa')->middleware('signed');
+
     Route::post('/lipa-na-mpesa', [BookingController::class, 'processMpesaPaymentRequest'])
         ->name('book.lipa-na-mpesa.push');
+
     Route::post('{booking:uuid}/confirm-mpesa-payment', [BookingController::class, 'confirmBookingPayment'])
         ->name('book.confirm-mpesa-payment');
 });

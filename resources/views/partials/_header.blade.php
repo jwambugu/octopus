@@ -48,31 +48,36 @@
 
             <div class="navbar-collapse collapse" role="navigation" aria-expanded="true" id="app-navigation">
                 <ul class="nav navbar-nav">
-                    <li class="dropdown ">
-                        <a href="{{ route('index') }}">
+                    <li class="dropdown">
+                        <a href="{{ route('index') }}" class="override-text-transform">
                             Home
                         </a>
                     </li>
                     <li class="dropdown">
-                        <a href="{{ route('properties.index') }}">
+                        <a href="{{ route('properties.index') }}" class="override-text-transform">
                             Properties
                         </a>
                     </li>
                     <li class="dropdown">
-                        <a href="{{ route('about-us') }}">
+                        <a href="{{ route('about-us') }}" class="override-text-transform">
                             About Us
                         </a>
                     </li>
                     <li class="dropdown ">
-                        <a href="{{ route('contact-us') }}">
+                        <a href="{{ route('contact-us') }}" class="override-text-transform">
                             Contact Us
+                        </a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="{{ route('home') }}" class="override-text-transform">
+                            My Account
                         </a>
                     </li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right rightside-navbar">
                     @guest
                         <li>
-                            <a href="{{ route('login') }}" class="button">
+                            <a href="{{ route('login') }}" class="button override-text-transform">
                                 Login Now
                             </a>
                         </li>
@@ -80,7 +85,8 @@
                         <li>
                             <a href="{{ route('logout') }}"
                                onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();" class="button">
+                                                     document.getElementById('logout-form').submit();"
+                               class="button override-text-transform">
                                 Logout
                             </a>
                         </li>

@@ -16,7 +16,10 @@
         <div v-if="hasUnsuccessfulPayments">
             <div class="notice notice-info">
                 We will send a payment notification to your phone with the
-                booking amount of KES {{ payment.amount | numberFormat }}.
+                booking amount of
+                <strong style="color: #000000"
+                    >KES {{ payment.amount | numberFormat }}</strong
+                >.
                 <br />
                 Please enter your Mpesa PIN to complete the transaction.
             </div>
