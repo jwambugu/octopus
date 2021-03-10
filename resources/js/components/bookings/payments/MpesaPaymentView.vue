@@ -205,7 +205,7 @@ export default {
                     this.confirmingPayment = false;
 
                     if (status === "success") {
-                        window.location.reload(next);
+                        window.location.replace(next);
                     }
                 })
                 .catch((error) => {

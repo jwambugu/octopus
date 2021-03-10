@@ -113,4 +113,13 @@ class Payment extends Model
                 'id', 'name', 'slug', 'cost_per_night'
             ]);
     }
+
+    /**
+     * Returns the property being paid for.
+     * @return BelongsTo
+     */
+    public function booking(): BelongsTo
+    {
+        return $this->belongsTo(Booking::class, 'booking_id');
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Mail\PropertyBooked;
 use App\Models\Booking;
 use App\Models\Payment;
 use Exception;
@@ -11,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Mail;
 
 class MpesaController extends Controller
 {
@@ -92,6 +94,12 @@ class MpesaController extends Controller
                 Booking::where('id', $payment->booking_id)->update([
                     'is_paid' => true,
                 ]);
+
+                // Send an email to the user
+                $booking = Booking::with('property', 'property.owner', 'user', 'property.city')
+                    ->find($payment->booking_id);
+
+                Mail::to($booking->user->email)->queue(new PropertyBooked($booking));
             }
         } catch (Exception $exception) {
             throw new Exception($exception->getMessage());
@@ -103,7 +111,7 @@ class MpesaController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function lipaNaMpesaCallback(Request $request)
+    public function lipaNaMpesaCallback(Request $request): JsonResponse
     {
         $response = json_decode($request->getContent());
 

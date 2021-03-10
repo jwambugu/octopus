@@ -95,8 +95,19 @@ class Booking extends Model
         return $this->belongsTo(Property::class, 'property_id')
             ->with('defaultImage')
             ->select([
-                'id', 'name', 'slug', 'cost_per_night', 'address'
+                'id', 'name', 'slug', 'cost_per_night', 'address', 'admin_id', 'city_id'
             ]);
+    }
+
+    /**
+     * Get the user who booked the property
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id')->select([
+            'id', 'name', 'email'
+        ]);
     }
 
     /**

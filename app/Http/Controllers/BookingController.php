@@ -195,7 +195,7 @@ class BookingController extends Controller
     public function confirmBookingPayment(Booking $booking): JsonResponse
     {
         // Get the booking payment that was recently created and was successful
-        $payment = Payment::where([
+        $payment = Payment::with('booking')->where([
             'booking_id' => $booking->id,
             'is_successful' => true
         ])->latest()->first();
@@ -226,7 +226,9 @@ class BookingController extends Controller
             'data' => [
                 'message' => 'Payment processed successful.',
                 'alertClass' => 'alert-success',
-                'next' => route('booking.index'),
+                'next' => route('booking.show', [
+                    'booking' => $payment->booking->uuid
+                ]),
                 'status' => 'success',
             ]
         ]);

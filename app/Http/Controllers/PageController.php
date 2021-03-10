@@ -14,8 +14,6 @@ class PageController extends Controller
      */
     public function index()
     {
-//        \Mail::to('jay@test.com')->send(new PropertyBooked());
-//        return new PropertyBooked();
         return view('welcome');
     }
 
