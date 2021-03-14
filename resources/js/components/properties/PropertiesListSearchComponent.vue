@@ -14,7 +14,7 @@
                                     data-live-search="true"
                                     data-live-search-placeholder="Search value"
                                     id="property_types"
-                                    v-model="filterData.propertyTypes"
+                                    v-model="filterData.property_types"
                                 >
                                     <option value="">Property Types</option>
                                     <option
@@ -22,7 +22,7 @@
                                             type, index
                                         ) in filters.propertyTypes"
                                         :key="index"
-                                        :value="type.id"
+                                        :value="type.slug"
                                     >
                                         {{ type.name }}
                                     </option>
@@ -43,7 +43,7 @@
                                     <option
                                         v-for="(city, index) in filters.cities"
                                         :key="index"
-                                        :value="city.id"
+                                        :value="city.slug"
                                     >
                                         {{ city.name }}
                                     </option>
@@ -106,23 +106,36 @@ export default {
             required: true,
             type: Object,
         },
+        queryParams: {
+            required: true,
+            type: Object,
+        },
     },
     data() {
         return {
             filterData: {
-                propertyTypes: "",
+                property_types: "",
                 bedrooms: "",
                 city: "",
             },
         };
     },
+    mounted() {
+        const { property_types, bedrooms, city } = this.queryParams;
+
+        this.filterData.property_types = property_types ?? "";
+        this.filterData.bedrooms = bedrooms ?? "";
+        this.filterData.city = city ?? "";
+
+        console.log(this.filterData);
+    },
     methods: {
         filterProperties() {
-            const { propertyTypes, bedrooms, city } = this.filterData;
+            const { property_types, bedrooms, city } = this.filterData;
 
             this.$store.dispatch("GET_PROPERTIES", {
                 page: this.page,
-                propertyTypes,
+                property_types,
                 bedrooms,
                 city,
             });

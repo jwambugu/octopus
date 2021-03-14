@@ -10,6 +10,7 @@
                 <div class="row">
                     <properties-list-search-component
                         :filters="filters"
+                        :query-params="queryParams"
                         :page="page"
                     ></properties-list-search-component>
                 </div>
@@ -63,6 +64,10 @@ export default {
             type: Number,
         },
         filters: {
+            required: true,
+            type: Object,
+        },
+        queryParams: {
             required: true,
             type: Object,
         },
