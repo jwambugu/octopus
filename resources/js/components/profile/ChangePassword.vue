@@ -18,43 +18,50 @@
             </div>
 
             <div class="main-title-2">
-                <h1>Update Profile</h1>
+                <h1>Change Account Password</h1>
             </div>
 
-            <form @submit.prevent="updateProfile">
+            <form @submit.prevent="changePassword">
                 <div class="form-group">
-                    <label for="name">Name</label>
+                    <label for="current_password">Current Password</label>
                     <input
-                        id="name"
-                        type="text"
+                        id="current_password"
+                        type="password"
                         class="input-text"
-                        v-model="profile.name"
+                        v-model="credentials.current_password"
+                        required
                     />
                 </div>
                 <div class="form-group">
-                    <label for="email">Email</label>
+                    <label for="password">New Password</label>
                     <input
-                        id="email"
-                        type="email"
+                        id="password"
+                        type="password"
                         class="input-text"
-                        v-model="profile.email"
+                        v-model="credentials.password"
+                        required
                     />
                 </div>
+
                 <div class="form-group">
-                    <label for="phone_number">Phone Number</label>
+                    <label for="password_confirmation"
+                        >Confirm New Password</label
+                    >
                     <input
-                        id="phone_number"
-                        type="text"
+                        id="password_confirmation"
+                        type="password"
                         class="input-text"
-                        v-model="profile.phone_number"
+                        v-model="credentials.password_confirmation"
+                        required
                     />
                 </div>
+
                 <div class="form-group">
                     <button
                         class="btn button-md button-theme btn-block"
-                        v-if="!updatingProfile"
+                        v-if="!changingPassword"
                     >
-                        Update Profile
+                        Change Password
                     </button>
                     <button
                         type="submit"
@@ -72,43 +79,48 @@
 
 <script>
 export default {
-    name: "EditProfile",
-    props: {
-        user: {
-            required: true,
-            type: Object,
-        },
-    },
+    name: "ChangePassword",
     data() {
         return {
-            profile: {
-                name: this.user.name,
-                email: this.user.email,
-                phone_number: this.user.phone_number,
+            credentials: {
+                current_password: "",
+                password: "",
+                password_confirmation: "",
             },
-            updatingProfile: false,
+            changingPassword: false,
             errorMessage: "",
             successMessage: "",
         };
     },
     methods: {
-        updateProfile() {
-            this.updatingProfile = true;
+        clearInputs() {
+            this.credentials.current_password = "";
+            this.credentials.password = "";
+            this.credentials.password_confirmation = "";
+        },
+        changePassword() {
+            // this.changingPassword = true;
             this.errorMessage = "";
 
+            console.log(123);
+
             this.$store
-                .dispatch("UPDATE_PROFILE", this.profile)
+                .dispatch("CHANGE_PASSWORD", this.credentials)
                 .then(({ message }) => {
                     this.successMessage = message;
                     this.updatingProfile = false;
+
+                    this.clearInputs();
 
                     setTimeout(() => {
                         window.location.reload();
                     }, 2000);
                 })
                 .catch((error) => {
-                    this.updatingProfile = false;
+                    this.changingPassword = false;
                     this.errorMessage = error;
+
+                    this.clearInputs();
                 });
         },
     },

@@ -23,6 +23,27 @@ const actions = {
                 .catch((error) => reject(errorHandler(error)));
         });
     },
+    CHANGE_PASSWORD: ({}, payload) => {
+        return new Promise((resolve, reject) => {
+            const {
+                current_password,
+                password,
+                password_confirmation,
+            } = payload;
+
+            axios
+                .put("/change-password", {
+                    current_password,
+                    password,
+                    password_confirmation,
+                })
+                .then(({ data }) => {
+                    console.log(data);
+                    resolve(data.data);
+                })
+                .catch((error) => reject(errorHandler(error)));
+        });
+    },
 };
 
 export default {
