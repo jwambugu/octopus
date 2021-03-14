@@ -27,6 +27,8 @@ Auth::routes();
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::put('/update-profile', [HomeController::class, 'updateProfile'])->name('update-profile');
+Route::get('/change-password', [HomeController::class, 'changePasswordView'])->name('change-password');
+Route::put('/change-password', [HomeController::class, 'changePassword'])->name('change-password');
 
 /**
  * Property routes

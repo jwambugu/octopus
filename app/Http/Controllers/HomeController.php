@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\UpdateProfileRequest;
 use App\Models\User;
 use DB;
 use Exception;
+use Hash;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
 
@@ -116,6 +121,59 @@ class HomeController extends Controller
         return response()->json([
             'data' => [
                 'message' => 'Profile updated successfully.'
+            ]
+        ]);
+    }
+
+    /**
+     * Render the view for changing the user password.
+     * @return Application|Factory|View
+     */
+    public function changePasswordView()
+    {
+        return view('profile.password');
+    }
+
+    /**
+     * Process the request for updating the usr password.
+     * @param ChangePasswordRequest $request
+     * @return JsonResponse
+     * @throws ValidationException
+     */
+    public function changePassword(ChangePasswordRequest $request): JsonResponse
+    {
+        // Extract request data
+        $user = $request->user();
+        $currentPassword = $request['current_password'];
+        $newPassword = $request['password'];
+
+        // Check if the current password is valid
+        if (!Hash::check($currentPassword, $user->password)) {
+            throw ValidationException::withMessages([
+                'current_password' => 'The current password does not match the account password.',
+            ]);
+        }
+
+        // Check if the new password matches the current password
+        if (Hash::check($newPassword, $user->password)) {
+            throw ValidationException::withMessages([
+                'current_password' => 'The new password cannot be the same as the old password.',
+            ]);
+        }
+
+        try {
+            // Update the user password
+            User::query()->where('id', $user->id)->update([
+                'password' => Hash::make($newPassword),
+            ]);
+
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+
+        return response()->json([
+            'data' => [
+                'message' => 'Password changed successfully.'
             ]
         ]);
     }

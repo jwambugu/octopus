@@ -5,7 +5,7 @@
             <div class="edit-profile-photo">
                 <img src="{{ asset('images/avatar.png') }}" alt="agent-1" class="img-responsive">
             </div>
-            <h3 class="">{{ auth()->user()->name }}</h3>
+            <h3 class="override-text-transform">{{ auth()->user()->name }}</h3>
             <p>{{ auth()->user()->email }}</p>
 
         </div>
@@ -27,7 +27,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="change-password.html">
+                    <a href="{{ route('change-password') }}">
                         <i class="flaticon-security"></i>Change Password
                     </a>
                 </li>
