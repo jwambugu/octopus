@@ -37,13 +37,13 @@ const actions = {
         commit("setLoadingProperties", true);
 
         return new Promise((resolve, reject) => {
-            const { page, propertyTypes, bedrooms, city, sortBy } = payload;
+            const { page, property_types, bedrooms, city, sortBy } = payload;
 
             axios
                 .get("/properties/fetch-properties", {
                     params: {
                         page,
-                        propertyTypes,
+                        property_types,
                         bedrooms,
                         city,
                         sortBy,

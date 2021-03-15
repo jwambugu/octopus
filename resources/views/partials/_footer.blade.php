@@ -37,32 +37,22 @@
                 <div class="col-lg-4 col-md-3 col-sm-6 col-xs-12">
                     <div class="footer-item">
                         <div class="main-title-2">
-                            <h1>Links</h1>
+                            <h1>Quick Links</h1>
                         </div>
                         <ul class="links">
+                            @auth
+                                <li>
+                                    <a href="{{ route('home') }}">My Account</a>
+                                </li>
+                            @endauth
                             <li>
-                                <a href="index-2.html">Home</a>
+                                <a href="{{ route('index') }}">Home</a>
                             </li>
                             <li>
-                                <a href="about.html">About Us</a>
+                                <a href="{{ route('about-us') }}">About Us</a>
                             </li>
                             <li>
-                                <a href="contact.html">Contact Us</a>
-                            </li>
-                            <li>
-                                <a href="blog-single-sidebar-right.html">Blog</a>
-                            </li>
-                            <li>
-                                <a href="blog-single-sidebar-right.html">Services</a>
-                            </li>
-                            <li>
-                                <a href="properties-list-rightside.html">Properties Listing</a>
-                            </li>
-                            <li>
-                                <a href="properties-grid-rightside.html">Properties Grid</a>
-                            </li>
-                            <li>
-                                <a href="properties-details.html">Properties Details</a>
+                                <a href="{{ route('contact-us') }}">Contact Us</a>
                             </li>
                         </ul>
                     </div>

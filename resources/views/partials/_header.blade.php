@@ -68,11 +68,13 @@
                             Contact Us
                         </a>
                     </li>
-                    <li class="dropdown">
-                        <a href="{{ route('home') }}" class="override-text-transform">
-                            My Account
-                        </a>
-                    </li>
+                    @auth
+                        <li class="dropdown">
+                            <a href="{{ route('home') }}" class="override-text-transform">
+                                My Account
+                            </a>
+                        </li>
+                    @endauth
                 </ul>
                 <ul class="nav navbar-nav navbar-right rightside-navbar">
                     @guest

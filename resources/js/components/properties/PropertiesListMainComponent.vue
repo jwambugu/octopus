@@ -10,6 +10,7 @@
                 <div class="row">
                     <properties-list-search-component
                         :filters="filters"
+                        :query-params="queryParams"
                         :page="page"
                     ></properties-list-search-component>
                 </div>
@@ -66,6 +67,10 @@ export default {
             required: true,
             type: Object,
         },
+        queryParams: {
+            required: true,
+            type: Object,
+        },
     },
     data() {
         return {
@@ -77,9 +82,6 @@ export default {
             loading: "getLoadingProperties",
             isListView: "getIsListView",
         }),
-    },
-    created() {
-        this.getProperties();
     },
     methods: {
         getProperties() {
