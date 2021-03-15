@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\City;
 use App\Models\Property;
+use App\Models\PropertyType;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -50,8 +52,13 @@ class PropertyController extends Controller
      */
     public function index(Request $request)
     {
-        // Check if we have a page query parameter
-        $page = $request->query->has('page') ? $request->query->get('page') : 1;
+        // Check if we have any query parameters
+        $query = $request->query;
+
+        $page = $query->has('page') ? $query->get('page') : 1;
+        $propertyTypes = $query->has('property_types') ? $query->get('property_types') : "";
+        $bedrooms = $query->has('bedrooms') ? $query->get('bedrooms') : 0;
+        $city = $query->has('city') ? $query->get('city') : "";
 
         // Get the filter data
         $filters = $this->propertyFilterData();
@@ -59,6 +66,11 @@ class PropertyController extends Controller
         return view('properties.index')->with([
             'page' => $page,
             'filters' => $filters,
+            'queryParams' => [
+                'propertyTypes' => $propertyTypes,
+                'bedrooms' => $bedrooms,
+                'city' => $city
+            ]
         ]);
     }
 
@@ -71,8 +83,14 @@ class PropertyController extends Controller
     private function applyPropertyFiltersIfAny(object $request, $properties)
     {
 
-        if ($request->has('propertyTypes')) {
-            $properties = $properties->whereIn('property_type_id', [$request->get('propertyTypes')]);
+        if ($request->has('property_types')) {
+            $propertyType = PropertyType::whereSlug($request->get('property_types'))->first([
+                'id'
+            ]);
+
+            if ($propertyType) {
+                $properties = $properties->whereIn('property_type_id', [$propertyType->id]);
+            }
         }
 
         if ($request->has('bedrooms')) {
@@ -80,7 +98,14 @@ class PropertyController extends Controller
         }
 
         if ($request->has('city')) {
-            $properties = $properties->whereIn('city_id', [$request->get('city')]);
+            $city = City::whereSlug($request->get('city'))->first([
+                'id'
+            ]);
+
+
+            if ($city) {
+                $properties = $properties->whereIn('city_id', [$city->id]);
+            }
         }
 
         return $properties;

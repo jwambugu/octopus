@@ -32,7 +32,9 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="{{ route('logout') }}"
+                       onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
                         <i class="flaticon-sign-out-option"></i>Log Out
                     </a>
                 </li>
