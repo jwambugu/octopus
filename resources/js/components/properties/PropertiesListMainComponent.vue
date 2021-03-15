@@ -83,9 +83,6 @@ export default {
             isListView: "getIsListView",
         }),
     },
-    created() {
-        this.getProperties();
-    },
     methods: {
         getProperties() {
             this.$store

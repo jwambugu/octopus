@@ -53,13 +53,12 @@ class PropertyController extends Controller
     public function index(Request $request)
     {
         // Check if we have any query parameters
-        $queryParams = $request->query();
         $query = $request->query;
 
         $page = $query->has('page') ? $query->get('page') : 1;
-//        $propertyTypes = $query->has('property_types') ? $query->get('property_types') : "";
-//        $bedrooms = $query->has('bedrooms') ? $query->get('bedrooms') : "";
-//        $city = $query->has('city') ? $query->get('city') : "";
+        $propertyTypes = $query->has('property_types') ? $query->get('property_types') : "";
+        $bedrooms = $query->has('bedrooms') ? $query->get('bedrooms') : 0;
+        $city = $query->has('city') ? $query->get('city') : "";
 
         // Get the filter data
         $filters = $this->propertyFilterData();
@@ -67,10 +66,11 @@ class PropertyController extends Controller
         return view('properties.index')->with([
             'page' => $page,
             'filters' => $filters,
-//            'propertyTypes' => $propertyTypes,
-//            'bedrooms' => $bedrooms,
-//            'city' => $city,
-            'queryParams' => $queryParams
+            'queryParams' => [
+                'propertyTypes' => $propertyTypes,
+                'bedrooms' => $bedrooms,
+                'city' => $city
+            ]
         ]);
     }
 

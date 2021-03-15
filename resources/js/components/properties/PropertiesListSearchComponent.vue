@@ -120,14 +120,17 @@ export default {
             },
         };
     },
-    mounted() {
+    created() {
         const { property_types, bedrooms, city } = this.queryParams;
 
-        this.filterData.property_types = property_types ?? "";
-        this.filterData.bedrooms = bedrooms ?? "";
-        this.filterData.city = city ?? "";
+        this.filterData = {
+            ...this.filterData,
+            property_types,
+            bedrooms,
+            city,
+        };
 
-        console.log(this.filterData);
+        this.filterProperties();
     },
     methods: {
         filterProperties() {
