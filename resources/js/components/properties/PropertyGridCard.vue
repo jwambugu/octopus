@@ -18,34 +18,38 @@
             </div>
 
             <div class="property-content">
-                <div class="info">
-                    <h1 class="title">
+                <div class="info mb-3">
+                    <h1 class="title title-height">
                         <a :href="propertyLink">
-                            {{ property.name | truncate(40) }}
+                            {{ property.name }}
                         </a>
                     </h1>
 
-                    <h3 class="property-address">
+                    <h3 class="property-address property-address-height">
                         <a :href="propertyLink">
                             <i class="fa fa-map-marker"></i>
-                            {{ property.address | truncate(40) }}
+                            {{ property.address }}
                         </a>
                     </h3>
 
-                    <ul class="facilities-list clearfix">
+                    <ul
+                        class="facilities-list clearfix facilities-list-padding"
+                    >
                         <li v-for="(amenity, index) in amenities" :key="index">
                             <i :class="amenity.amenity.icon"></i>
-                            <span>{{ amenity.amenity.name }}</span>
+                            <span style="margin-left: 7px">{{
+                                amenity.amenity.name
+                            }}</span>
                         </li>
                     </ul>
                 </div>
 
-                <div class="property-footer" style="margin-bottom: 30px">
-                    <span class="left"> </span>
-                    <span class="right">
-                        <i class="fa fa-heart-o"></i> Add to favorites
-                    </span>
-                </div>
+                <!--                <div class="property-footer" style="margin-bottom: 30px">-->
+                <!--                    <span class="left"> </span>-->
+                <!--                    <span class="right">-->
+                <!--                        <i class="fa fa-heart-o"></i> Add to favorites-->
+                <!--                    </span>-->
+                <!--                </div>-->
             </div>
         </div>
     </div>
@@ -77,4 +81,17 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.title-height {
+    height: 2rem;
+}
+
+.property-address-height {
+    height: 2rem;
+    padding-top: 2rem;
+}
+
+.facilities-list-padding {
+    padding-top: 5rem;
+}
+</style>
