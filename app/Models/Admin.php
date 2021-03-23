@@ -43,6 +43,8 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Admin withTrashed()
  * @method static Builder|Admin withoutTrashed()
  * @mixin Eloquent
+ * @property int|null $otp
+ * @method static \Illuminate\Database\Eloquent\Builder|Admin whereOtp($value)
  */
 class Admin extends Model
 {

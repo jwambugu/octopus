@@ -21,11 +21,11 @@
                         <i class="flaticon-apartment"></i>My Bookings
                     </a>
                 </li>
-                <li>
-                    <a href="favorited-properties.html">
-                        <i class="fa fa-heart"></i>Favorited Properties
-                    </a>
-                </li>
+                {{--                <li>--}}
+                {{--                    <a href="favorited-properties.html">--}}
+                {{--                        <i class="fa fa-heart"></i>Favorited Properties--}}
+                {{--                    </a>--}}
+                {{--                </li>--}}
                 <li>
                     <a href="{{ route('change-password') }}">
                         <i class="flaticon-security"></i>Change Password

@@ -7,11 +7,13 @@ use App\Http\Requests\MpesaPaymentRequest;
 use App\Models\Booking;
 use App\Models\Payment;
 use App\Models\Property;
+use App\Models\Rating;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -83,6 +85,28 @@ class BookingController extends Controller
     }
 
     /**
+     * Create a new property booking rating
+     * @param Booking $booking
+     * @return Rating|Model
+     * @throws Exception
+     */
+    private function createBookingRating(Booking $booking)
+    {
+        // Get the data for the property being booked
+        $booking = $booking->load('property:id,admin_id');
+
+        try {
+            return Rating::create([
+                'booking_id' => $booking->id,
+                'user_id' => $booking->user_id,
+                'admin_id' => $booking->property->admin_id,
+            ]);
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    /**
      * Process the request for booking a property
      * @param BookPropertyRequest $request
      * @return JsonResponse
@@ -114,6 +138,9 @@ class BookingController extends Controller
 
             // Add payment
             PaymentController::createBookingPayment($numberOfNights, $propertyID, $booking->id, $user->id);
+
+            // Create the booking rating data
+            $this->createBookingRating($booking);
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }

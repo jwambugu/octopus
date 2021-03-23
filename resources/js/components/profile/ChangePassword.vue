@@ -99,16 +99,14 @@ export default {
             this.credentials.password_confirmation = "";
         },
         changePassword() {
-            // this.changingPassword = true;
+            this.changingPassword = true;
             this.errorMessage = "";
-
-            console.log(123);
 
             this.$store
                 .dispatch("CHANGE_PASSWORD", this.credentials)
                 .then(({ message }) => {
                     this.successMessage = message;
-                    this.updatingProfile = false;
+                    this.changingPassword = false;
 
                     this.clearInputs();
 

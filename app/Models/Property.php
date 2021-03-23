@@ -68,6 +68,12 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Query\Builder|Property withoutTrashed()
  * @property-read City $city
  * @property-read Admin $owner
+ * @property int $has_sent_approval_notifications
+ * @property string|null $approved_at
+ * @property string|null $suspended_at
+ * @method static Builder|Property whereApprovedAt($value)
+ * @method static Builder|Property whereHasSentApprovalNotifications($value)
+ * @method static Builder|Property whereSuspendedAt($value)
  */
 class Property extends Model
 {

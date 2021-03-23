@@ -4,7 +4,7 @@
             <div class="sidebar-widget">
                 <form>
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="property_types">
                                     Property Type
@@ -29,7 +29,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="city">City</label>
                                 <select
@@ -50,7 +50,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="bedrooms">Bedrooms</label>
                                 <select
@@ -73,19 +73,25 @@
                                 </select>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="form-group mb-0">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <button
-                                    type="button"
-                                    class="button-md button-theme pull-right"
-                                    @click="filterProperties"
-                                >
-                                    Filter Properties
-                                </button>
-                            </div>
+                        <div class="col-md-3">
+                            <button
+                                type="button"
+                                class="button-md button-theme btn-block override-text-transform"
+                                style="margin-top: 1.7rem"
+                                @click="filterProperties"
+                                v-if="!filtering"
+                            >
+                                Filter Properties
+                            </button>
+                            <button
+                                type="submit"
+                                class="btn button-md btn-block button-theme"
+                                style="margin-top: 1.9rem"
+                                disabled
+                                v-else
+                            >
+                                <i class="fa fa-spinner fa-spin fa-1x"></i>
+                            </button>
                         </div>
                     </div>
                 </form>
@@ -118,6 +124,7 @@ export default {
                 bedrooms: "",
                 city: "",
             },
+            filtering: false,
         };
     },
     created() {
@@ -134,14 +141,20 @@ export default {
     },
     methods: {
         filterProperties() {
+            this.filtering = true;
+
             const { property_types, bedrooms, city } = this.filterData;
 
-            this.$store.dispatch("GET_PROPERTIES", {
-                page: this.page,
-                property_types,
-                bedrooms,
-                city,
-            });
+            this.$store
+                .dispatch("GET_PROPERTIES", {
+                    page: this.page,
+                    property_types,
+                    bedrooms,
+                    city,
+                })
+                .then(() => {
+                    this.filtering = false;
+                });
         },
     },
 };
