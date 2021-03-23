@@ -63,6 +63,22 @@ const actions = {
 
         commit("setIsListView", isListView);
     },
+    RATE_PROPERTY: ({}, payload) => {
+        return new Promise((resolve, reject) => {
+            const { ratings, uuid } = payload;
+
+            axios
+                .post(`/properties/rate-property`, {
+                    ratings,
+                    uuid,
+                })
+                .then(({ data }) => {
+                    console.log(data);
+                    resolve(data.data);
+                })
+                .catch((error) => reject(error));
+        });
+    },
 };
 
 export default {
