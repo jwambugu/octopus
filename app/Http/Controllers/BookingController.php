@@ -55,6 +55,11 @@ class BookingController extends Controller
         ]);
     }
 
+    /**
+     * Render the view showing booking details
+     * @param Booking $booking
+     * @return Application|Factory|View
+     */
     public function show(Booking $booking)
     {
         // Get the booking data
@@ -64,8 +69,15 @@ class BookingController extends Controller
             'payments:id,account_number,amount,is_paid,booking_id,created_at'
         ]);
 
+
+//        return $ratingRoute = URL::signedRoute('properties.rate-property', [
+//            'property' => $booking->property->slug,
+//            'uuid' => 'bc740f05-beb9-4c71-bd86-84cfafc3837d',
+//            'type' => 'guest'
+//        ]);
+
         return \view('bookings.show')->with([
-            'booking' => $booking
+            'booking' => $booking,
         ]);
     }
 
@@ -95,8 +107,12 @@ class BookingController extends Controller
         // Get the data for the property being booked
         $booking = $booking->load('property:id,admin_id');
 
+        // Generate a new uuid
+        $uuid = Uuid::uuid4();
+
         try {
             return Rating::create([
+                'uuid' => $uuid,
                 'booking_id' => $booking->id,
                 'user_id' => $booking->user_id,
                 'admin_id' => $booking->property->admin_id,
@@ -192,7 +208,7 @@ class BookingController extends Controller
         $phoneNumber = $request['phone_number'];
 
         // Find the payment using the id
-        $payment = Payment::find($paymentID, [
+        $payment = Payment::query()->with('booking')->find($paymentID, [
             'id', 'account_number', 'amount', 'booking_id', 'property_id', 'user_id',
         ]);
 

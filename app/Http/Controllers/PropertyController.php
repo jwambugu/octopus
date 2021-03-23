@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BookingRating;
 use App\Models\City;
 use App\Models\Property;
 use App\Models\PropertyType;
+use App\Models\Rating;
+use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -202,6 +206,78 @@ class PropertyController extends Controller
 
         return view('properties.show')->with([
             'property' => $property
+        ]);
+    }
+
+    /**
+     * Render the view for submitting the property ratings
+     * @param Request $request
+     * @param Property $property
+     * @return Application|Factory|View|RedirectResponse
+     */
+    public function createPropertyBookingRatingView(Request $request, Property $property)
+    {
+        // Extract the request data
+        $bookingUUID = $request->query->get('uuid');
+        $type = $request->query->get('type');
+
+        // Get the rating data
+        $rating = Rating::whereUuid($bookingUUID)->first();
+
+        if (!$rating) {
+            return redirect()->route('index');
+        }
+
+        if ($type == 'guest' && !is_null($rating->guest_ratings)) {
+            return redirect()->route('index');
+        }
+
+        if ($type == 'host' && !is_null($rating->host_ratings)) {
+            return redirect()->route('index');
+        }
+
+        // Get the available booking ratings
+        $ratings = BookingRating::where([
+            'is_active' => true,
+            'type' => 'host' // TODO: use type as guest
+        ])->get([
+            'id', 'title', 'description', 'is_boolean'
+        ]);
+
+        $property = $property->load('amenities');
+
+        return \view('bookings.ratings.create')->with([
+            'property' => $property,
+            'uuid' => $bookingUUID,
+            'ratings' => $ratings
+        ]);
+    }
+
+    /**
+     * Process the request for submitting a property rating
+     * @param Request $request
+     * @return JsonResponse
+     * @throws Exception
+     */
+    public function createPropertyBookingRating(Request $request): JsonResponse
+    {
+        // Extract the request data
+        $ratings = $request['ratings'];
+        $uuid = $request['uuid'];
+
+        try {
+            DB::table('ratings')->where('uuid', $uuid)->update([
+                'guest_ratings' => json_encode($ratings),
+                'updated_at' => now()
+            ]);
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+
+        return response()->json([
+            'data' => [
+                'message' => 'Ratings submitted successfully. Thank you!'
+            ]
         ]);
     }
 }

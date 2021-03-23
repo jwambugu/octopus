@@ -9,10 +9,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Carbon;
 
+
 /**
  * App\Models\Rating
  *
  * @property int $id
+ * @property string $uuid
  * @property array|null $guest_ratings
  * @property array|null $host_ratings
  * @property int $booking_id
@@ -34,6 +36,7 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|Rating whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Rating whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Rating whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Rating whereUuid($value)
  * @method static Builder|Rating withTrashed()
  * @method static Builder|Rating withoutTrashed()
  * @mixin Eloquent
@@ -48,6 +51,7 @@ class Rating extends Model
      * @var array
      */
     protected $fillable = [
+        'uuid',
         'guest_ratings',
         'host_ratings',
         'booking_id',

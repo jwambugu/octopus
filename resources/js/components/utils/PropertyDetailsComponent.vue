@@ -18,7 +18,7 @@
             </div>
         </div>
 
-        <div class="panel-box">
+        <div class="panel-box" v-if="property.amenities">
             <div class="panel with-nav-tabs panel-default">
                 <div class="panel-body">
                     <div class="tab-content">

@@ -87,6 +87,7 @@ class Property extends Model
     protected $casts = [
         'location' => 'object',
         'is_available' => 'boolean',
+        'has_sent_approval_notifications' => 'boolean',
     ];
 
     /**

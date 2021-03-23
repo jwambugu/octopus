@@ -42,6 +42,12 @@ Route::group([
     Route::get('/fetch-properties', [PropertyController::class, 'getProperties'])->name('fetch-properties');
 
     Route::get('/{property:slug}', [PropertyController::class, 'show'])->name('show');
+
+    Route::get('/{property:slug}/rate-property', [PropertyController::class, 'createPropertyBookingRatingView'])
+        ->name('rate-property')->middleware('signed');
+
+    Route::post('/rate-property', [PropertyController::class, 'createPropertyBookingRating'])
+        ->name('submit-rating');
 });
 
 /**
@@ -69,3 +75,4 @@ Route::group([
     Route::post('{booking:uuid}/confirm-mpesa-payment', [BookingController::class, 'confirmBookingPayment'])
         ->name('book.confirm-mpesa-payment');
 });
+

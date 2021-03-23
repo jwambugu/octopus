@@ -212,7 +212,9 @@ class PaymentController extends Controller
         // If we get here, it means the payment had been processed early.
         // We will create a new payment instead with the same account number
         try {
-            $this->createBookingPayment($payment->property_id, $payment->booking_id, $payment->user_id);
+            $this->createBookingPayment(
+                $payment->booking->number_of_nights, $payment->property_id, $payment->booking_id, $payment->user_id
+            );
         } catch (Exception $exception) {
             throw new Exception($exception->getMessage());
         }
