@@ -63,12 +63,11 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-9 col-sm-9 col-xs-12">
-                    <img src="{{ asset('img/logos/logo-2.png') }}" alt="logo-2">
                     <h3>Looking To For A Place?</h3>
                 </div>
 
                 <div class="col-md-3 col-sm-3 col-xs-12">
-                    <a href="{{ route('login') }}" class="btn button-md button-theme">Book Now</a>
+                    <a href="{{ route('properties.index') }}" class="btn button-md button-theme">Book Now</a>
                 </div>
             </div>
         </div>
