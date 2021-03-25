@@ -63,7 +63,7 @@
             </div>
             <div class="footer">
             <span>
-                Don't have an account? <a href="{{ route('register') }}">Register here</a>
+                Don't have an account? <a href="{{ route('register', ['_next' => $next]) }}">Register here</a>
             </span>
             </div>
         </div>

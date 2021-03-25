@@ -3,9 +3,15 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -71,5 +77,37 @@ class RegisterController extends Controller
             'phone_number' => $data['phone_number'],
             'password' => Hash::make($data['password']),
         ]);
+    }
+
+    /**
+     * Show the application registration form
+     * @param Request $request
+     * @return Application|Factory|View
+     */
+    public function showRegistrationForm(Request $request)
+    {
+        $next = $request->query->get('_next');
+
+        return view('auth.register')->with([
+            'next' => $next
+        ]);
+    }
+
+    /**
+     * Handle the registration request
+     * @param RegisterRequest $request
+     * @return RedirectResponse
+     */
+    public function register(RegisterRequest $request): RedirectResponse
+    {
+        // Create a new user
+        $user = $this->create($request->all());
+
+        // Login the user
+        auth()->loginUsingId($user->id, true);
+
+        $next = !$request->has('_next') ? route('home') : $request['_next'];
+
+        return redirect()->to($next);
     }
 }

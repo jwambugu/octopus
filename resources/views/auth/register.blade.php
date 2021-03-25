@@ -15,13 +15,16 @@
 
                 <form method="POST" action="{{ route('register') }}">
                     @csrf
+
+                    <input type="hidden" name="_next" value="{{ $next }}">
+
                     <div class="form-group">
                         <label for="name" class="hidden"></label>
                         <input type="text" name="name" id="name" class="input-text error-message-txt" autofocus
                                value="{{ old('name') }}" placeholder="Full Name">
 
                         @error('name')
-                        <span class="invalid-feedback" role="alert">
+                        <span class="invalid-feedback text-danger" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>
                         @enderror
@@ -57,7 +60,7 @@
                                placeholder="Password">
 
                         @error('password')
-                        <span class="invalid-feedback" role="alert">
+                        <span class="invalid-feedback text-danger" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>
                         @enderror

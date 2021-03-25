@@ -17,3 +17,4 @@ _ide_helper.php
 routes.txt
 **/.DS_Store
 out/
+.env.production
