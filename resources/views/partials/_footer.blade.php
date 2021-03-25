@@ -58,7 +58,6 @@
     </div>
 </footer>
 
-
 <div class="copy-right">
     <div class="container">
         <div class="row clearfix">
