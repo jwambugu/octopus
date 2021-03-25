@@ -23,7 +23,7 @@
                         <div class="sidebar-widget">
                             <div
                                 class="text-center"
-                                style="color: #96c51e"
+                                style="color: #ffb400"
                                 v-if="!hasError"
                             >
                                 <i class="fa fa-spinner fa-spin fa-4x"></i>

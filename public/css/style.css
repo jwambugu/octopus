@@ -8993,7 +8993,8 @@ input[type=number] {
 }
 
 .pagination > .active > span {
-    background-color: #96C51E;
+    /*background-color: #96C51E;*/
+    background-color: #ffb400;
 }
 
 .override-alert-text-transform {
