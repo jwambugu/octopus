@@ -42,7 +42,8 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a href="{{ route('index') }}" class="logo">
-                    <img src="{{ asset('img/logos/logo.png') }}" alt="logo">
+                    <img src="{{ asset('img/logos/app-logo.png') }}" style="margin-top: -10px; height: 6rem;"
+                         alt="logo">
                 </a>
             </div>
 
