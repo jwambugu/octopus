@@ -7,7 +7,7 @@
             <div class="details">
                 <div class="logo">
                     <a href="{{ route('index') }}">
-                        <img src="{{ asset('img/logos/logo.png') }}" alt="logo">
+                        <img src="{{ asset('img/logos/app-logo.png') }}" style="height: 10rem" alt="logo">
                     </a>
                 </div>
                 <div class="clearfix"></div>
