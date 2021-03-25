@@ -9,10 +9,6 @@
                         <div class="main-title-2">
                             <h1>Contact Us</h1>
                         </div>
-                        <p>
-                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
-                            been industry's printing and
-                        </p>
                         <ul class="personal-info">
                             <li>
                                 <i class="fa fa-map-marker"></i>
@@ -20,7 +16,7 @@
                             </li>
                             <li>
                                 <i class="fa fa-envelope"></i>
-                                Email:<a href="mailto:sales@hotelempire.com">info@themevessel.com</a>
+                                Email:<a href="mailto:">info@themevessel.com</a>
                             </li>
                             <li>
                                 <i class="fa fa-phone"></i>
