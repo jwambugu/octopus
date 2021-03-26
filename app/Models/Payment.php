@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Eloquent;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -66,7 +65,7 @@ use Illuminate\Support\Carbon;
  */
 class Payment extends Model
 {
-    use HasFactory, SoftDeletes;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
