@@ -2,7 +2,7 @@
     <div class="col-lg-8 col-md-8 col-sm-12">
         <div class="my-address">
             <div class="main-title-2">
-                <h1><span>My</span> Bookings</h1>
+                <h1>My Vacations</h1>
 
                 <my-bookings-table :bookings="bookings"></my-bookings-table>
 

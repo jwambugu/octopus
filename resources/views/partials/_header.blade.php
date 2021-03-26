@@ -56,7 +56,7 @@
                     </li>
                     <li class="dropdown">
                         <a href="{{ route('properties.index') }}" class="override-text-transform">
-                            Properties
+                            Vacations
                         </a>
                     </li>
                     <li class="dropdown">
