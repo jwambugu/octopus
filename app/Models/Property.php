@@ -74,6 +74,9 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Property whereApprovedAt($value)
  * @method static Builder|Property whereHasSentApprovalNotifications($value)
  * @method static Builder|Property whereSuspendedAt($value)
+ * @property int|null $cancellation_policy_id
+ * @property-read CancellationPolicy|null $cancellationPolicy
+ * @method static Builder|Property whereCancellationPolicyId($value)
  */
 class Property extends Model
 {
@@ -142,5 +145,14 @@ class Property extends Model
         return $this->belongsTo(City::class, 'city_id')->select([
             'id', 'name', 'slug'
         ]);
+    }
+
+    /**
+     * Returns the property cancellation policy
+     * @return BelongsTo
+     */
+    public function cancellationPolicy(): BelongsTo
+    {
+        return $this->belongsTo(CancellationPolicy::class, 'cancellation_policy_id');
     }
 }
