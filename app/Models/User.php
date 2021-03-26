@@ -48,6 +48,7 @@ use Illuminate\Support\Carbon;
  * @property-read int|null $bookings_count
  * @property-read Collection|Property[] $properties
  * @property-read int|null $properties_count
+ * @method static \Database\Factories\UserFactory factory(...$parameters)
  */
 class User extends Authenticatable
 {
