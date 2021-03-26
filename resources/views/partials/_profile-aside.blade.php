@@ -18,7 +18,7 @@
                 </li>
                 <li>
                     <a href="{{ route('booking.index') }}">
-                        <i class="flaticon-apartment"></i>My Bookings
+                        <i class="flaticon-apartment"></i>My Vacations
                     </a>
                 </li>
                 {{--                <li>--}}

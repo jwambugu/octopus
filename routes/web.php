@@ -34,7 +34,7 @@ Route::put('/change-password', [HomeController::class, 'changePassword'])->name(
  * Property routes
  */
 Route::group([
-    'prefix' => 'properties',
+    'prefix' => 'vacations',
     'as' => 'properties.',
 ], function () {
     Route::get('/', [PropertyController::class, 'index'])->name('index');
