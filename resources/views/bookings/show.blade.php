@@ -7,7 +7,8 @@
             <div class="row">
                 @include('partials._profile-aside')
 
-                <my-bookings-property-details :booking="{{ $booking }}"></my-bookings-property-details>
+                <my-bookings-property-details :booking="{{ $booking }}"
+                                              :can-cancel="{{ json_encode($canCancel) }}"></my-bookings-property-details>
             </div>
         </div>
     </div>

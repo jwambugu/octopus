@@ -65,19 +65,29 @@ class BookingController extends Controller
         // Get the booking data
         $booking = $booking->load([
             'property',
+            'property.owner:id,name,email,phone_number,description',
+            'property.owner.profilePicture:id,admin_id,public_url',
+            'property.cancellationPolicy:id,title,description,timeframe_in_hours',
             'property.amenities',
             'payments:id,account_number,amount,is_paid,booking_id,created_at'
         ]);
 
-
-//        return $ratingRoute = URL::signedRoute('properties.rate-property', [
-//            'property' => $booking->property->slug,
-//            'uuid' => 'bc740f05-beb9-4c71-bd86-84cfafc3837d',
-//            'type' => 'guest'
+//        return URL::signedRoute('properties.rate-property', [
+//            'property' => 'ab-aut-unde-officia-1',
+//            'uuid' => 'c146b74f-d206-4a9f-bf1d-2d135280b759',
+//            'type' => 'host'
 //        ]);
+
+        $timeFrame = now()->subHours($booking->property->cancellationPolicy->timeframe_in_hours);
+
+        // Check if the user can cancel the booking
+        $diffInHours = Carbon::parse($timeFrame)->diffInHours($booking->created_at);
+
+        $canCancel = $diffInHours != 0;
 
         return \view('bookings.show')->with([
             'booking' => $booking,
+            'canCancel' => $canCancel
         ]);
     }
 

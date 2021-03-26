@@ -218,11 +218,11 @@ class PropertyController extends Controller
     public function createPropertyBookingRatingView(Request $request, Property $property)
     {
         // Extract the request data
-        $bookingUUID = $request->query->get('uuid');
+        $ratingUUID = $request->query->get('uuid');
         $type = $request->query->get('type');
 
         // Get the rating data
-        $rating = Rating::whereUuid($bookingUUID)->first();
+        $rating = Rating::whereUuid($ratingUUID)->first();
 
         if (!$rating) {
             return redirect()->route('index');
@@ -244,7 +244,11 @@ class PropertyController extends Controller
             'id', 'title', 'description', 'is_boolean'
         ]);
 
-        $property = $property->load('amenities');
+        $property = $property->load([
+            'amenities',
+            'owner:id,name,email,phone_number,description',
+            'owner.profilePicture:id,admin_id,public_url',
+        ]);
 
         return \view('bookings.ratings.create')->with([
             'property' => $property,
