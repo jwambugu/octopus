@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
 /**
@@ -29,8 +29,11 @@ use Illuminate\Support\Carbon;
  * @method static Builder|PropertyType whereSlug($value)
  * @method static Builder|PropertyType whereUpdatedAt($value)
  * @mixin Eloquent
+ * @method static \Illuminate\Database\Query\Builder|PropertyType onlyTrashed()
+ * @method static \Illuminate\Database\Query\Builder|PropertyType withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|PropertyType withoutTrashed()
  */
 class PropertyType extends Model
 {
-    use HasFactory;
+    use SoftDeletes;
 }

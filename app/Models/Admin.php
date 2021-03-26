@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Eloquent;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -46,11 +45,11 @@ use Illuminate\Support\Carbon;
  * @mixin Eloquent
  * @property int|null $otp
  * @method static \Illuminate\Database\Eloquent\Builder|Admin whereOtp($value)
- * @property-read \App\Models\ProfilePicture|null $profilePicture
+ * @property-read ProfilePicture|null $profilePicture
  */
 class Admin extends Model
 {
-    use HasFactory, SoftDeletes;
+    use SoftDeletes;
 
     /**
      * The attributes that should be hidden for arrays.
