@@ -7,7 +7,7 @@
                         <span class="heading-icon">
                             <i class="fa fa-th-list"></i>
                         </span>
-                        <span class="hidden-xs">Available Properties</span>
+                        <span class="hidden-xs">Vacations</span>
                     </h4>
                 </div>
                 <div class="col-lg-6 col-md-7 col-sm-7 col-xs-10 cod-pad">

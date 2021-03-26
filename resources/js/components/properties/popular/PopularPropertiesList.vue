@@ -3,7 +3,7 @@
         <div class="col-lg-4 col-md-4 col-xs-12">
             <div class="sidebar-widget popular-posts">
                 <div class="main-title-2">
-                    <h1>Popular Properties</h1>
+                    <h1>Popular Vacations</h1>
                 </div>
             </div>
         </div>

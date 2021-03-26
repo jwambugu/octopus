@@ -51,7 +51,7 @@ export default {
             return this.booking.property;
         },
         propertyLink() {
-            return `/properties/${this.property.slug}`;
+            return `/vacations/${this.property.slug}`;
         },
         viewBookingLink() {
             return `/bookings/${this.booking.uuid}`;

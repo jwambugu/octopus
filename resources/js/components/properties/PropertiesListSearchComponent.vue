@@ -81,7 +81,7 @@
                                 @click="filterProperties"
                                 v-if="!filtering"
                             >
-                                Filter Properties
+                                Filter Vacations
                             </button>
                             <button
                                 type="submit"
