@@ -5,6 +5,7 @@ namespace App\Models;
 use Eloquent;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Carbon;
@@ -45,6 +46,7 @@ use Illuminate\Support\Carbon;
  * @mixin Eloquent
  * @property int|null $otp
  * @method static \Illuminate\Database\Eloquent\Builder|Admin whereOtp($value)
+ * @property-read \App\Models\ProfilePicture|null $profilePicture
  */
 class Admin extends Model
 {
@@ -69,4 +71,13 @@ class Admin extends Model
         'location' => 'object',
         'is_available' => 'boolean',
     ];
+
+    /**
+     * Returns the current admin profile picture.
+     * @return HasOne
+     */
+    public function profilePicture(): HasOne
+    {
+        return $this->hasOne(ProfilePicture::class);
+    }
 }

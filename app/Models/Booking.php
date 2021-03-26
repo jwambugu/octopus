@@ -99,7 +99,7 @@ class Booking extends Model
         return $this->belongsTo(Property::class, 'property_id')
             ->with('defaultImage')
             ->select([
-                'id', 'name', 'slug', 'cost_per_night', 'address', 'admin_id', 'city_id'
+                'id', 'name', 'slug', 'cost_per_night', 'address', 'admin_id', 'city_id', 'cancellation_policy_id'
             ]);
     }
 
@@ -120,8 +120,9 @@ class Booking extends Model
      */
     public function unsuccessfulPayments(): HasMany
     {
-        return $this->payments()->where('is_successful', false)->select([
-            'id', 'uuid', 'account_number', 'amount', 'booking_id'
-        ]);
+        return $this->payments()
+            ->where('is_successful', false)->select([
+                'id', 'uuid', 'account_number', 'amount', 'booking_id'
+            ]);
     }
 }
