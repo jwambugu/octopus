@@ -214,7 +214,7 @@ class VacationController extends Controller
      */
     public function show(Property $property)
     {
-        $property = $property->load('images', 'amenities');
+        $property = $property->load('images', 'amenities', 'cancellationPolicy:id,title,description');
         $property->booking_route = route('booking.property.view', [
             'property' => $property->slug
         ]);

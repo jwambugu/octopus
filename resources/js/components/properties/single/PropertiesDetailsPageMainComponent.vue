@@ -37,6 +37,8 @@
                                 </p>
                             </div>
 
+                            <hr />
+
                             <div class="properties-amenities">
                                 <div class="main-title-2">
                                     <h1><span>Amenities</span></h1>
@@ -61,6 +63,28 @@
                                 </div>
                             </div>
 
+                            <hr />
+
+                            <div
+                                class="properties-description mb-40"
+                                style="margin-top: 1.3rem"
+                            >
+                                <div class="main-title-2">
+                                    <h1><span>Cancellation Policy</span></h1>
+                                </div>
+                                <div class="media">
+                                    <div class="media-body">
+                                        <p>
+                                            <strong>{{
+                                                cancellationPolicy.title
+                                            }}</strong
+                                            >:
+                                            {{ cancellationPolicy.description }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="row">
                                 <div class="col-md-6 col-md-offset-6">
                                     <div
@@ -71,7 +95,7 @@
                                             :href="bookingRoute"
                                             class="btn button-theme btn-lg pull-right"
                                             style="color: #ffffff"
-                                            >Book Now</a
+                                            >Reserve</a
                                         >
                                     </div>
                                 </div>
@@ -113,6 +137,9 @@ export default {
         },
         bookingRoute() {
             return this.property.booking_route;
+        },
+        cancellationPolicy() {
+            return this.property.cancellation_policy;
         },
     },
 };
