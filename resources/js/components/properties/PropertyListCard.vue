@@ -28,12 +28,12 @@
                         </a>
                     </h1>
 
-                    <h3 class="property-address">
-                        <a :href="propertyLink">
-                            <i class="fa fa-map-marker"></i>
-                            {{ property.address }}
-                        </a>
-                    </h3>
+                    <!--                    <h3 class="property-address">-->
+                    <!--                        <a :href="propertyLink">-->
+                    <!--                            <i class="fa fa-map-marker"></i>-->
+                    <!--                            {{ property.address }}-->
+                    <!--                        </a>-->
+                    <!--                    </h3>-->
 
                     <ul class="facilities-list clearfix">
                         <li v-for="(amenity, index) in amenities" :key="index">

@@ -460,7 +460,7 @@
                                                             <td align="center" bgcolor="#F44E3C" role="presentation"
                                                                 style="border:none;border-radius:20px;cursor:auto;mso-padding-alt:10px 25px;background:#F44E3C;"
                                                                 valign="middle">
-                                                                <a href="{{ route('properties.show', $booking->property->slug) }}"
+                                                                <a href="{{ route('vacations.show', $booking->property->slug) }}"
                                                                    style="display:inline-block;background:#F44E3C;color:white;font-family:Roboto, Helvetica, Arial, sans-serif;font-size:13px;font-weight:normal;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:10px 25px;mso-padding-alt:0px;border-radius:20px;">
                                                                     View Property </a>
                                                             </td>
