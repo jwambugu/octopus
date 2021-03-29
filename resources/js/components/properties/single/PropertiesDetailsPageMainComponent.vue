@@ -7,10 +7,6 @@
                         <div class="heading-properties clearfix sidebar-widget">
                             <div class="pull-left">
                                 <h3>{{ property.name }}</h3>
-                                <p>
-                                    <i class="fa fa-map-marker"></i>
-                                    {{ property.address }}
-                                </p>
                             </div>
                             <div class="pull-right">
                                 <h3>
