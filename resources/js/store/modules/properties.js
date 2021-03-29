@@ -40,7 +40,7 @@ const actions = {
             const { page, property_types, bedrooms, city, sortBy } = payload;
 
             axios
-                .get("/vacations/fetch-properties", {
+                .get("/vacations/fetch-vacations", {
                     params: {
                         page,
                         property_types,

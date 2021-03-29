@@ -1,7 +1,19 @@
 @extends('layouts.app')
 
 @section('content')
-    <properties-list-main-component style="margin-top: -40px" :page="{{ $page }}"
-                                    :filters="{{ json_encode($filters) }}"
-                                    :query-params="{{ json_encode($queryParams) }}"></properties-list-main-component>
+    <div class="container" style="padding-top: 3rem; margin-bottom: 2.4rem">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="error404-content">
+                    <h2>Coming Soon</h2>
+                    <p>Watch out for best deals on properties.</p>
+
+                    <a href="{{ route('index') }}" class="button-sm out-line-btn override-text-transform">
+                        Back to home page
+                    </a>
+
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection

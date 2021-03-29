@@ -4,6 +4,7 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PropertyController;
+use App\Http\Controllers\VacationController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,23 +32,34 @@ Route::get('/change-password', [HomeController::class, 'changePasswordView'])->n
 Route::put('/change-password', [HomeController::class, 'changePassword'])->name('change-password');
 
 /**
- * Property routes
+ * Vacation routes
  */
 Route::group([
     'prefix' => 'vacations',
+    'as' => 'vacations.',
+], function () {
+    Route::get('/', [VacationController::class, 'index'])->name('index');
+
+    Route::get('/fetch-vacations', [VacationController::class, 'getVacations'])->name('fetch-vacations');
+
+    Route::get('/{property:slug}', [VacationController::class, 'show'])->name('show');
+
+    Route::get('/{property:slug}/rate-property', [VacationController::class, 'createPropertyBookingRatingView'])
+        ->name('rate-property')->middleware('signed');
+
+    Route::post('/rate-property', [VacationController::class, 'createPropertyBookingRating'])
+        ->name('submit-rating');
+});
+
+/**
+ * Property routes
+ */
+Route::group([
+    'prefix' => 'properties',
     'as' => 'properties.',
 ], function () {
     Route::get('/', [PropertyController::class, 'index'])->name('index');
 
-    Route::get('/fetch-properties', [PropertyController::class, 'getProperties'])->name('fetch-properties');
-
-    Route::get('/{property:slug}', [PropertyController::class, 'show'])->name('show');
-
-    Route::get('/{property:slug}/rate-property', [PropertyController::class, 'createPropertyBookingRatingView'])
-        ->name('rate-property')->middleware('signed');
-
-    Route::post('/rate-property', [PropertyController::class, 'createPropertyBookingRating'])
-        ->name('submit-rating');
 });
 
 /**
