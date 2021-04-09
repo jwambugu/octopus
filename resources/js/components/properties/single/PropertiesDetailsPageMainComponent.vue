@@ -6,7 +6,7 @@
                     <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
                         <div class="heading-properties clearfix sidebar-widget">
                             <div class="pull-left">
-                                <h3>{{ property.name }}</h3>
+                                <h3>{{ property.name | ucWords }}</h3>
                             </div>
                             <div class="pull-right">
                                 <h3>
@@ -70,7 +70,9 @@
                                 style="margin-top: 1.3rem"
                             >
                                 <div class="main-title-2">
-                                    <h1><span>Cancellation Policy</span></h1>
+                                    <h1>
+                                        <span>Cancellation Policy </span>
+                                    </h1>
                                 </div>
                                 <div class="media">
                                     <div class="media-body">

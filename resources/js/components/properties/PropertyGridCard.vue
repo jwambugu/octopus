@@ -21,7 +21,7 @@
                 <div class="info mb-3">
                     <h1 class="title title-height">
                         <a :href="propertyLink">
-                            {{ property.name }}
+                            {{ property.name | ucWords }}
                         </a>
                     </h1>
 

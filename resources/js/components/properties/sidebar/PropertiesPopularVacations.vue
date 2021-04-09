@@ -22,7 +22,7 @@
                     <div class="media-body">
                         <h3 class="media-heading">
                             <a :href="`/vacations/${vacation.slug}`">
-                                {{ vacation.name | truncate(30) }}
+                                {{ vacation.name | truncate(30) | ucWords }}
                             </a>
                         </h3>
                         <div class="listing-post-meta">
