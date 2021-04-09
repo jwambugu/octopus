@@ -2,6 +2,7 @@
     <div class="col-lg-8 col-md-8 col-sm-12">
         <property-details-component
             :property="booking.property"
+            :is-paid="booking.is_paid"
         ></property-details-component>
 
         <div class="sidebar-widget latest-reviews">
@@ -11,7 +12,7 @@
             <div class="media">
                 <div class="media-body">
                     <h3 class="media-heading">
-                        <a href="#">{{ cancellationPolicy.title }}</a>
+                        <a>{{ cancellationPolicy.title }}</a>
                     </h3>
 
                     <p>{{ cancellationPolicy.description }}</p>
