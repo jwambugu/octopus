@@ -35,8 +35,8 @@ const mutations = {
     setLoadingProperties: (state, loadingProperties) =>
         (state.loadingProperties = loadingProperties),
     setVacationTypes: (state, types) => (state.vacationTypes = types),
-    setLoadingVacationTypes: (state) =>
-        (state.loadingVacationTypes = !state.loadingVacationTypes),
+    setLoadingVacationTypes: (state, loading) =>
+        (state.loadingVacationTypes = state.loadingVacationTypes = loading),
 };
 
 const actions = {
@@ -93,7 +93,7 @@ const actions = {
                     const { vacationTypes } = data.data;
 
                     commit("setVacationTypes", vacationTypes);
-                    commit("setLoadingVacationTypes");
+                    commit("setLoadingVacationTypes", false);
 
                     resolve();
                 })
