@@ -101,7 +101,7 @@
             </div>
         </div>
 
-        <div class="panel-box" v-if="property.owner">
+        <div class="panel-box" v-if="isPaid && property.owner">
             <div class="panel with-nav-tabs panel-default">
                 <div class="panel-body">
                     <div class="tab-content">
@@ -230,6 +230,10 @@ export default {
         property: {
             required: true,
             type: Object,
+        },
+        isPaid: {
+            required: true,
+            type: Boolean,
         },
     },
     computed: {
