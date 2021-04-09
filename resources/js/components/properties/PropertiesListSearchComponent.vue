@@ -128,11 +128,11 @@ export default {
         };
     },
     created() {
-        const { property_types, bedrooms, city } = this.queryParams;
+        const { propertyTypes, bedrooms, city } = this.queryParams;
 
         this.filterData = {
             ...this.filterData,
-            property_types,
+            property_types: propertyTypes,
             bedrooms,
             city,
         };
