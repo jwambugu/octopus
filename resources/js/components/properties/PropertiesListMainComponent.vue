@@ -15,20 +15,14 @@
                     ></properties-list-search-component>
                 </div>
 
-                <div class="row" v-if="!loading">
-                    <properties-list></properties-list>
+                <div class="row">
+                    <properties-list v-if="!loading"></properties-list>
 
-                    <properties-vacation-sidebar
-                        :vacation-types="vacationTypes"
-                        :is-loading-vacation-types="isLoadingVacationTypes"
-                    ></properties-vacation-sidebar>
-                </div>
-                <div class="row" v-if="loading">
-                    <div class="col-lg-12 col-md-12 col-xs-12">
+                    <div class="col-lg-8 col-md-8 col-xs-12" v-if="loading">
                         <div class="sidebar-widget">
                             <div
                                 class="text-center"
-                                style="color: #ffb400"
+                                style="color: #ffb400; padding: 3rem"
                                 v-if="!hasError"
                             >
                                 <i class="fa fa-spinner fa-spin fa-4x"></i>
@@ -44,6 +38,11 @@
                             </div>
                         </div>
                     </div>
+
+                    <properties-vacation-sidebar
+                        :vacation-types="vacationTypes"
+                        :is-loading-vacation-types="isLoadingVacationTypes"
+                    ></properties-vacation-sidebar>
                 </div>
             </div>
         </div>
@@ -96,18 +95,17 @@ export default {
         this.getAvailableVacationTypes();
     },
     methods: {
-        getProperties() {
-            this.$store
-                .dispatch("GET_PROPERTIES", {
-                    page: this.page,
-                })
-                .catch(() => {
-                    this.hasError = true;
-                });
-        },
+        // getProperties() {
+        //     this.$store
+        //         .dispatch("GET_PROPERTIES", {
+        //             page: this.page,
+        //         })
+        //         .catch(() => {
+        //             this.hasError = true;
+        //         });
+        // },
         getAvailableVacationTypes() {
             this.$store.dispatch("GET_AVAILABLE_VACATION_TYPES");
-            console.log(123);
         },
     },
 };

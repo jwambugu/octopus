@@ -199,7 +199,7 @@ class VacationController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function getVacations(Request $request): JsonResponse
+    public function getVacations(Request $request)
     {
         // Remove all the empty route parameters
         $cleanedRequest = collect(array_filter($request->all()));
@@ -222,7 +222,7 @@ class VacationController extends Controller
         // Sort the properties by the option provided
         $properties = $properties->select([
             'id', 'name', 'slug', 'address', 'cost_per_night', 'property_type_id'
-        ])->paginate(30)->appends($cleanedRequest->all());
+        ])->simplePaginate(30)->appends($cleanedRequest->all());
 
         $apiRoute = route('vacations.fetch-vacations');
         $viewRoute = route('index');
@@ -231,9 +231,9 @@ class VacationController extends Controller
         return response()->json([
             'data' => [
                 'properties' => $properties->items(),
-                'total' => $properties->total(),
-                'lastPage' => $properties->lastPage(),
-                'currentPage' => $properties->currentPage(),
+                'total' => $properties->count(),
+//                'lastPage' => $properties->lastPage(),
+//                'currentPage' => $properties->currentPage(),
                 'links' => (string)$links
             ]
         ]);

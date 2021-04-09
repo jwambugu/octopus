@@ -28,20 +28,20 @@
                                 </option>
                             </select>
                         </label>
-                        <button
-                            class="change-view-btn active-view-btn"
-                            v-if="isListView"
-                            @click="changeView(false)"
-                        >
-                            <i class="fa fa-th-list"></i>
-                        </button>
-                        <button
-                            class="change-view-btn"
-                            v-else
-                            @click="changeView(true)"
-                        >
-                            <i class="fa fa-th-large"></i>
-                        </button>
+                        <!--                        <button-->
+                        <!--                            class="change-view-btn active-view-btn"-->
+                        <!--                            v-if="isListView"-->
+                        <!--                            @click="changeView(false)"-->
+                        <!--                        >-->
+                        <!--                            <i class="fa fa-th-list"></i>-->
+                        <!--                        </button>-->
+                        <!--                        <button-->
+                        <!--                            class="change-view-btn"-->
+                        <!--                            v-else-->
+                        <!--                            @click="changeView(true)"-->
+                        <!--                        >-->
+                        <!--                            <i class="fa fa-th-large"></i>-->
+                        <!--                        </button>-->
                     </div>
                 </div>
             </div>
