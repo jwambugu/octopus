@@ -3,6 +3,7 @@
         <div class="col-lg-8 col-md-8 col-sm-12">
             <property-details-component
                 :property="property"
+                :is-paid="property.is_paid"
             ></property-details-component>
 
             <div class="my-address">

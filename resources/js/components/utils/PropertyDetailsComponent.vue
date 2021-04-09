@@ -2,7 +2,7 @@
     <div>
         <div class="heading-properties clearfix sidebar-widget">
             <div class="pull-left">
-                <h3>{{ property.name }}</h3>
+                <h3>{{ property.name | ucWords }}</h3>
             </div>
             <div class="pull-right">
                 <h3>

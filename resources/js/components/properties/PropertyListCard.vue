@@ -24,7 +24,7 @@
                 <div class="info">
                     <h1 class="title">
                         <a :href="propertyLink">
-                            {{ property.name }}
+                            {{ property.name | ucWords }}
                         </a>
                     </h1>
 

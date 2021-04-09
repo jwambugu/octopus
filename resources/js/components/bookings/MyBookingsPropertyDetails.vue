@@ -17,26 +17,28 @@
 
                     <p>{{ cancellationPolicy.description }}</p>
 
-                    <div
-                        class="pull-right"
-                        style="padding-top: 15px"
-                        v-if="canCancel"
-                    >
-                        <button
-                            class="button-theme button-md"
-                            v-if="!isCancelling"
+                    <div v-if="booking.is_paid">
+                        <div
+                            class="pull-right"
+                            style="padding-top: 15px"
+                            v-if="canCancel"
                         >
-                            Cancel Booking
-                        </button>
+                            <button
+                                class="button-theme button-md"
+                                v-if="!isCancelling"
+                            >
+                                Cancel Booking
+                            </button>
 
-                        <button
-                            type="button"
-                            class="button-theme button-md"
-                            disabled
-                            v-else
-                        >
-                            <i class="fa fa-spinner fa-spin fa-1x"></i>
-                        </button>
+                            <button
+                                type="button"
+                                class="button-theme button-md"
+                                disabled
+                                v-else
+                            >
+                                <i class="fa fa-spinner fa-spin fa-1x"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

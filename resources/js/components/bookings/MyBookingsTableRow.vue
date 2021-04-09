@@ -8,7 +8,7 @@
             />
             <div class="title">
                 <h4>
-                    <a :href="propertyLink">{{ property.name }} </a>
+                    <a :href="propertyLink">{{ property.name | ucWords }} </a>
                 </h4>
 
                 <span class="table-property-price">
