@@ -39,10 +39,7 @@
                         </div>
                     </div>
 
-                    <properties-vacation-sidebar
-                        :vacation-types="vacationTypes"
-                        :is-loading-vacation-types="isLoadingVacationTypes"
-                    ></properties-vacation-sidebar>
+                    <properties-vacation-sidebar></properties-vacation-sidebar>
                 </div>
             </div>
         </div>
@@ -52,7 +49,6 @@
 <script>
 import PropertiesListSearchComponent from "./PropertiesListSearchComponent";
 import PropertiesList from "./PropertiesList";
-import PopularPropertiesList from "./popular/PopularPropertiesList";
 import { mapGetters } from "vuex";
 import PropertiesVacationSidebar from "./sidebar/PropertiesVacationSidebar";
 
@@ -60,7 +56,6 @@ export default {
     name: "PropertiesListMainComponent",
     components: {
         PropertiesVacationSidebar,
-        PopularPropertiesList,
         PropertiesList,
         PropertiesListSearchComponent,
     },
@@ -87,26 +82,7 @@ export default {
         ...mapGetters({
             loading: "getLoadingProperties",
             isListView: "getIsListView",
-            vacationTypes: "getVacationTypes",
-            isLoadingVacationTypes: "getLoadingVacationTypes",
         }),
-    },
-    created() {
-        this.getAvailableVacationTypes();
-    },
-    methods: {
-        // getProperties() {
-        //     this.$store
-        //         .dispatch("GET_PROPERTIES", {
-        //             page: this.page,
-        //         })
-        //         .catch(() => {
-        //             this.hasError = true;
-        //         });
-        // },
-        getAvailableVacationTypes() {
-            this.$store.dispatch("GET_AVAILABLE_VACATION_TYPES");
-        },
     },
 };
 </script>

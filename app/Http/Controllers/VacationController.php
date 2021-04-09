@@ -72,7 +72,7 @@ class VacationController extends Controller
     /**
      * Render the properties index page
      * @param Request $request
-     * @return Application|Factory|View
+     * @return
      */
     public function index(Request $request)
     {
@@ -199,7 +199,7 @@ class VacationController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function getVacations(Request $request)
+    public function getVacations(Request $request): JsonResponse
     {
         // Remove all the empty route parameters
         $cleanedRequest = collect(array_filter($request->all()));
@@ -328,6 +328,45 @@ class VacationController extends Controller
         return response()->json([
             'data' => [
                 'message' => 'Ratings submitted successfully. Thank you!'
+            ]
+        ]);
+    }
+
+    /**
+     * Returns the properties with the highest number of vacation bookings
+     * @return JsonResponse
+     */
+    public function getPopularVacations(): JsonResponse
+    {
+        // Get the properties with the highest count of paid bookings
+        $topBookings = DB::table('bookings AS b')
+            ->select('b.property_id', DB::raw('COUNT(b.property_id) AS count'))
+            ->join('properties AS p', 'b.property_id', '=', 'p.id')
+            ->where([
+                'p.is_available' => true,
+                'p.status' => 'approved',
+//                'b.is_paid' => true
+            ])
+            ->groupBy(['property_id'])
+            ->orderByDesc('count')
+            ->take(5)
+            ->get();
+
+        // Get the property_id
+        $propertiesIDs = $topBookings->pluck('property_id');
+
+        // Get the properties that are available and have been approved.
+        $properties = Property::with('defaultImage')->where([
+            'is_available' => true,
+            'status' => 'approved',
+        ])->select([
+            'id', 'name', 'slug', 'address', 'cost_per_night', 'property_type_id'
+        ])->whereIn('id', $propertiesIDs)
+            ->get();
+
+        return response()->json([
+            'data' => [
+                'properties' => $properties
             ]
         ]);
     }

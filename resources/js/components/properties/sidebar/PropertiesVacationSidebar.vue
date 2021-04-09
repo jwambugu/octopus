@@ -1,29 +1,22 @@
 <template>
     <div>
         <div class="col-lg-4 col-md-4 col-xs-12">
-            <properties-available-vacation-types
-                :vacation-types="vacationTypes"
-                :is-loading-vacation-types="isLoadingVacationTypes"
-            ></properties-available-vacation-types>
+            <properties-available-vacation-types></properties-available-vacation-types>
+
+            <properties-popular-vacations></properties-popular-vacations>
         </div>
     </div>
 </template>
 
 <script>
 import PropertiesAvailableVacationTypes from "./PropertiesAvailableVacationTypes";
+import PropertiesPopularVacations from "./PropertiesPopularVacations";
 
 export default {
     name: "PropertiesVacationSidebar",
-    components: { PropertiesAvailableVacationTypes },
-    props: {
-        vacationTypes: {
-            required: true,
-            type: Array,
-        },
-        isLoadingVacationTypes: {
-            type: Boolean,
-            required: true,
-        },
+    components: {
+        PropertiesPopularVacations,
+        PropertiesAvailableVacationTypes,
     },
 };
 </script>

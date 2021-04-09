@@ -4,7 +4,7 @@
             <div class="main-title-2">
                 <h1>Available Vacation Types</h1>
             </div>
-            <ul class="list-unstyled list-cat" v-if="!isLoadingVacationTypes">
+            <ul class="list-unstyled list-cat" v-if="!loading">
                 <li
                     v-for="vacationType in vacationTypes"
                     :key="vacationType.id"
@@ -27,16 +27,22 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
     name: "PropertiesAvailableVacationTypes",
-    props: {
-        vacationTypes: {
-            required: true,
-            type: Array,
-        },
-        isLoadingVacationTypes: {
-            type: Boolean,
-            required: true,
+    computed: {
+        ...mapGetters({
+            vacationTypes: "getVacationTypes",
+            loading: "getLoadingVacationTypes",
+        }),
+    },
+    created() {
+        this.getAvailableVacationTypes();
+    },
+    methods: {
+        getAvailableVacationTypes() {
+            this.$store.dispatch("GET_AVAILABLE_VACATION_TYPES");
         },
     },
 };

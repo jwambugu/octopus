@@ -103,7 +103,7 @@
                         </div>
                     </div>
 
-                    <popular-properties-list></popular-properties-list>
+                    <properties-vacation-sidebar></properties-vacation-sidebar>
                 </div>
             </div>
         </div>
@@ -113,12 +113,12 @@
 <script>
 import PropertiesListSearchComponent from "../PropertiesListSearchComponent";
 import PropertyDetailsPageSlider from "./PropertyDetailsPageSlider";
-import PopularPropertiesList from "../popular/PopularPropertiesList";
+import PropertiesVacationSidebar from "../sidebar/PropertiesVacationSidebar";
 
 export default {
     name: "PropertiesDetailsPageMainComponent",
     components: {
-        PopularPropertiesList,
+        PropertiesVacationSidebar,
         PropertyDetailsPageSlider,
         PropertiesListSearchComponent,
     },

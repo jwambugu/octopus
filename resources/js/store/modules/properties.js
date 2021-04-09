@@ -11,6 +11,8 @@ const state = {
     loadingProperties: false,
     vacationTypes: [],
     loadingVacationTypes: true,
+    popularVacations: [],
+    loadingPopularVacations: true,
 };
 
 const getters = {
@@ -20,14 +22,16 @@ const getters = {
     getLoadingProperties: (state) => state.loadingProperties,
     getVacationTypes: (state) => state.vacationTypes,
     getLoadingVacationTypes: (state) => state.loadingVacationTypes,
+    getPopularVacations: (state) => state.popularVacations,
+    getLoadingPopularVacations: (state) => state.loadingPopularVacations,
 };
 
 const mutations = {
     setProperties: (state, data) => {
         state.properties = data.properties;
         state.total = data.total;
-        state.lastPage = data.lastPage;
-        state.currentPage = data.currentPage;
+        // state.lastPage = data.lastPage;
+        // state.currentPage = data.currentPage;
         state.links = data.links;
         state.page = data.page;
     },
@@ -37,6 +41,10 @@ const mutations = {
     setVacationTypes: (state, types) => (state.vacationTypes = types),
     setLoadingVacationTypes: (state, loading) =>
         (state.loadingVacationTypes = state.loadingVacationTypes = loading),
+    setPopularVacations: (state, vacations) =>
+        (state.popularVacations = vacations),
+    setLoadingPopularVacations: (state, loading) =>
+        (state.loadingPopularVacations = loading),
 };
 
 const actions = {
@@ -94,6 +102,21 @@ const actions = {
 
                     commit("setVacationTypes", vacationTypes);
                     commit("setLoadingVacationTypes", false);
+
+                    resolve();
+                })
+                .catch((error) => reject(error));
+        });
+    },
+    GET_POPULAR_VACATIONS: ({ commit }) => {
+        return new Promise((resolve, reject) => {
+            axios
+                .get(`/vacations/get-popular-vacations`)
+                .then(({ data }) => {
+                    const { properties } = data.data;
+
+                    commit("setPopularVacations", properties);
+                    commit("setLoadingPopularVacations", false);
 
                     resolve();
                 })
