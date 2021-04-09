@@ -14,9 +14,14 @@
                         :page="page"
                     ></properties-list-search-component>
                 </div>
+
                 <div class="row" v-if="!loading">
                     <properties-list></properties-list>
-                    <popular-properties-list></popular-properties-list>
+
+                    <properties-vacation-sidebar
+                        :vacation-types="vacationTypes"
+                        :is-loading-vacation-types="isLoadingVacationTypes"
+                    ></properties-vacation-sidebar>
                 </div>
                 <div class="row" v-if="loading">
                     <div class="col-lg-12 col-md-12 col-xs-12">
@@ -50,10 +55,12 @@ import PropertiesListSearchComponent from "./PropertiesListSearchComponent";
 import PropertiesList from "./PropertiesList";
 import PopularPropertiesList from "./popular/PopularPropertiesList";
 import { mapGetters } from "vuex";
+import PropertiesVacationSidebar from "./sidebar/PropertiesVacationSidebar";
 
 export default {
     name: "PropertiesListMainComponent",
     components: {
+        PropertiesVacationSidebar,
         PopularPropertiesList,
         PropertiesList,
         PropertiesListSearchComponent,
@@ -81,7 +88,12 @@ export default {
         ...mapGetters({
             loading: "getLoadingProperties",
             isListView: "getIsListView",
+            vacationTypes: "getVacationTypes",
+            isLoadingVacationTypes: "getLoadingVacationTypes",
         }),
+    },
+    created() {
+        this.getAvailableVacationTypes();
     },
     methods: {
         getProperties() {
@@ -92,6 +104,10 @@ export default {
                 .catch(() => {
                     this.hasError = true;
                 });
+        },
+        getAvailableVacationTypes() {
+            this.$store.dispatch("GET_AVAILABLE_VACATION_TYPES");
+            console.log(123);
         },
     },
 };

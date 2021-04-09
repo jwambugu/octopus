@@ -94,6 +94,38 @@ class VacationController extends Controller
     }
 
     /**
+     * Returns the data for the vacation types we have in the system.
+     * @return JsonResponse
+     */
+    public function getAvailableVacationTypes(): JsonResponse
+    {
+        // Get the properties which are active. Also get the count of the properties
+        $vacationTypes = PropertyType::where('is_active', true)->select([
+            'id', 'name', 'slug'
+        ])->withCount('properties')
+            ->get()
+            ->map(function ($propertyType) {
+                return [
+                    'id' => $propertyType->id,
+                    'name' => $propertyType->name,
+                    'slug' => $propertyType->slug,
+                    'count' => $propertyType->properties_count,
+                    '_route' => route('vacations.index', [
+                        'property_types' => $propertyType->slug
+                    ])
+                ];
+            })->sortByDesc(function ($propertyType) {
+                return strlen($propertyType['slug']);
+            })->values();
+
+        return response()->json([
+            'data' => [
+                'vacationTypes' => $vacationTypes
+            ]
+        ]);
+    }
+
+    /**
      * Apply any of the filters if we have any
      * @param object $request
      * @param $properties

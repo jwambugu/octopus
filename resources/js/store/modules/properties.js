@@ -9,6 +9,8 @@ const state = {
     page: 1,
     isListView: false,
     loadingProperties: false,
+    vacationTypes: [],
+    loadingVacationTypes: true,
 };
 
 const getters = {
@@ -16,6 +18,8 @@ const getters = {
     getPaginationLinks: (state) => state.links,
     getIsListView: (state) => state.isListView,
     getLoadingProperties: (state) => state.loadingProperties,
+    getVacationTypes: (state) => state.vacationTypes,
+    getLoadingVacationTypes: (state) => state.loadingVacationTypes,
 };
 
 const mutations = {
@@ -30,6 +34,9 @@ const mutations = {
     setIsListView: (state, isListView) => (state.isListView = isListView),
     setLoadingProperties: (state, loadingProperties) =>
         (state.loadingProperties = loadingProperties),
+    setVacationTypes: (state, types) => (state.vacationTypes = types),
+    setLoadingVacationTypes: (state) =>
+        (state.loadingVacationTypes = !state.loadingVacationTypes),
 };
 
 const actions = {
@@ -73,8 +80,22 @@ const actions = {
                     uuid,
                 })
                 .then(({ data }) => {
-                    console.log(data);
                     resolve(data.data);
+                })
+                .catch((error) => reject(error));
+        });
+    },
+    GET_AVAILABLE_VACATION_TYPES: ({ commit }) => {
+        return new Promise((resolve, reject) => {
+            axios
+                .get(`/vacations/get-available-vacations`)
+                .then(({ data }) => {
+                    const { vacationTypes } = data.data;
+
+                    commit("setVacationTypes", vacationTypes);
+                    commit("setLoadingVacationTypes");
+
+                    resolve();
                 })
                 .catch((error) => reject(error));
         });
