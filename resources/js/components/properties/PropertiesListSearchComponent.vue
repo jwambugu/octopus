@@ -7,7 +7,7 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="property_types">
-                                    Property Type
+                                    Vacation Type
                                 </label>
                                 <select
                                     class="selectpicker search-fields"
@@ -16,7 +16,7 @@
                                     id="property_types"
                                     v-model="filterData.property_types"
                                 >
-                                    <option value="">Property Types</option>
+                                    <option value="">Vacation Type</option>
                                     <option
                                         v-for="(
                                             type, index
