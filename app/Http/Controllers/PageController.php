@@ -16,6 +16,7 @@ class PageController extends Controller
      */
     public function index(Request $request)
     {
+        return PayPalController::createOrderRequest();
         return (new VacationController)->index($request);
     }
 
