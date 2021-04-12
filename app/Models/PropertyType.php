@@ -33,6 +33,8 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Query\Builder|PropertyType onlyTrashed()
  * @method static \Illuminate\Database\Query\Builder|PropertyType withTrashed()
  * @method static \Illuminate\Database\Query\Builder|PropertyType withoutTrashed()
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Property[] $properties
+ * @property-read int|null $properties_count
  */
 class PropertyType extends Model
 {
