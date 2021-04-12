@@ -90,7 +90,7 @@ class PayPalController extends Controller
                             ]
                         ],
                     'items' =>
-                        array(
+                        [
                             0 =>
                                 [
                                     'name' => 'T-Shirt',
@@ -104,7 +104,7 @@ class PayPalController extends Controller
                                     'quantity' => '1',
                                     'category' => 'PHYSICAL_GOODS'
                                 ]
-                        ),
+                        ],
                 ],
             ],
         ];
