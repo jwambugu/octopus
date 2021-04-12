@@ -46,6 +46,8 @@ use Illuminate\Support\Carbon;
  * @property int|null $otp
  * @method static \Illuminate\Database\Eloquent\Builder|Admin whereOtp($value)
  * @property-read ProfilePicture|null $profilePicture
+ * @property string|null $phone_verification_code
+ * @method static \Illuminate\Database\Eloquent\Builder|Admin wherePhoneVerificationCode($value)
  */
 class Admin extends Model
 {

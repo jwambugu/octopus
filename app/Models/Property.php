@@ -76,6 +76,8 @@ use Illuminate\Support\Carbon;
  * @property int|null $cancellation_policy_id
  * @property-read CancellationPolicy|null $cancellationPolicy
  * @method static Builder|Property whereCancellationPolicyId($value)
+ * @property string|null $reason_for_suspension
+ * @method static Builder|Property whereReasonForSuspension($value)
  */
 class Property extends Model
 {
