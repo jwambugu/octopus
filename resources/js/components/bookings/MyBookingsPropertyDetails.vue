@@ -189,6 +189,10 @@ export default {
                     this.hideModal();
 
                     this.successMessage = message;
+
+                    setTimeout(() => {
+                        location.reload();
+                    }, 2000);
                 })
                 .catch((error) => {
                     this.errorMessage = error;

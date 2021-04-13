@@ -323,23 +323,32 @@ class BookingController extends Controller
             ]);
         }
 
+        // Get the amount to refund from the payments.
+        // Only get the successful transactions
+        $payment = DB::table('payments')->where([
+            'is_successful' => true,
+            'booking_id' => $booking->id
+        ])->first('amount');
+
+        if (!$payment) {
+            throw ValidationException::withMessages([
+                'booking' => 'Invalid booking provided or payment already refund.'
+            ]);
+        }
+
+        $amount = $payment->amount;
+
         try {
-            DB::transaction(function () use ($booking) {
+            DB::transaction(function () use ($booking, $amount) {
                 // Set the booking as cancelled
                 Booking::whereId($booking->id)->update([
                     'cancelled_at' => now()
                 ]);
 
-                // Get the amount to refund from the payments.
-                // Only get the successful transactions
-                $payment = DB::table('payments')->where([
-                    'is_successful' => true,
-                    'booking_id' => $booking->id
-                ])->first('amount');
 
                 // Create a new refund
                 Refund::create([
-                    'amount' => $payment->amount,
+                    'amount' => $amount,
                     'booking_id' => $booking->id,
                     'payment_channel_id' => 1,
                     'user_id' => auth()->id(),
