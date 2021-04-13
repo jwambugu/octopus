@@ -38,6 +38,8 @@ use Illuminate\Support\Carbon;
  * @method static Builder|CancellationPolicy withTrashed()
  * @method static Builder|CancellationPolicy withoutTrashed()
  * @mixin Eloquent
+ * @property int $percentage_to_refund
+ * @method static \Illuminate\Database\Eloquent\Builder|CancellationPolicy wherePercentageToRefund($value)
  */
 class CancellationPolicy extends Model
 {

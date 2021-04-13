@@ -8,7 +8,9 @@ use App\Models\Booking;
 use App\Models\Payment;
 use App\Models\Property;
 use App\Models\Rating;
+use App\Models\Refund;
 use Carbon\Carbon;
+use DB;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -18,6 +20,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Ramsey\Uuid\Uuid;
+use Throwable;
 use URL;
 
 class BookingController extends Controller
@@ -67,7 +70,7 @@ class BookingController extends Controller
             'property',
             'property.owner:id,name,email,phone_number,description',
             'property.owner.profilePicture:id,admin_id,public_url',
-            'property.cancellationPolicy:id,title,description,timeframe_in_hours',
+            'property.cancellationPolicy:id,title,description,timeframe_in_hours,percentage_to_refund',
             'property.amenities',
             'payments:id,account_number,amount,is_paid,booking_id,created_at'
         ]);
@@ -84,6 +87,11 @@ class BookingController extends Controller
         $diffInHours = Carbon::parse($timeFrame)->diffInHours($booking->created_at);
 
         $canCancel = $diffInHours != 0;
+
+        // If the booking had been cancelled, block them from asking for a refund
+        if (!is_null($booking->cancelled_at)) {
+            $canCancel = false;
+        }
 
         return \view('bookings.show')->with([
             'booking' => $booking,
@@ -290,6 +298,61 @@ class BookingController extends Controller
                     'booking' => $payment->booking->uuid
                 ]),
                 'status' => 'success',
+            ]
+        ]);
+    }
+
+    /**
+     * Process the request for cancelling a booking
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException
+     * @throws Exception
+     */
+    public function cancelBooking(Request $request): JsonResponse
+    {
+        $booking = Booking::query()->with('property:id,admin_id', 'property.owner:id')
+            ->whereUuid($request['uuid'])
+            ->first([
+                'id', 'property_id', 'cancelled_at'
+            ]);
+
+        if (!$booking || !is_null($booking->cancelled_at)) {
+            throw ValidationException::withMessages([
+                'booking' => 'Invalid booking provided or payment already refund.'
+            ]);
+        }
+
+        try {
+            DB::transaction(function () use ($booking) {
+                // Set the booking as cancelled
+                Booking::whereId($booking->id)->update([
+                    'cancelled_at' => now()
+                ]);
+
+                // Get the amount to refund from the payments.
+                // Only get the successful transactions
+                $payment = DB::table('payments')->where([
+                    'is_successful' => true,
+                    'booking_id' => $booking->id
+                ])->first('amount');
+
+                // Create a new refund
+                Refund::create([
+                    'amount' => $payment->amount,
+                    'booking_id' => $booking->id,
+                    'payment_channel_id' => 1,
+                    'user_id' => auth()->id(),
+                    'admin_id' => $booking->property->owner->id
+                ]);
+            });
+        } catch (Throwable $e) {
+            throw new Exception($e->getMessage());
+        }
+
+        return response()->json([
+            'data' => [
+                'message' => 'Request processed successful. You will be refunded within 24 hours.'
             ]
         ]);
     }

@@ -1,5 +1,21 @@
 <template>
     <div class="col-lg-8 col-md-8 col-sm-12">
+        <div
+            class="alert alert-success text-center override-alert-text-transform"
+            role="alert"
+            v-if="successMessage"
+        >
+            {{ successMessage }}
+        </div>
+
+        <div
+            class="alert alert-danger text-center override-alert-text-transform"
+            role="alert"
+            v-if="errorMessage"
+        >
+            {{ errorMessage }}
+        </div>
+
         <property-details-component
             :property="booking.property"
             :is-paid="booking.is_paid"
@@ -26,8 +42,59 @@
                             <button
                                 class="button-theme button-md"
                                 v-if="!isCancelling"
+                                data-toggle="modal"
+                                data-target="#cancelBookingModal"
                             >
                                 Cancel Booking
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div v-if="canCancel">
+            <div
+                class="modal fade"
+                id="cancelBookingModal"
+                tabindex="-1"
+                role="dialog"
+                aria-labelledby="cancelBookingModal"
+                style="margin-top: 15rem"
+            >
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button
+                                type="button"
+                                class="close"
+                                data-dismiss="modal"
+                                aria-label="Close"
+                            >
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel">
+                                <strong>Cancel Booking</strong>
+                            </h4>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to cancel this booking for
+                            property <strong>{{ booking.property.name }}</strong
+                            >? You will be charged
+                            <strong>{{
+                                cancellationPolicy.percentage_to_refund
+                            }}</strong
+                            >% of the total booking amount plus the transaction
+                            charges.
+                        </div>
+                        <div class="modal-footer">
+                            <button
+                                type="button"
+                                class="button-theme button-md"
+                                v-if="!isCancelling"
+                                @click="cancelBooking"
+                            >
+                                Proceed To Cancel
                             </button>
 
                             <button
@@ -96,11 +163,39 @@ export default {
     data() {
         return {
             isCancelling: false,
+            errorMessage: "",
+            successMessage: "",
         };
     },
     computed: {
         cancellationPolicy() {
             return this.booking.property.cancellation_policy;
+        },
+    },
+    methods: {
+        hideModal() {
+            $("#cancelBookingModal").modal("hide");
+        },
+        cancelBooking() {
+            this.isCancelling = true;
+            this.errorMessage = "";
+            this.successMessage = "";
+
+            this.$store
+                .dispatch("CANCEL_BOOKING", {
+                    uuid: this.booking.uuid,
+                })
+                .then(({ message }) => {
+                    this.hideModal();
+
+                    this.successMessage = message;
+                })
+                .catch((error) => {
+                    this.errorMessage = error;
+                    this.isCancelling = false;
+
+                    this.hideModal();
+                });
         },
     },
 };
