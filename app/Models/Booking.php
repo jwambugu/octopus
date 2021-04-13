@@ -50,6 +50,8 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Booking withTrashed()
  * @method static Builder|Booking withoutTrashed()
  * @mixin Eloquent
+ * @property string|null $cancelled_at
+ * @method static \Illuminate\Database\Eloquent\Builder|Booking whereCancelledAt($value)
  */
 class Booking extends Model
 {
@@ -68,6 +70,7 @@ class Booking extends Model
         'is_paid',
         'property_id',
         'user_id',
+        'cancelled_at',
     ];
 
 

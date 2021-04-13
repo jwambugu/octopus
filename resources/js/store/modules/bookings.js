@@ -50,6 +50,20 @@ const actions = {
                 .catch((error) => reject(errorHandler(error)));
         });
     },
+    CANCEL_BOOKING: ({}, payload) => {
+        return new Promise((resolve, reject) => {
+            const { uuid } = payload;
+
+            axios
+                .post(`/bookings/cancel-booking`, {
+                    uuid,
+                })
+                .then(({ data }) => {
+                    resolve(data.data);
+                })
+                .catch((error) => reject(errorHandler(error)));
+        });
+    },
 };
 
 export default {

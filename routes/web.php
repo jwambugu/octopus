@@ -92,5 +92,8 @@ Route::group([
 
     Route::post('{booking:uuid}/confirm-mpesa-payment', [BookingController::class, 'confirmBookingPayment'])
         ->name('book.confirm-mpesa-payment');
+
+    Route::post('cancel-booking', [BookingController::class, 'cancelBooking'])
+        ->name('book.cancel-booking');
 });
 
