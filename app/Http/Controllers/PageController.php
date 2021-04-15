@@ -17,6 +17,14 @@ class PageController extends Controller
     public function index(Request $request)
     {
 //        return PayPalController::createOrderRequest();
+//        $commission =
+        $charges = \DB::table('transaction_charges')
+            ->whereRaw('? BETWEEN minimum_amount AND maximum_amount', [3])
+            ->first([
+                'charges'
+            ]);
+
+//        return $charges->charges;
         return (new VacationController)->index($request);
     }
 

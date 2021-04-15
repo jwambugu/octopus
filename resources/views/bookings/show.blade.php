@@ -8,7 +8,9 @@
                 @include('partials._profile-aside')
 
                 <my-bookings-property-details :booking="{{ $booking }}"
-                                              :can-cancel="{{ json_encode($canCancel) }}"></my-bookings-property-details>
+                                              :can-cancel="{{ json_encode($canCancel) }}"
+                                              :charges-breakdown="{{ json_encode($cancellationChargesBreakdown) }}"
+                ></my-bookings-property-details>
             </div>
         </div>
     </div>

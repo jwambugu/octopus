@@ -1,6 +1,6 @@
 <template>
     <tr :class="{ 'b-none': isLastProperty }">
-        <td class="title-container">
+        <td class="title-container booking-link" @click="viewBooking">
             <img
                 :src="image"
                 :alt="property.name"
@@ -8,7 +8,9 @@
             />
             <div class="title">
                 <h4>
-                    <a :href="propertyLink">{{ property.name | ucWords }} </a>
+                    <a :href="viewBookingLink"
+                        >{{ property.name | ucWords }}
+                    </a>
                 </h4>
 
                 <span class="table-property-price">
@@ -63,7 +65,16 @@ export default {
             return this.property.default_image.public_url;
         },
     },
+    methods: {
+        viewBooking() {
+            location.replace(this.viewBookingLink);
+        },
+    },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.booking-link {
+    cursor: pointer;
+}
+</style>

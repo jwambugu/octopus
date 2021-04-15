@@ -71,6 +71,7 @@ class Booking extends Model
         'property_id',
         'user_id',
         'cancelled_at',
+        'cancellation_policy_data',
     ];
 
 
@@ -83,6 +84,7 @@ class Booking extends Model
         'is_paid' => 'boolean',
         'checkin_date' => 'date',
         'checkout_date' => 'date',
+        'cancellation_policy_data' => 'object',
     ];
 
     /**

@@ -46,7 +46,10 @@ class Refund extends Model
      * @var array
      */
     protected $fillable = [
-        'amount',
+        'booking_amount',
+        'commission',
+        'transaction_charges',
+        'refundable_amount',
         'booking_id',
         'payment_channel_id',
         'user_id',
