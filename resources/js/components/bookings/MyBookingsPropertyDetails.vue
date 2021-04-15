@@ -60,7 +60,7 @@
                 tabindex="-1"
                 role="dialog"
                 aria-labelledby="cancelBookingModal"
-                style="margin-top: 15rem"
+                style="margin-top: 7rem"
             >
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -78,14 +78,64 @@
                             </h4>
                         </div>
                         <div class="modal-body">
-                            Are you sure you want to cancel this booking for
-                            property <strong>{{ booking.property.name }}</strong
-                            >? You will be charged
-                            <strong>{{
-                                cancellationPolicy.percentage_to_refund
-                            }}</strong
-                            >% of the total booking amount plus the transaction
-                            charges.
+                            <p class="bold-text">
+                                Are you sure you want to cancel?
+                            </p>
+
+                            <p class="bold-text">
+                                Here is a summary of the charges incurred
+                            </p>
+
+                            <div class="tables mb-50">
+                                <table class="table table-bordered mb-0">
+                                    <tbody>
+                                        <tr>
+                                            <th>Booking Amount</th>
+                                            <th>
+                                                KES
+                                                {{
+                                                    chargesBreakdown.bookingAmount
+                                                        | numberFormat
+                                                }}
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Commission</th>
+                                            <th>
+                                                KES
+                                                {{
+                                                    chargesBreakdown.commission
+                                                        | numberFormat
+                                                }}
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">
+                                                Transaction Charges
+                                            </th>
+                                            <th>
+                                                KES
+                                                {{
+                                                    chargesBreakdown.transactionCharges
+                                                        | numberFormat
+                                                }}
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">
+                                                Refundable Amount
+                                            </th>
+                                            <th>
+                                                KES
+                                                {{
+                                                    chargesBreakdown.refundableAmount
+                                                        | numberFormat
+                                                }}
+                                            </th>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button
@@ -159,6 +209,10 @@ export default {
             required: true,
             type: Boolean,
         },
+        chargesBreakdown: {
+            required: true,
+            type: Object,
+        },
     },
     data() {
         return {
@@ -205,4 +259,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.bold-text {
+    color: #333333;
+}
+</style>

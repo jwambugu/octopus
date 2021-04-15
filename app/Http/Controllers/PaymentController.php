@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Payment;
-use App\Models\Property;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
@@ -27,21 +26,16 @@ class PaymentController extends Controller
     /**
      * Creates a new booking payment record.
      * @param int $numberOfNights
-     * @param int $propertyID
+     * @param object $property
      * @param int $bookingID
      * @param int $userID
      * @return Payment|Model
      * @throws Exception
      */
-    public static function createBookingPayment(int $numberOfNights, int $propertyID, int $bookingID, int $userID)
+    public static function createBookingPayment(int $numberOfNights, object $property, int $bookingID, int $userID)
     {
         // Get a new account number
         $accountNumber = (new PaymentController)->generateAccountNumber();
-
-        // Get the property data
-        $property = Property::find($propertyID, [
-            'id', 'cost_per_night'
-        ]);
 
         // Generate a new uuid
         $uuid = Uuid::uuid4();

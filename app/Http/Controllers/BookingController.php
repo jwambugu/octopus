@@ -110,9 +110,12 @@ class BookingController extends Controller
 
         $canCancel = $this->canCancelBooking($booking);
 
+        $cancellationChargesBreakdown = $this->getCancellationChargesBreakdown($booking);
+
         return \view('bookings.show')->with([
             'booking' => $booking,
-            'canCancel' => $canCancel
+            'canCancel' => $canCancel,
+            'cancellationChargesBreakdown' => $cancellationChargesBreakdown
         ]);
     }
 
@@ -166,34 +169,43 @@ class BookingController extends Controller
      */
     public function bookProperty(BookPropertyRequest $request): JsonResponse
     {
-        // Get the request data
-        $propertyID = $request['property_id'];
-        $user = $request->user();
-        $checkinDate = $request['checkin_date'];
-        $checkoutDate = $request['checkout_date'];
-
-        $numberOfNights = Carbon::parse($checkoutDate)->diffInDays($checkinDate);
-        $numberOfNights = $numberOfNights == 0 ? 1 : $numberOfNights;
-
-        // Generate a new uuid
-        $uuid = Uuid::uuid4();
-
         try {
-            $booking = Booking::create([
-                'uuid' => $uuid,
-                'checkin_date' => $checkinDate,
-                'checkout_date' => $checkoutDate,
-                'number_of_nights' => $numberOfNights,
-                'property_id' => $propertyID,
-                'user_id' => auth()->id(),
-            ]);
+            $booking = DB::transaction(function () use ($request) {
+                // Get the request data
+                $propertyID = $request['property_id'];
+                $user = $request->user();
+                $checkinDate = $request['checkin_date'];
+                $checkoutDate = $request['checkout_date'];
 
-            // Add payment
-            PaymentController::createBookingPayment($numberOfNights, $propertyID, $booking->id, $user->id);
+                $property = Property::with('cancellationPolicy')->find($propertyID, [
+                    'id', 'cost_per_night', 'cancellation_policy_id'
+                ]);
 
-            // Create the booking rating data
-            $this->createBookingRating($booking);
-        } catch (Exception $e) {
+                $numberOfNights = Carbon::parse($checkoutDate)->diffInDays($checkinDate);
+                $numberOfNights = $numberOfNights == 0 ? 1 : $numberOfNights;
+
+                // Generate a new uuid
+                $uuid = Uuid::uuid4();
+
+                $booking = Booking::create([
+                    'uuid' => $uuid,
+                    'checkin_date' => $checkinDate,
+                    'checkout_date' => $checkoutDate,
+                    'number_of_nights' => $numberOfNights,
+                    'cancellation_policy_data' => $property->cancellationPolicy,
+                    'property_id' => $propertyID,
+                    'user_id' => $user->id,
+                ]);
+
+                // Add payment
+                PaymentController::createBookingPayment($numberOfNights, $property, $booking->id, $user->id);
+
+                // Create the booking rating data
+                $this->createBookingRating($booking);
+
+                return $booking;
+            });
+        } catch (Throwable $e) {
             throw new Exception($e->getMessage());
         }
 
@@ -321,6 +333,50 @@ class BookingController extends Controller
     }
 
     /**
+     * Returns a summary of the charges to be accrued if the user cancels.
+     * @param object $booking
+     * @return array
+     */
+    private function getCancellationChargesBreakdown(object $booking): array
+    {
+        $cancellationPolicy = (object)$booking->cancellation_policy_data;
+
+        $commissionPercentage = $cancellationPolicy->percentage_to_refund / 100;
+
+        // Get the amount to refund from the payments.
+        // Only get the successful transactions
+        $payment = DB::table('payments')->where([
+            'is_paid' => true,
+            'booking_id' => $booking->id
+        ])->first('amount');
+
+        if (!$payment) {
+            return [];
+        }
+
+        $bookingAmount = $payment->amount;
+
+        $commission = ceil($commissionPercentage * $bookingAmount);
+
+        $transactionCharges = DB::table('transaction_charges')
+            ->whereRaw('? BETWEEN minimum_amount AND maximum_amount', [$bookingAmount])
+            ->first([
+                'charges'
+            ]);
+
+        $charges = $transactionCharges->charges;
+
+        $refundableAmount = floor($bookingAmount - ($commission + $charges));
+
+        return [
+            'bookingAmount' => (int)$bookingAmount,
+            'commission' => $commission,
+            'transactionCharges' => (float)$charges,
+            'refundableAmount' => $refundableAmount,
+        ];
+    }
+
+    /**
      * Process the request for cancelling a booking
      * @param Request $request
      * @return JsonResponse
@@ -332,40 +388,36 @@ class BookingController extends Controller
         $booking = Booking::query()->with('property:id,admin_id', 'property.owner:id')
             ->whereUuid($request['uuid'])
             ->first([
-                'id', 'property_id', 'cancelled_at'
+                'id', 'property_id', 'cancelled_at', 'cancellation_policy_data', 'is_paid',
             ]);
 
-        if (!$booking || !is_null($booking->cancelled_at)) {
+        if (!$booking || !is_null($booking->cancelled_at) || !$booking->is_paid) {
             throw ValidationException::withMessages([
                 'booking' => 'Invalid booking provided or payment already refund.'
             ]);
         }
 
-        // Get the amount to refund from the payments.
-        // Only get the successful transactions
-        $payment = DB::table('payments')->where([
-            'is_successful' => true,
-            'booking_id' => $booking->id
-        ])->first('amount');
+        $chargesBreakdown = $this->getCancellationChargesBreakdown($booking);
 
-        if (!$payment) {
+        if (!count($chargesBreakdown)) {
             throw ValidationException::withMessages([
                 'booking' => 'Invalid booking provided or payment already refund.'
             ]);
         }
 
-        $amount = $payment->amount;
 
         try {
-            DB::transaction(function () use ($booking, $amount) {
-                // Set the booking as cancelled
+            DB::transaction(function () use ($booking, $chargesBreakdown) {
+                // Set the booking as cancelled. Prevent multiple refunds requests
                 Booking::whereId($booking->id)->update([
                     'cancelled_at' => now()
                 ]);
 
-                // Create a new refund
                 Refund::create([
-                    'amount' => $amount,
+                    'booking_amount' => $chargesBreakdown['bookingAmount'],
+                    'commission' => $chargesBreakdown['commission'],
+                    'transaction_charges' => $chargesBreakdown['transactionCharges'],
+                    'refundable_amount' => $chargesBreakdown['refundableAmount'],
                     'booking_id' => $booking->id,
                     'payment_channel_id' => 1,
                     'user_id' => auth()->id(),
