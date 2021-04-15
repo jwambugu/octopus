@@ -81,6 +81,8 @@ class Booking extends Model
      */
     protected $casts = [
         'is_paid' => 'boolean',
+        'checkin_date' => 'date',
+        'checkout_date' => 'date',
     ];
 
     /**

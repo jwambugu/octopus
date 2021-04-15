@@ -15,7 +15,6 @@ use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -59,6 +58,40 @@ class BookingController extends Controller
     }
 
     /**
+     * Determine if a user can cancel a booking.
+     * @param Booking $booking
+     * @return bool
+     */
+    private function canCancelBooking(Booking $booking): bool
+    {
+        // If the booking had been cancelled, block them from asking for a refund
+        if (!is_null($booking->cancelled_at)) {
+            return false;
+        }
+
+        // Check if the user is supposed to checkin in today.
+        // if they are, block them from cancelling
+        $timeElapsedSinceBooking = now()->diffInDays($booking->checkin_date, false);
+
+        if ($timeElapsedSinceBooking <= 0) {
+            return false;
+        }
+
+        $cancellationTimeFrame = $booking->property->cancellationPolicy->timeframe_in_hours;
+
+        if ($cancellationTimeFrame == 0) {
+            return true;
+        }
+
+        $timeFrame = now()->subHours($cancellationTimeFrame);
+
+        // Check if the user can cancel the booking
+        $diffInHours = Carbon::parse($timeFrame)->diffInHours($booking->created_at);
+
+        return $diffInHours != 0;
+    }
+
+    /**
      * Render the view showing booking details
      * @param Booking $booking
      * @return Application|Factory|View
@@ -75,23 +108,7 @@ class BookingController extends Controller
             'payments:id,account_number,amount,is_paid,booking_id,created_at'
         ]);
 
-//        return URL::signedRoute('properties.rate-property', [
-//            'property' => 'ab-aut-unde-officia-1',
-//            'uuid' => 'c146b74f-d206-4a9f-bf1d-2d135280b759',
-//            'type' => 'host'
-//        ]);
-
-        $timeFrame = now()->subHours($booking->property->cancellationPolicy->timeframe_in_hours);
-
-        // Check if the user can cancel the booking
-        $diffInHours = Carbon::parse($timeFrame)->diffInHours($booking->created_at);
-
-        $canCancel = $diffInHours != 0;
-
-        // If the booking had been cancelled, block them from asking for a refund
-        if (!is_null($booking->cancelled_at)) {
-            $canCancel = false;
-        }
+        $canCancel = $this->canCancelBooking($booking);
 
         return \view('bookings.show')->with([
             'booking' => $booking,
@@ -117,10 +134,10 @@ class BookingController extends Controller
     /**
      * Create a new property booking rating
      * @param Booking $booking
-     * @return Rating|Model
+     * @return void
      * @throws Exception
      */
-    private function createBookingRating(Booking $booking)
+    private function createBookingRating(Booking $booking): void
     {
         // Get the data for the property being booked
         $booking = $booking->load('property:id,admin_id');
@@ -129,12 +146,13 @@ class BookingController extends Controller
         $uuid = Uuid::uuid4();
 
         try {
-            return Rating::create([
+            Rating::create([
                 'uuid' => $uuid,
                 'booking_id' => $booking->id,
                 'user_id' => $booking->user_id,
                 'admin_id' => $booking->property->admin_id,
             ]);
+            return;
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
@@ -344,7 +362,6 @@ class BookingController extends Controller
                 Booking::whereId($booking->id)->update([
                     'cancelled_at' => now()
                 ]);
-
 
                 // Create a new refund
                 Refund::create([
