@@ -169,8 +169,19 @@ class BookingController extends Controller
      */
     public function bookProperty(BookPropertyRequest $request): JsonResponse
     {
+        $checkinDate = Carbon::parse($request['checkin_date']);
+        $checkoutDate = Carbon::parse($request['checkout_date']);
+
+        $numberOfNights = $checkinDate->diffInDays($checkoutDate, false);
+
+        if ($numberOfNights <= 0) {
+            throw ValidationException::withMessages([
+                'checkin_date' => "Checkout date must be greater than or equal to checkin date."
+            ]);
+        }
+
         try {
-            $booking = DB::transaction(function () use ($request) {
+            $booking = DB::transaction(function () use ($request, $numberOfNights) {
                 // Get the request data
                 $propertyID = $request['property_id'];
                 $user = $request->user();
@@ -181,7 +192,6 @@ class BookingController extends Controller
                     'id', 'cost_per_night', 'cancellation_policy_id'
                 ]);
 
-                $numberOfNights = Carbon::parse($checkoutDate)->diffInDays($checkinDate);
                 $numberOfNights = $numberOfNights == 0 ? 1 : $numberOfNights;
 
                 // Generate a new uuid
