@@ -754,7 +754,11 @@
 
                                                     <ul>
                                                         <li>Property Name: {{ $booking->property->name }}</li>
-                                                        <li>Property Address: {{ $booking->property->address }}</li>
+                                                        <li>Host Name: {{ $booking->property->owner->name }}</li>
+                                                        <li>Host
+                                                            Phone
+                                                            Number: {{ $booking->property->owner->phone_number }}</li>
+                                                        {{--                                                        <li>Property Address: {{ $booking->property->address }}</li>--}}
                                                     </ul>
                                                 </div>
                                             </td>
@@ -1077,8 +1081,11 @@
                                                 style="font-size:0px;padding:0 20px 30px 20px;word-break:break-word;">
                                                 <div
                                                     style="font-family:Roboto, Helvetica, Arial, sans-serif;font-size:14px;font-weight:400;line-height:21px;text-align:left;color:#000000;">
-                                                    <p>We hope you will have a wonderful staycation from {start} to
-                                                        {end}.</p>
+                                                    <p>We hope you will have a wonderful staycation
+                                                        from {{ \Carbon\Carbon::parse($booking->checkin_date)->format('Y-m-d') }}
+                                                        to
+                                                        {{ \Carbon\Carbon::parse($booking->checkout_date)->format('Y-m-d') }}
+                                                    </p>
                                                     <p>Cheers, 🎉🎉</p>
                                                     <p>{{ config('app.name') }} Support Team</p>
                                                 </div>
