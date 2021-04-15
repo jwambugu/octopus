@@ -49,6 +49,7 @@
                             v-model="bookingData.checkout_date"
                             :min="minDate"
                             required
+                            @input="monitorCheckoutDate"
                         />
                     </div>
 
@@ -114,10 +115,15 @@ export default {
         minDate() {
             return new Date().toISOString().slice(0, 10);
         },
-        nightsBooked() {
+        formattedDates() {
             const { checkin_date, checkout_date } = this.bookingData;
             const checkinDate = new Date(checkin_date);
             const checkoutDate = new Date(checkout_date);
+
+            return { checkoutDate, checkinDate };
+        },
+        nightsBooked() {
+            const { checkoutDate, checkinDate } = this.formattedDates;
 
             const timeDifference = Math.abs(checkoutDate - checkinDate);
             const daysBetween = Math.ceil(
@@ -126,8 +132,22 @@ export default {
 
             return daysBetween === 0 ? 1 : daysBetween;
         },
+        isCheckingOutInThePast() {
+            const { checkoutDate, checkinDate } = this.formattedDates;
+
+            return checkoutDate - checkinDate < 0;
+        },
     },
     methods: {
+        monitorCheckoutDate() {
+            this.errorMessage = "";
+
+            if (this.isCheckingOutInThePast) {
+                this.bookingData.checkout_date = "";
+                this.errorMessage =
+                    "Checkout date must be greater than or equal to checkin date.";
+            }
+        },
         bookProperty() {
             this.bookingProperty = true;
             this.errorMessage = "";
@@ -136,14 +156,16 @@ export default {
                 .dispatch("BOOK_PROPERTY", this.bookingData)
                 .then(({ message, next }) => {
                     this.successMessage = message;
+                    this.bookingProperty = false;
 
                     setTimeout(() => {
-                        window.location.replace(next);
+                        location.replace(next);
                     }, 2000);
                 })
                 .catch((error) => {
                     this.bookingProperty = false;
                     this.errorMessage = error;
+                    this.bookingData.checkout_date = "";
                 });
         },
     },
