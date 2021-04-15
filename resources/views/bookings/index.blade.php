@@ -23,7 +23,7 @@
                             </div>
 
                             <div class="text-center" style="padding-top: 3rem; padding-bottom: 2rem">
-                                <a href="{{ route('properties.index') }}" class="button-md button-theme">
+                                <a href="{{ route('vacations.index') }}" class="button-md button-theme">
                                     Book Now
                                 </a>
                             </div>
