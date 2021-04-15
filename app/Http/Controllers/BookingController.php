@@ -356,7 +356,7 @@ class BookingController extends Controller
 
         $bookingAmount = $payment->amount;
 
-        $commission = ceil($commissionPercentage * $bookingAmount);
+        $commission = floor($commissionPercentage * $bookingAmount);
 
         $transactionCharges = DB::table('transaction_charges')
             ->whereRaw('? BETWEEN minimum_amount AND maximum_amount', [$bookingAmount])
@@ -364,15 +364,19 @@ class BookingController extends Controller
                 'charges'
             ]);
 
-        $charges = $transactionCharges->charges;
+        $charges = ceil($transactionCharges->charges);
 
         $refundableAmount = floor($bookingAmount - ($commission + $charges));
+
+        // For non refundable payments the time frame will be 0, meaning the guest will not be refunded
+        $refundableAmount = $cancellationPolicy->timeframe_in_hours != 0 ? $refundableAmount : 0;
 
         return [
             'bookingAmount' => (int)$bookingAmount,
             'commission' => $commission,
             'transactionCharges' => (float)$charges,
             'refundableAmount' => $refundableAmount,
+            'isRefundable' => $refundableAmount != 0
         ];
     }
 
