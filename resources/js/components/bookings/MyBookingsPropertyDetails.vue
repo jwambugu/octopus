@@ -109,7 +109,9 @@
                                                 }}
                                             </th>
                                         </tr>
-                                        <tr>
+                                        <tr
+                                            v-if="chargesBreakdown.isRefundable"
+                                        >
                                             <th scope="row">
                                                 Transaction Charges
                                             </th>
