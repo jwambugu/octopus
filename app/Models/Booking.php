@@ -52,6 +52,8 @@ use Illuminate\Support\Carbon;
  * @mixin Eloquent
  * @property string|null $cancelled_at
  * @method static \Illuminate\Database\Eloquent\Builder|Booking whereCancelledAt($value)
+ * @property object $cancellation_policy_data
+ * @method static \Illuminate\Database\Eloquent\Builder|Booking whereCancellationPolicyData($value)
  */
 class Booking extends Model
 {

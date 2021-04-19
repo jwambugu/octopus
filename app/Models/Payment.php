@@ -62,6 +62,8 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Payment withoutTrashed()
  * @mixin Eloquent
  * @property-read Booking $booking
+ * @property string $transaction_type
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereTransactionType($value)
  */
 class Payment extends Model
 {

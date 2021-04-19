@@ -16,12 +16,18 @@
                 <ul class="top-social-media pull-right">
                     @guest
                         <li>
-                            <a href="{{ route('login') }}" class="sign-in"><i class="fa fa-sign-in"></i> Login</a>
+                            <a href="{{ route('login') }}" class="sign-in override-text-transform">Login</a>
                         </li>
                         <li>
-                            <a href="{{ route('register') }}" class="sign-in"><i class="fa fa-user"></i> Register</a>
+                            <a href="{{ route('register') }}" class="sign-in override-text-transform">Register</a>
                         </li>
                     @else
+                        <li>
+                            <a href="{{ route('login') }}" class="sign-in override-text-transform"
+                               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                Logout
+                            </a>
+                        </li>
                     @endguest
                 </ul>
             </div>
@@ -59,16 +65,6 @@
                             Properties
                         </a>
                     </li>
-                    <li class="dropdown">
-                        <a href="{{ route('about-us') }}" class="override-text-transform">
-                            About Us
-                        </a>
-                    </li>
-                    <li class="dropdown ">
-                        <a href="{{ route('contact-us') }}" class="override-text-transform">
-                            Contact Us
-                        </a>
-                    </li>
                     @auth
                         <li class="dropdown">
                             <a href="{{ route('home') }}" class="override-text-transform">
@@ -76,24 +72,26 @@
                             </a>
                         </li>
                     @endauth
+
                 </ul>
                 <ul class="nav navbar-nav navbar-right rightside-navbar">
-                    @guest
+                    <li>
+                        <a href="https://account.lomu-homes.com/" target="_blank"
+                           class="button override-text-transform">
+                            Become a Host <i class="fa fa-external-link"></i>
+                        </a>
+                    </li>
+
+                    @auth
                         <li>
-                            <a href="{{ route('login') }}" class="button override-text-transform">
-                                Login Now
+                            <a href="{{ route('login') }}" class="logout-button button override-text-transform"
+                               style="margin-left: 20px; background: #a94442 !important"
+                               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <i class="fa fa-power-off"></i>
                             </a>
                         </li>
-                    @else
-                        <li>
-                            <a href="{{ route('logout') }}"
-                               onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();"
-                               class="button override-text-transform">
-                                Logout
-                            </a>
-                        </li>
-                    @endif
+                    @endauth
+
                 </ul>
             </div>
         </nav>

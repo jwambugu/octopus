@@ -78,6 +78,8 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Property whereCancellationPolicyId($value)
  * @property string|null $reason_for_suspension
  * @method static Builder|Property whereReasonForSuspension($value)
+ * @property string|null $google_place_id
+ * @method static Builder|Property whereGooglePlaceId($value)
  */
 class Property extends Model
 {

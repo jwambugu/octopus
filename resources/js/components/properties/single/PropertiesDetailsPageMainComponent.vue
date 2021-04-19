@@ -65,6 +65,23 @@
 
                             <hr />
 
+                            <div class="map" v-if="!creatingMap">
+                                <div class="main-title-2">
+                                    <h1><span>Location</span></h1>
+                                </div>
+                                <div
+                                    id="map"
+                                    class="contact-map"
+                                    style="
+                                        height: 654px;
+                                        position: relative;
+                                        overflow: hidden;
+                                    "
+                                ></div>
+                            </div>
+
+                            <hr v-if="!creatingMap" />
+
                             <div
                                 class="properties-description mb-40"
                                 style="margin-top: 1.3rem"
@@ -130,6 +147,11 @@ export default {
             type: Object,
         },
     },
+    data() {
+        return {
+            creatingMap: true,
+        };
+    },
     computed: {
         images() {
             return this.property.images;
@@ -142,6 +164,56 @@ export default {
         },
         cancellationPolicy() {
             return this.property.cancellation_policy;
+        },
+    },
+    mounted() {
+        this.initMap();
+    },
+    methods: {
+        initMap() {
+            const {
+                maps_api_key,
+                coordinates,
+                google_place_id,
+            } = this.property;
+
+            if (google_place_id === null) {
+                return;
+            }
+
+            let script = document.createElement("script");
+
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${maps_api_key}&callback=initMap`;
+
+            script.async = true;
+
+            window.initMap = function () {
+                let map = new google.maps.Map(document.getElementById("map"), {
+                    center: coordinates,
+                    zoom: 15,
+                });
+
+                // The marker, positioned at Uluru
+                const marker = new google.maps.Marker({
+                    position: coordinates,
+                    map: map,
+                    visible: false,
+                });
+
+                // Add circle overlay and bind to marker
+                const circle = new google.maps.Circle({
+                    map: map,
+                    radius: 500,
+                    fillColor: "#ffb400",
+                    strokeColor: "#ffb400",
+                });
+
+                circle.bindTo("center", marker, "position");
+            };
+
+            document.head.appendChild(script);
+
+            this.creatingMap = false;
         },
     },
 };
