@@ -8629,7 +8629,16 @@ table.manage-table .title-container .title span {
     }
 
     .rightside-navbar {
-        display: none;
+        /*display: none;*/
+        width: 40%;
+
+    }
+
+    .logout-button {
+        /*margin-top: 3px !important;*/
+        /*margin-left: 0px !important;*/
+        /*width: 30%;*/
+        display: none !important;
     }
 
     .main-header .navbar-default .nav > li > a {
