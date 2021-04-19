@@ -35,6 +35,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|Refund withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Refund withoutTrashed()
  * @mixin \Eloquent
+ * @property int $booking_amount
+ * @property int $commission
+ * @property int $transaction_charges
+ * @property int $refundable_amount
+ * @method static \Illuminate\Database\Eloquent\Builder|Refund whereBookingAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Refund whereCommission($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Refund whereRefundableAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Refund whereTransactionCharges($value)
  */
 class Refund extends Model
 {

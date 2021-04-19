@@ -37,5 +37,8 @@ return [
         'base_url' => env('MPESA_BASE_URL'),
         'short_code' => env('MPESA_SHORTCODE'),
     ],
+    'google' => [
+        'maps_api_key' => env('GOOGLE_MAPS_API_KEY'),
+    ]
 
 ];

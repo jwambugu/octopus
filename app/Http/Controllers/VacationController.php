@@ -251,6 +251,15 @@ class VacationController extends Controller
             'property' => $property->slug
         ]);
 
+        $placeID = $property->google_place_id;
+
+        if (!is_null($placeID)) {
+            $coordinates = CacheController::cachedPlaceDetails($placeID);
+
+            $property->coordinates = $coordinates;
+            $property->maps_api_key = config('services.google.maps_api_key');
+        }
+
         return view('vacations.show')->with([
             'property' => $property
         ]);
