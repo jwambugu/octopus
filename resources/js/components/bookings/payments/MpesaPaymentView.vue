@@ -13,78 +13,159 @@
             </div>
         </div>
 
-        <div v-if="hasUnsuccessfulPayments">
-            <div class="notice notice-info">
-                We will send a payment notification to your phone with the
-                booking amount of
-                <strong style="color: #000000"
-                    >KES {{ payment.amount | numberFormat }}</strong
-                >.
-                <br />
-                Please enter your Mpesa PIN to complete the transaction.
+        <div
+            class="alert alert-success text-center override-alert-text-transform"
+            role="alert"
+            v-if="successMessage"
+        >
+            {{ successMessage }}
+        </div>
+
+        <div
+            class="alert alert-danger text-center override-alert-text-transform"
+            role="alert"
+            v-if="errorMessage"
+        >
+            {{ errorMessage }}
+        </div>
+
+        <div class="panel-group" id="accordion" v-if="hasUnsuccessfulPayments">
+            <div class="panel panel-default">
+                <a
+                    data-toggle="collapse"
+                    data-parent="#accordion"
+                    href="#collapseOne"
+                >
+                    <div class="panel-heading">
+                        <div>
+                            <img
+                                src="/images/mpesa-logo.png"
+                                class="img img-responsive payment-channels-logos"
+                                style="width: 50px"
+                                alt=""
+                            />
+
+                            <h4 class="panel-heading-title">Pay with Mpesa</h4>
+
+                            <br /><br />
+                        </div>
+                    </div>
+                </a>
+                <div id="collapseOne" class="panel-collapse collapse in">
+                    <div class="my-address">
+                        <div
+                            class="alert alert-info override-alert-text-transform"
+                            style="background-color: #014d9e; color: #ffffff"
+                        >
+                            We will send a payment notification to your phone
+                            with the booking amount of
+                            <strong style="color: #ffffff"
+                                >KES {{ payment.amount | numberFormat }}</strong
+                            >.
+                            <br />
+                            Please enter your Mpesa PIN to complete the
+                            transaction.
+                        </div>
+
+                        <form @submit.prevent="makeMpesaPayment">
+                            <div class="form-group">
+                                <label
+                                    for="phone_number"
+                                    class="bolder-text-override"
+                                    >Phone Number</label
+                                >
+                                <input
+                                    id="phone_number"
+                                    type="number"
+                                    class="input-text"
+                                    v-model="paymentData.phoneNumber"
+                                />
+                            </div>
+                            <div class="form-group">
+                                <label for="amount" class="bolder-text-override"
+                                    >Amount to Pay</label
+                                >
+                                <input
+                                    id="amount"
+                                    type="text"
+                                    class="input-text"
+                                    :value="payment.amount"
+                                    readonly
+                                />
+                            </div>
+
+                            <div class="form-group">
+                                <button
+                                    type="submit"
+                                    class="btn button-md btn-block button-theme"
+                                    v-if="!makingPayment"
+                                >
+                                    Pay With Mpesa
+                                </button>
+
+                                <button
+                                    type="submit"
+                                    class="btn button-md btn-block button-theme"
+                                    disabled
+                                    v-if="makingPayment"
+                                >
+                                    <i class="fa fa-spinner fa-spin fa-1x"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
-
-            <div class="my-address">
-                <div
-                    class="alert alert-success text-center override-alert-text-transform"
-                    role="alert"
-                    v-if="successMessage"
+            <div class="panel panel-default">
+                <a
+                    data-toggle="collapse"
+                    data-parent="#accordion"
+                    href="#collapseTwo"
                 >
-                    {{ successMessage }}
-                </div>
+                    <div class="panel-heading">
+                        <div>
+                            <img
+                                src="/images/paypal-logo.png"
+                                class="img img-responsive payment-channels-logos"
+                                alt=""
+                            />
 
-                <div
-                    class="alert alert-danger text-center override-alert-text-transform"
-                    role="alert"
-                    v-if="errorMessage"
-                >
-                    {{ errorMessage }}
-                </div>
-
-                <div class="main-title-2">
-                    <h1>Make Payment</h1>
-                </div>
-
-                <form @submit.prevent="makeMpesaPayment">
-                    <div class="form-group">
-                        <label for="phone_number">Phone Number</label>
-                        <input
-                            id="phone_number"
-                            type="number"
-                            class="input-text"
-                            v-model="paymentData.phoneNumber"
-                        />
+                            <h4 class="panel-heading-title">Pay with Paypal</h4>
+                            <br /><br />
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="amount">Amount to Pay</label>
-                        <input
-                            id="amount"
-                            type="text"
-                            class="input-text"
-                            :value="payment.amount"
-                            readonly
-                        />
-                    </div>
+                </a>
+                <div id="collapseTwo" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <div class="my-address">
+                            <div
+                                class="alert alert-info override-alert-text-transform"
+                                style="
+                                    background-color: #014d9e;
+                                    color: #ffffff;
+                                "
+                            >
+                                We will redirect you to PayPal to complete the
+                                transaction of
+                                <strong class="text-white">
+                                    KES
+                                    {{ payment.amount | numberFormat }}
+                                </strong>
+                                for your vacation booking.
+                                <br />
+                            </div>
 
-                    <div class="form-group">
-                        <button
-                            type="submit"
-                            class="btn button-md btn-block button-theme"
-                            v-if="!makingPayment"
-                        >
-                            Make Payment
-                        </button>
-
-                        <button
-                            type="submit"
-                            class="btn button-md btn-block button-theme"
-                            disabled
-                            v-else
-                        >
-                            <i class="fa fa-spinner fa-spin fa-1x"></i>
-                        </button>
+                            <button
+                                type="button"
+                                class="btn button-md btn-block button-theme"
+                                @click="makePayPalPayment"
+                                v-if="!makingPayment"
+                            >
+                                Pay With Paypal
+                            </button>
+                        </div>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
 
@@ -173,6 +254,7 @@ export default {
                 this.booking.unsuccessful_payments.length !== 0;
         },
         makeMpesaPayment() {
+            // this.errorMessage = "TODO: ALLOW PAYMENTS";
             this.makingPayment = true;
             this.errorMessage = "";
 
@@ -216,6 +298,7 @@ export default {
                     this.errorMessage = error;
                 });
         },
+        makePayPalPayment() {},
     },
 };
 </script>

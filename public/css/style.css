@@ -9048,4 +9048,21 @@ input[type=number] {
 /*    border: 2px solid white;*/
 /*}*/
 
+.bolder-text-override {
+    color: #37404d !important;
+}
+
+.panel-heading-title {
+    margin-top: 8px;
+    font-size: 25px;
+    float: left;
+    margin-left: 15px;
+}
+
+.payment-channels-logos {
+    width: 40px;
+    float: left;
+    margin-top: -5px;
+}
+
 

@@ -3,6 +3,7 @@
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\PayPalController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\VacationController;
 use Illuminate\Support\Facades\Route;
@@ -95,5 +96,16 @@ Route::group([
 
     Route::post('cancel-booking', [BookingController::class, 'cancelBooking'])
         ->name('book.cancel-booking');
+});
+
+/**
+ * Paypal routes
+ */
+Route::group([
+    'prefix' => 'paypal',
+    'as' => 'paypal.'
+], function () {
+    Route::get('/cancel-url', [PayPalController::class, 'cancelURL'])->name('cancel-url');
+    Route::get('/return-url', [PayPalController::class, 'returnURL'])->name('return-url');
 });
 
