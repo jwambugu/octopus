@@ -2,9 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Payment;
+use DB;
+use Exception;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use PayPalCheckoutSdk\Core\PayPalHttpClient;
 use PayPalCheckoutSdk\Core\ProductionEnvironment;
 use PayPalCheckoutSdk\Core\SandboxEnvironment;
+use PayPalCheckoutSdk\Orders\OrdersCaptureRequest;
 use PayPalCheckoutSdk\Orders\OrdersCreateRequest;
 
 
@@ -63,10 +69,10 @@ class PayPalController extends Controller
     {
 
         return [
-            'intent' => 'AUTHORIZE',
+            'intent' => 'CAPTURE',
             'application_context' => [
-                'return_url' => 'https://example.com/return',
-                'cancel_url' => 'https://example.com/cancel',
+                'return_url' => route('paypal.return-url'), // The URL where the customer is redirected after the customer approves the payment.
+                'cancel_url' => route('paypal.cancel-url'), // The URL where the customer is redirected after the customer cancels the payment.
                 'brand_name' => config('app.name'),
                 'locale' => 'en-US',
                 'landing_page' => 'BILLING',
@@ -108,5 +114,58 @@ class PayPalController extends Controller
                 ],
             ],
         ];
+    }
+
+    public function returnURL(Request $request)
+    {
+        // 9CE84966M09339251
+        try {
+            // 9CE84966M09339251
+            $client = self::client();
+
+            $orderID = $request['token'];
+
+            $captureRequest = new OrdersCaptureRequest($orderID);
+
+            $response = $client->execute($captureRequest);
+        } catch (Exception $e) {
+            return redirect()->route('index');
+        }
+
+        info('returnURLPayload', [$response]);
+
+        $status = $response->result->status;
+
+        $isCompletedSuccessfully = $status == 'COMPLETED';
+
+        DB::table('payments')->where('paypal_order_id', $orderID)->update([
+            'callback_data' => json_encode($response),
+            'is_successful' => $isCompletedSuccessfully,
+            'is_paid' => $isCompletedSuccessfully,
+            'updated_at' => now()
+        ]);
+    }
+
+    /**
+     * Handle the cancellation url for paypal.
+     * @param Request $request
+     * @return RedirectResponse
+     * @throws Exception
+     */
+    public function cancelURL(Request $request): RedirectResponse
+    {
+        try {
+            $payment = Payment::where('paypal_order_id', $request['token']);
+
+            if ($payment) {
+                $payment->update([
+                    'is_cancelled' => true
+                ]);
+            }
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+
+        return redirect()->route('booking.index');
     }
 }

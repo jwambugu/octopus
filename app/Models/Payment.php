@@ -91,6 +91,8 @@ class Payment extends Model
         'booking_id',
         'property_id',
         'user_id',
+        'paypal_order_id',
+        'is_cancelled',
     ];
 
     /**

@@ -12,11 +12,24 @@ class PageController extends Controller
     /**
      * Render the application index page.
      * @param Request $request
-     * @return Application|Factory|View
+     * @return
      */
     public function index(Request $request)
     {
-//        return PayPalController::createOrderRequest();
+//        $response = PayPalController::createOrderRequest();
+//
+//        info($response['results']->id);
+//        $orderID = $response['results']->id;
+//
+//        \DB::table('payments')->where('id', 1)->update([
+//            'paypal_order_id' => $orderID,
+//            'request_response_data' => json_encode($response),
+//        ]);
+//
+//        $approveData = collect($response['links'])->where('rel', 'approve')->first();
+//
+////        dd($approveData->href);
+//        return redirect($approveData->href);
 
         return (new VacationController)->index($request);
     }
