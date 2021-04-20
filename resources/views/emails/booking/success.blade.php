@@ -758,6 +758,10 @@
                                                         <li>Host
                                                             Phone
                                                             Number: {{ $booking->property->owner->phone_number }}</li>
+                                                        <li>Checkin
+                                                            Time: {{ date('H:i', strtotime($booking->property->checkin_time)) }}</li>
+                                                        <li>Checkout
+                                                            Time: {{ date('H:i', strtotime($booking->property->checkout_time)) }}</li>
                                                         {{--                                                        <li>Property Address: {{ $booking->property->address }}</li>--}}
                                                     </ul>
                                                 </div>
@@ -1082,9 +1086,8 @@
                                                 <div
                                                     style="font-family:Roboto, Helvetica, Arial, sans-serif;font-size:14px;font-weight:400;line-height:21px;text-align:left;color:#000000;">
                                                     <p>We hope you will have a wonderful staycation
-                                                        from {{ \Carbon\Carbon::parse($booking->checkin_date)->format('Y-m-d') }}
-                                                        to
-                                                        {{ \Carbon\Carbon::parse($booking->checkout_date)->format('Y-m-d') }}
+                                                        from {{ date('Y-m-d', strtotime($booking->checkin_date)) }}
+                                                        to {{ date('Y-m-d', strtotime($booking->checkout_date)) }}
                                                     </p>
                                                     <p>Cheers, 🎉🎉</p>
                                                     <p>{{ config('app.name') }} Support Team</p>

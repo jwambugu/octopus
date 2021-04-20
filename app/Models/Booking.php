@@ -107,7 +107,8 @@ class Booking extends Model
         return $this->belongsTo(Property::class, 'property_id')
             ->with('defaultImage')
             ->select([
-                'id', 'name', 'slug', 'cost_per_night', 'address', 'admin_id', 'city_id', 'cancellation_policy_id'
+                'id', 'name', 'slug', 'cost_per_night', 'address', 'admin_id', 'city_id', 'cancellation_policy_id',
+                'checkin_time', 'checkout_time'
             ]);
     }
 

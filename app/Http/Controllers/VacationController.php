@@ -251,6 +251,9 @@ class VacationController extends Controller
             'property' => $property->slug
         ]);
 
+        $property->checkin_time = date('H:i', strtotime($property->checkin_time));
+        $property->checkout_time = date('H:i', strtotime($property->checkout_time));
+
         $placeID = $property->google_place_id;
 
         if (!is_null($placeID)) {

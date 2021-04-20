@@ -65,6 +65,34 @@
 
                             <hr />
 
+                            <div class="floor-plans">
+                                <div class="main-title-2">
+                                    <h1><span>House Rules</span></h1>
+                                </div>
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <strong>Checkin Time</strong>
+                                            </td>
+                                            <td>
+                                                {{ property.checkin_time }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <strong>Checkout Time</strong>
+                                            </td>
+                                            <td>
+                                                {{ property.checkout_time }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <hr />
+
                             <div class="map" v-if="!creatingMap">
                                 <div class="main-title-2">
                                     <h1><span>Location</span></h1>
