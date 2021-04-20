@@ -80,6 +80,10 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Property whereReasonForSuspension($value)
  * @property string|null $google_place_id
  * @method static Builder|Property whereGooglePlaceId($value)
+ * @property string $checkin_time
+ * @property string $checkout_time
+ * @method static Builder|Property whereCheckinTime($value)
+ * @method static Builder|Property whereCheckoutTime($value)
  */
 class Property extends Model
 {
