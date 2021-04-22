@@ -64,6 +64,20 @@ const actions = {
                 .catch((error) => reject(errorHandler(error)));
         });
     },
+    MAKE_PAYPAL_PAYMENT: ({}, payload) => {
+        return new Promise((resolve, reject) => {
+            const { uuid } = payload;
+
+            axios
+                .post(`/bookings/lipa-na-paypal`, {
+                    uuid,
+                })
+                .then(({ data }) => {
+                    resolve(data.data);
+                })
+                .catch((error) => reject(errorHandler(error)));
+        });
+    },
 };
 
 export default {

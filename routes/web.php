@@ -96,6 +96,9 @@ Route::group([
 
     Route::post('cancel-booking', [BookingController::class, 'cancelBooking'])
         ->name('book.cancel-booking');
+
+    Route::post('/lipa-na-paypal', [BookingController::class, 'processPaypalPaymentRequest'])
+        ->name('lipa-na-paypal');
 });
 
 /**

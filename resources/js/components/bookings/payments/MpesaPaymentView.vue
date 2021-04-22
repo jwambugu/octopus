@@ -95,21 +95,34 @@
                             </div>
 
                             <div class="form-group">
-                                <button
-                                    type="submit"
-                                    class="btn button-md btn-block button-theme"
-                                    v-if="!makingPayment"
-                                >
-                                    Pay With Mpesa
-                                </button>
+                                <div v-if="!hasSelectedPaypal">
+                                    <button
+                                        type="submit"
+                                        class="btn button-md btn-block button-theme"
+                                        v-if="!makingPayment"
+                                    >
+                                        Pay With Mpesa
+                                    </button>
+
+                                    <button
+                                        type="submit"
+                                        class="btn button-md btn-block button-theme"
+                                        disabled
+                                        v-if="makingPayment"
+                                    >
+                                        <i
+                                            class="fa fa-spinner fa-spin fa-1x"
+                                        ></i>
+                                    </button>
+                                </div>
 
                                 <button
-                                    type="submit"
+                                    v-else
+                                    type="button"
                                     class="btn button-md btn-block button-theme"
                                     disabled
-                                    v-if="makingPayment"
                                 >
-                                    <i class="fa fa-spinner fa-spin fa-1x"></i>
+                                    Pay With Mpesa
                                 </button>
                             </div>
                         </form>
@@ -159,7 +172,25 @@
                                 type="button"
                                 class="btn button-md btn-block button-theme"
                                 @click="makePayPalPayment"
-                                v-if="!makingPayment"
+                                v-if="!makingPayment && !hasSelectedMpesa"
+                            >
+                                Pay With Paypal
+                            </button>
+
+                            <button
+                                type="submit"
+                                class="btn button-md btn-block button-theme"
+                                disabled
+                                v-if="makingPayment"
+                            >
+                                <i class="fa fa-spinner fa-spin fa-1x"></i>
+                            </button>
+
+                            <button
+                                type="button"
+                                class="btn button-md btn-block button-theme"
+                                disabled
+                                v-if="hasSelectedMpesa"
                             >
                                 Pay With Paypal
                             </button>
@@ -235,6 +266,8 @@ export default {
             alertMessage: "",
             alertClass: "",
             hasUnsuccessfulPayments: true,
+            hasSelectedMpesa: false,
+            hasSelectedPaypal: false,
         };
     },
     computed: {
@@ -257,6 +290,7 @@ export default {
             // this.errorMessage = "TODO: ALLOW PAYMENTS";
             this.makingPayment = true;
             this.errorMessage = "";
+            this.hasSelectedMpesa = true;
 
             this.paymentData.paymentID = this.payment.id;
 
@@ -298,7 +332,23 @@ export default {
                     this.errorMessage = error;
                 });
         },
-        makePayPalPayment() {},
+        makePayPalPayment() {
+            this.hasSelectedPaypal = true;
+            this.makingPayment = true;
+
+            this.$store
+                .dispatch("MAKE_PAYPAL_PAYMENT", {
+                    uuid: this.payment.uuid,
+                })
+                .then(({ next }) => {
+                    location.replace(next);
+                })
+                .catch((error) => {
+                    this.makingPayment = false;
+                    this.errorMessage = error;
+                    this.makingPayment = false;
+                });
+        },
     },
 };
 </script>

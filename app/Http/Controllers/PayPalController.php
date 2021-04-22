@@ -116,14 +116,28 @@ class PayPalController extends Controller
         ];
     }
 
-    public function returnURL(Request $request)
+    /**
+     * Process the paypal callback
+     * @param Request $request
+     * @return RedirectResponse
+     * @throws Exception
+     */
+    public function returnURL(Request $request): RedirectResponse
     {
-        // 9CE84966M09339251
-        try {
-            // 9CE84966M09339251
-            $client = self::client();
+        $orderID = $request['token'];
 
-            $orderID = $request['token'];
+        $payment = Payment::wherePaypalOrderId($orderID)
+            ->with('booking:id,uuid')
+            ->first([
+                'id', 'booking_id'
+            ]);
+
+        if (!$payment) {
+            return redirect()->route('index');
+        }
+
+        try {
+            $client = self::client();
 
             $captureRequest = new OrdersCaptureRequest($orderID);
 
@@ -132,18 +146,23 @@ class PayPalController extends Controller
             return redirect()->route('index');
         }
 
-        info('returnURLPayload', [$response]);
-
         $status = $response->result->status;
 
         $isCompletedSuccessfully = $status == 'COMPLETED';
 
-        DB::table('payments')->where('paypal_order_id', $orderID)->update([
-            'callback_data' => json_encode($response),
-            'is_successful' => $isCompletedSuccessfully,
-            'is_paid' => $isCompletedSuccessfully,
-            'updated_at' => now()
-        ]);
+        try {
+            DB::table('payments')->where('paypal_order_id', $orderID)
+                ->update([
+                    'callback_data' => json_encode($response),
+                    'is_successful' => $isCompletedSuccessfully,
+                    'is_paid' => $isCompletedSuccessfully,
+                    'updated_at' => now()
+                ]);
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+
+        return redirect()->route('booking.show', $payment->booking->uuid);
     }
 
     /**

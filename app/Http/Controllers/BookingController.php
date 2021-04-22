@@ -448,4 +448,49 @@ class BookingController extends Controller
             ]
         ]);
     }
+
+    /**
+     * Process the request for paying using paypal.
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException
+     */
+    public function processPaypalPaymentRequest(Request $request): JsonResponse
+    {
+        // Get the request data
+        $uuid = $request['uuid'];
+
+        // Find the payment using the id
+        $payment = Payment::query()
+            ->with('booking')
+            ->select([
+                'id', 'account_number', 'amount', 'booking_id', 'property_id', 'user_id',
+            ])
+            ->firstWhere('uuid', $uuid);
+
+        if (!$payment) {
+            throw ValidationException::withMessages([
+                'payment' => 'Invalid payment. Please try again.'
+            ]);
+        }
+
+        $orderResponse = PayPalController::createOrderRequest();
+
+        $paypalOrderID = $orderResponse['results']->id;
+
+        DB::table('payments')->where('id', $payment->id)
+            ->update([
+                'paypal_order_id' => $paypalOrderID,
+                'request_response_data' => json_encode($orderResponse),
+                'updated_at' => now()
+            ]);
+
+        $approveData = collect($orderResponse['links'])->where('rel', 'approve')->first();
+
+        return response()->json([
+            'data' => [
+                'next' => $approveData->href
+            ]
+        ]);
+    }
 }
