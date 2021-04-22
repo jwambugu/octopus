@@ -64,6 +64,10 @@ use Illuminate\Support\Carbon;
  * @property-read Booking $booking
  * @property string $transaction_type
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereTransactionType($value)
+ * @property string|null $paypal_order_id
+ * @property int $is_cancelled
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereIsCancelled($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment wherePaypalOrderId($value)
  */
 class Payment extends Model
 {
