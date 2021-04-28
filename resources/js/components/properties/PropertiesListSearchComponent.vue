@@ -225,7 +225,7 @@ export default {
 
 @media (min-width: 320px) and (max-width: 480px) {
     .floating-panel {
-        top: 19rem;
+        top: 18rem;
         left: 10px;
         width: 100% !important;
         -webkit-transition: all 0.5s ease-in-out;
