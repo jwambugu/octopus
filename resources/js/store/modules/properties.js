@@ -13,6 +13,7 @@ const state = {
     loadingVacationTypes: true,
     popularVacations: [],
     loadingPopularVacations: true,
+    vacationAddresses: [],
 };
 
 const getters = {
@@ -24,6 +25,7 @@ const getters = {
     getLoadingVacationTypes: (state) => state.loadingVacationTypes,
     getPopularVacations: (state) => state.popularVacations,
     getLoadingPopularVacations: (state) => state.loadingPopularVacations,
+    getVacationAddresses: (state) => state.vacationAddresses,
 };
 
 const mutations = {
@@ -45,6 +47,8 @@ const mutations = {
         (state.popularVacations = vacations),
     setLoadingPopularVacations: (state, loading) =>
         (state.loadingPopularVacations = loading),
+    setVacationAddresses: (state, loading) =>
+        (state.vacationAddresses = loading),
 };
 
 const actions = {
@@ -121,6 +125,25 @@ const actions = {
                     resolve();
                 })
                 .catch((error) => reject(error));
+        });
+    },
+    FIND_VACATIONS_BY_ADDRESS: ({ commit }, payload) => {
+        return new Promise((resolve) => {
+            const { query } = payload;
+
+            axios
+                .get(`/vacations/find-vacation-addresses`, {
+                    params: {
+                        query,
+                    },
+                })
+                .then(({ data }) => {
+                    const { addresses } = data.data;
+
+                    commit("setVacationAddresses", addresses);
+
+                    resolve();
+                });
         });
     },
 };
