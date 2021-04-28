@@ -49,6 +49,9 @@ Route::group([
     Route::get('/get-popular-vacations', [VacationController::class, 'getPopularVacations'])
         ->name('get-popular-vacations');
 
+    Route::get('/find-vacation-addresses', [VacationController::class, 'findVacationAddresses'])
+        ->name('find-vacation-addresses');
+
     Route::get('/{property:slug}', [VacationController::class, 'show'])->name('show');
 
     Route::get('/{property:slug}/rate-property', [VacationController::class, 'createPropertyBookingRatingView'])

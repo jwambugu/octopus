@@ -72,7 +72,7 @@ class VacationController extends Controller
     /**
      * Render the properties index page
      * @param Request $request
-     * @return
+     * @return Application|Factory|View
      */
     public function index(Request $request)
     {
@@ -379,6 +379,25 @@ class VacationController extends Controller
         return response()->json([
             'data' => [
                 'properties' => $properties
+            ]
+        ]);
+    }
+
+    public function findVacationAddresses(Request $request): JsonResponse
+    {
+        // Extract the request data
+        $query = $request['query'];
+
+        $query = sprintf('%s%s%s', '%', $query, '%');
+
+        $addresses = DB::table('properties')->where('address', 'like', $query)
+            ->select('address')
+            ->limit(6)
+            ->get();
+
+        return response()->json([
+            'data' => [
+                'addresses' => $addresses
             ]
         ]);
     }

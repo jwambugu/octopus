@@ -6,6 +6,23 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
+                                <label for="location"
+                                    >Where do you want to stay?</label
+                                >
+                                <input
+                                    type="search"
+                                    id="location"
+                                    class="form-control"
+                                    placeholder="Enter location..."
+                                    style="height: 4.5rem"
+                                    v-model="filterData.address"
+                                    @input="searchingByAddress"
+                                    autocomplete="off"
+                                />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
                                 <label for="property_types">
                                     Vacation Type
                                 </label>
@@ -25,27 +42,6 @@
                                         :value="type.slug"
                                     >
                                         {{ type.name }}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="city">City</label>
-                                <select
-                                    class="selectpicker search-fields"
-                                    data-live-search="true"
-                                    data-live-search-placeholder="Search value"
-                                    id="city"
-                                    v-model="filterData.city"
-                                >
-                                    <option value="">Locations</option>
-                                    <option
-                                        v-for="(city, index) in filters.cities"
-                                        :key="index"
-                                        :value="city.slug"
-                                    >
-                                        {{ city.name }}
                                     </option>
                                 </select>
                             </div>
@@ -81,7 +77,7 @@
                                 @click="filterProperties"
                                 v-if="!filtering"
                             >
-                                Filter Vacations
+                                Find Vacations
                             </button>
                             <button
                                 type="submit"
@@ -97,10 +93,32 @@
                 </form>
             </div>
         </div>
+        <div class="row floating-panel-main floating-panel" v-if="showPanel">
+            <div class="col-md-3">
+                <div class="sidebar-widget category-posts">
+                    <ul class="list-unstyled list-cat">
+                        <li
+                            v-for="(address, index) in addresses"
+                            :key="index"
+                            class="address-list-item"
+                            @click="setAddressToFilterWith(address)"
+                        >
+                            <a
+                                class="address-list-link"
+                                @click="setAddressToFilterWith(address)"
+                                >{{ address.address }}</a
+                            >
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
     name: "PropertiesListSearchComponent",
     props: {
@@ -123,9 +141,16 @@ export default {
                 property_types: "",
                 bedrooms: "",
                 city: "",
+                address: "",
             },
             filtering: false,
+            showPanel: false,
         };
+    },
+    computed: {
+        ...mapGetters({
+            addresses: "getVacationAddresses",
+        }),
     },
     created() {
         const { propertyTypes, bedrooms, city } = this.queryParams;
@@ -140,10 +165,30 @@ export default {
         this.filterProperties();
     },
     methods: {
+        searchingByAddress() {
+            const query = this.filterData.address;
+
+            if (query.length < 3) {
+                this.showPanel = false;
+
+                return;
+            }
+
+            this.showPanel = true;
+
+            this.$store.dispatch("FIND_VACATIONS_BY_ADDRESS", {
+                query,
+            });
+        },
+        setAddressToFilterWith(address) {
+            this.filterData.address = address.address;
+
+            this.showPanel = false;
+        },
         filterProperties() {
             this.filtering = true;
 
-            const { property_types, bedrooms, city } = this.filterData;
+            const { property_types, bedrooms, city, address } = this.filterData;
 
             this.$store
                 .dispatch("GET_PROPERTIES", {
@@ -160,4 +205,38 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.floating-panel-main {
+    position: absolute;
+    overflow: hidden;
+    z-index: 2400;
+}
+
+.floating-panel {
+    top: 29rem;
+    left: 150px;
+    width: 100% !important;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    /*-ms-transition: all 0.5s ease-in-out;*/
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
+}
+
+@media (min-width: 320px) and (max-width: 480px) {
+    .floating-panel {
+        top: 19rem;
+        left: 10px;
+        width: 100% !important;
+        -webkit-transition: all 0.5s ease-in-out;
+        -moz-transition: all 0.5s ease-in-out;
+        /*-ms-transition: all 0.5s ease-in-out;*/
+        -o-transition: all 0.5s ease-in-out;
+        transition: all 0.5s ease-in-out;
+    }
+}
+
+.address-list-item {
+    cursor: pointer;
+}
+</style>
