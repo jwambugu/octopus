@@ -12,6 +12,7 @@
                         :filters="filters"
                         :query-params="queryParams"
                         :page="page"
+                        :maps-key="mapsKey"
                     ></properties-list-search-component>
                 </div>
 
@@ -71,6 +72,10 @@ export default {
         queryParams: {
             required: true,
             type: Object,
+        },
+        mapsKey: {
+            required: true,
+            type: String,
         },
     },
     data() {

@@ -93,32 +93,10 @@
                 </form>
             </div>
         </div>
-        <div class="row floating-panel-main floating-panel" v-if="showPanel">
-            <div class="col-md-3">
-                <div class="sidebar-widget category-posts">
-                    <ul class="list-unstyled list-cat">
-                        <li
-                            v-for="(address, index) in addresses"
-                            :key="index"
-                            class="address-list-item"
-                            @click="setAddressToFilterWith(address)"
-                        >
-                            <a
-                                class="address-list-link"
-                                @click="setAddressToFilterWith(address)"
-                                >{{ address.address }}</a
-                            >
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
     </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-
 export default {
     name: "PropertiesListSearchComponent",
     props: {
@@ -134,6 +112,10 @@ export default {
             required: true,
             type: Object,
         },
+        mapsKey: {
+            required: true,
+            type: String,
+        },
     },
     data() {
         return {
@@ -147,43 +129,47 @@ export default {
             showPanel: false,
         };
     },
-    computed: {
-        ...mapGetters({
-            addresses: "getVacationAddresses",
-        }),
-    },
     created() {
-        const { propertyTypes, bedrooms, city } = this.queryParams;
+        const { propertyTypes, bedrooms, city, address } = this.queryParams;
 
         this.filterData = {
             ...this.filterData,
             property_types: propertyTypes,
             bedrooms,
             city,
+            address,
         };
 
         this.filterProperties();
+
+        let script = document.createElement("script");
+
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${this.mapsKey}&libraries=places`;
+
+        script.async = true;
+
+        document.head.appendChild(script);
     },
     methods: {
         searchingByAddress() {
-            const query = this.filterData.address;
+            const input = document.getElementById("location");
 
-            if (query.length < 3) {
-                this.showPanel = false;
+            const options = {
+                componentRestrictions: { country: "ke" },
+                fields: ["place_id", "geometry", "name"],
+                strictBounds: false,
+            };
 
-                return;
-            }
+            const autocomplete = new google.maps.places.Autocomplete(
+                input,
+                options
+            );
 
-            this.showPanel = true;
+            autocomplete.addListener("place_changed", () => {
+                const place = autocomplete.getPlace();
 
-            this.$store.dispatch("FIND_VACATIONS_BY_ADDRESS", {
-                query,
+                this.filterData.address = place.name;
             });
-        },
-        setAddressToFilterWith(address) {
-            this.filterData.address = address.address;
-
-            this.showPanel = false;
         },
         filterProperties() {
             this.filtering = true;
@@ -196,6 +182,7 @@ export default {
                     property_types,
                     bedrooms,
                     city,
+                    address,
                 })
                 .then(() => {
                     this.filtering = false;
@@ -206,6 +193,25 @@ export default {
 </script>
 
 <style scoped>
+/* Extended Styles */
+.pac-icon {
+    display: none !important;
+}
+
+.pac-item {
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.pac-item:hover {
+    background-color: #ececec;
+}
+
+.pac-item-query {
+    font-size: 16px;
+}
+
 .floating-panel-main {
     position: absolute;
     overflow: hidden;
