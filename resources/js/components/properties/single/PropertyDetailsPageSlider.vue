@@ -14,6 +14,7 @@
                             :src="image.public_url"
                             class="thumb-preview"
                             :alt="slug"
+                            style="max-height: 500px"
                         />
                     </div>
                 </div>
@@ -60,6 +61,7 @@
                         :src="image.public_url"
                         class="thumb-preview"
                         :alt="slug"
+                        style="max-height: 100px"
                     />
                 </li>
             </ol>
