@@ -235,7 +235,9 @@ class VacationController extends Controller
         // Sort the properties by the option provided
         $properties = $properties->select([
             'id', 'name', 'slug', 'address', 'cost_per_night', 'property_type_id'
-        ])->simplePaginate(10)->appends($cleanedRequest->all());
+        ])->orderByDesc('id')
+            ->simplePaginate(30)
+            ->appends($cleanedRequest->all());
 
         $apiRoute = route('vacations.fetch-vacations');
         $viewRoute = route('index');
