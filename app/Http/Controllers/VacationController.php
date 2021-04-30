@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\BookingRating;
-use App\Models\City;
 use App\Models\Property;
 use App\Models\PropertyType;
 use App\Models\Rating;
@@ -59,13 +58,18 @@ class VacationController extends Controller
         $query = $request->query;
 
         $propertyTypes = $query->has('property_types') ? $query->get('property_types') : "";
+
         $bedrooms = $query->has('bedrooms') ? $query->get('bedrooms') : 0;
+
         $city = $query->has('city') ? $query->get('city') : "";
+
+        $address = $query->has('address') ? $query->get('address') : "";
 
         return [
             'propertyTypes' => $propertyTypes,
             'bedrooms' => $bedrooms,
-            'city' => $city
+            'city' => $city,
+            'address' => $address
         ];
     }
 
@@ -86,10 +90,13 @@ class VacationController extends Controller
 
         $queryParams = $this->createVacationsQueryParameters($request);
 
+        $mapsApiKey = config('services.google.maps_api_key');
+
         return view('vacations.index')->with([
             'page' => $page,
             'filters' => $filters,
-            'queryParams' => $queryParams
+            'queryParams' => $queryParams,
+            'key' => $mapsApiKey
         ]);
     }
 
@@ -148,15 +155,21 @@ class VacationController extends Controller
             $properties = $properties->whereIn('bedrooms', [$request->get('bedrooms')]);
         }
 
-        if ($request->has('city')) {
-            $city = City::whereSlug($request->get('city'))->first([
-                'id'
-            ]);
+//        if ($request->has('city')) {
+//            $city = City::whereSlug($request->get('city'))->first([
+//                'id'
+//            ]);
+//
+//
+//            if ($city) {
+//                $properties = $properties->whereIn('city_id', [$city->id]);
+//            }
+//        }
 
+        if ($request->has('address')) {
+            $address = $request->get('address');
 
-            if ($city) {
-                $properties = $properties->whereIn('city_id', [$city->id]);
-            }
+            $properties = $properties->where('address', 'like', '%' . $address . '%');
         }
 
         return $properties;
@@ -222,7 +235,7 @@ class VacationController extends Controller
         // Sort the properties by the option provided
         $properties = $properties->select([
             'id', 'name', 'slug', 'address', 'cost_per_night', 'property_type_id'
-        ])->simplePaginate(30)->appends($cleanedRequest->all());
+        ])->simplePaginate(10)->appends($cleanedRequest->all());
 
         $apiRoute = route('vacations.fetch-vacations');
         $viewRoute = route('index');
@@ -379,25 +392,6 @@ class VacationController extends Controller
         return response()->json([
             'data' => [
                 'properties' => $properties
-            ]
-        ]);
-    }
-
-    public function findVacationAddresses(Request $request): JsonResponse
-    {
-        // Extract the request data
-        $query = $request['query'];
-
-        $query = sprintf('%s%s%s', '%', $query, '%');
-
-        $addresses = DB::table('properties')->where('address', 'like', $query)
-            ->select('address')
-            ->limit(6)
-            ->get();
-
-        return response()->json([
-            'data' => [
-                'addresses' => $addresses
             ]
         ]);
     }

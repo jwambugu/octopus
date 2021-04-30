@@ -56,7 +56,14 @@ const actions = {
         commit("setLoadingProperties", true);
 
         return new Promise((resolve, reject) => {
-            const { page, property_types, bedrooms, city, sortBy } = payload;
+            const {
+                page,
+                property_types,
+                bedrooms,
+                city,
+                sortBy,
+                address,
+            } = payload;
 
             axios
                 .get("/vacations/fetch-vacations", {
@@ -66,6 +73,7 @@ const actions = {
                         bedrooms,
                         city,
                         sortBy,
+                        address,
                     },
                 })
                 .then(({ data }) => {
@@ -125,25 +133,6 @@ const actions = {
                     resolve();
                 })
                 .catch((error) => reject(error));
-        });
-    },
-    FIND_VACATIONS_BY_ADDRESS: ({ commit }, payload) => {
-        return new Promise((resolve) => {
-            const { query } = payload;
-
-            axios
-                .get(`/vacations/find-vacation-addresses`, {
-                    params: {
-                        query,
-                    },
-                })
-                .then(({ data }) => {
-                    const { addresses } = data.data;
-
-                    commit("setVacationAddresses", addresses);
-
-                    resolve();
-                });
         });
     },
 };
