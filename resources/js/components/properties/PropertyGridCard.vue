@@ -8,7 +8,12 @@
                     KES {{ property.cost_per_night | numberFormat }}
                 </div>
 
-                <img :src="image" :alt="property.slug" class="img-responsive" />
+                <img
+                    :src="image"
+                    :alt="property.slug"
+                    class="img-responsive"
+                    style="max-height: 300px"
+                />
 
                 <div class="property-overlay">
                     <a :href="propertyLink" class="overlay-link">
