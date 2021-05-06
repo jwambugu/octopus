@@ -266,6 +266,8 @@ class VacationController extends Controller
             'property' => $property->slug
         ]);
 
+        $property->description = ucfirst($property->description);
+
         $property->checkin_time = date('H:i', strtotime($property->checkin_time));
         $property->checkout_time = date('H:i', strtotime($property->checkout_time));
 
