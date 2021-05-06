@@ -167,7 +167,7 @@ class BookingController extends Controller
      * @return JsonResponse
      * @throws Exception
      */
-    public function bookProperty(BookPropertyRequest $request): JsonResponse
+    public function bookProperty(BookPropertyRequest $request)
     {
         $checkinDate = Carbon::parse($request['checkin_date']);
         $checkoutDate = Carbon::parse($request['checkout_date']);
@@ -177,6 +177,18 @@ class BookingController extends Controller
         if ($numberOfNights <= 0) {
             throw ValidationException::withMessages([
                 'checkin_date' => "Checkout date must be greater than or equal to checkin date."
+            ]);
+        }
+
+        // Check if we have any bookings between the selected dates
+        $bookingsBetween = Booking::query()
+            ->where('checkin_date', '>=', $request['checkin_date'])
+            ->where('checkout_date', '<=', $request['checkout_date'])
+            ->first(['id']);
+
+        if ($bookingsBetween) {
+            throw ValidationException::withMessages([
+                'checkin_date' => 'Property is already booked within the specified date range.'
             ]);
         }
 
