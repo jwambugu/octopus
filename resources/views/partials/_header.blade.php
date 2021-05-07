@@ -3,10 +3,10 @@
         <div class="row">
             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                 <div class="list-inline">
-                    <a href="tel:{{ config('mail.phone_number.main') }}">
-                        <i class="fa fa-phone"></i>
-                        {{ config('mail.phone_number.main') }}
-                    </a>
+                    {{--                    <a href="tel:{{ config('mail.phone_number.main') }}">--}}
+                    {{--                        <i class="fa fa-phone"></i>--}}
+                    {{--                        {{ config('mail.phone_number.main') }}--}}
+                    {{--                    </a>--}}
                     <a href="mailto:{{ config('mail.from.address') }}"><i
                             class="fa fa-envelope"></i>{{ config('mail.from.address') }}
                     </a>
