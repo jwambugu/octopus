@@ -2,56 +2,52 @@
     <div class="container">
 
         <div class="footer-info">
-            <div class="row">
-
-                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
-                    <div class="footer-item fi2">
-                        <div class="main-title-2">
-                            <h1>Contact Us</h1>
-                        </div>
-                        <ul class="personal-info">
-                            <li>
-                                <i class="fa fa-map-marker"></i>
-                                Address: 20/F Green Road, Dhaka
-                            </li>
-                            <li>
-                                <i class="fa fa-envelope"></i>
-                                Email:<a href="mailto:">info@themevessel.com</a>
-                            </li>
-                            <li>
-                                <i class="fa fa-phone"></i>
-                                Phone: <a href="tel:+55-417-634-7071">+0477 85X6 552</a>
-                            </li>
-                            <li>
-                                <i class="fa fa-fax"></i>
-                                Fax: +0487 85X6 224
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-3 col-sm-6 col-xs-12">
-                    <div class="footer-item">
-                        <div class="main-title-2">
-                            <h1>Quick Links</h1>
-                        </div>
-                        <ul class="links">
-                            @auth
+            <div class="pull-right">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="footer-item fi2">
+                            <div class="main-title-2">
+                                <h1 style="text-transform: none">Contact Us</h1>
+                            </div>
+                            <ul class="personal-info">
                                 <li>
-                                    <a href="{{ route('home') }}">My Account</a>
+                                    <i class="fa fa-map-marker"></i>
+                                    Harlequin Suites, <br> Nairobi Kenya
                                 </li>
-                            @endauth
-                            <li>
-                                <a href="{{ route('index') }}">Home</a>
-                            </li>
-                            <li>
-                                <a href="{{ route('about-us') }}">About Us</a>
-                            </li>
-                            <li>
-                                <a href="{{ route('contact-us') }}">Contact Us</a>
-                            </li>
-                        </ul>
+                                <li>
+                                    <i class="fa fa-envelope"></i>
+                                    <a href="mailto:{{ config('mail.from.address') }}"><i
+                                            class="fa fa-envelope"></i>
+                                        {{ config('mail.from.address') }}
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
+
+                    {{--                <div class="col-lg-4 col-md-3 col-sm-6 col-xs-12">--}}
+                    {{--                    <div class="footer-item">--}}
+                    {{--                        <div class="main-title-2">--}}
+                    {{--                            <h1>Quick Links</h1>--}}
+                    {{--                        </div>--}}
+                    {{--                        <ul class="links">--}}
+                    {{--                            @auth--}}
+                    {{--                                <li>--}}
+                    {{--                                    <a href="{{ route('home') }}">My Account</a>--}}
+                    {{--                                </li>--}}
+                    {{--                            @endauth--}}
+                    {{--                            <li>--}}
+                    {{--                                <a href="{{ route('index') }}">Home</a>--}}
+                    {{--                            </li>--}}
+                    {{--                            <li>--}}
+                    {{--                                <a href="{{ route('about-us') }}">About Us</a>--}}
+                    {{--                            </li>--}}
+                    {{--                            <li>--}}
+                    {{--                                <a href="{{ route('contact-us') }}">Contact Us</a>--}}
+                    {{--                            </li>--}}
+                    {{--                        </ul>--}}
+                    {{--                    </div>--}}
+                    {{--                </div>--}}
                 </div>
             </div>
         </div>
