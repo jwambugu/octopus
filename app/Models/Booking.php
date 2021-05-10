@@ -84,6 +84,7 @@ class Booking extends Model
      */
     protected $casts = [
         'is_paid' => 'boolean',
+        'is_closing_booking' => 'boolean',
         'checkin_date' => 'date',
         'checkout_date' => 'date',
         'cancellation_policy_data' => 'object',
