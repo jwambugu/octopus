@@ -45,7 +45,9 @@ class BookingController extends Controller
         $user = $request->user();
 
         // Get the user bookings
-        $bookings = Booking::whereUserId($user->id)->with('property')
+        $bookings = Booking::whereUserId($user->id)
+            ->whereHas('payments')
+            ->with('property')
             ->orderByDesc('created_at')
             ->paginate(10);
 
