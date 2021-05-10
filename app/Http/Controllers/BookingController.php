@@ -46,7 +46,7 @@ class BookingController extends Controller
 
         // Get the user bookings
         $bookings = Booking::whereUserId($user->id)
-            ->whereHas('payments')
+            ->where('is_closing_booking', false)
             ->with('property')
             ->orderByDesc('created_at')
             ->paginate(10);
@@ -185,8 +185,9 @@ class BookingController extends Controller
         // Check if we have any bookings between the selected dates
         $bookingsBetween = Booking::query()
             ->where('is_paid', true)
-            ->where('checkin_date', '>=', $request['checkin_date'])
-            ->where('checkout_date', '<=', $request['checkout_date'])
+            ->whereBetween('checkin_date', [
+                $request['checkin_date'], $request['checkout_date']
+            ])
             ->first(['id']);
 
         if ($bookingsBetween) {
