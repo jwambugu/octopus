@@ -167,7 +167,7 @@ class BookingController extends Controller
      * @return JsonResponse
      * @throws Exception
      */
-    public function bookProperty(BookPropertyRequest $request)
+    public function bookProperty(BookPropertyRequest $request): JsonResponse
     {
         $checkinDate = Carbon::parse($request['checkin_date']);
         $checkoutDate = Carbon::parse($request['checkout_date']);
