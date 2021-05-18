@@ -17,7 +17,7 @@
         </div>
 
         <property-details-component
-            :property="booking.property"
+            :property="bookingDetails.property"
             :is-paid="booking.is_paid"
         ></property-details-component>
 
@@ -213,7 +213,6 @@ export default {
         },
         chargesBreakdown: {
             required: true,
-            type: Object,
         },
     },
     data() {
@@ -226,6 +225,14 @@ export default {
     computed: {
         cancellationPolicy() {
             return this.booking.property.cancellation_policy;
+        },
+        bookingDetails() {
+            if (!this.booking.canShowHostDetails) {
+                this.booking.property.owner = null;
+
+                return this.booking;
+            }
+            return this.booking;
         },
     },
     methods: {

@@ -100,6 +100,10 @@ class BookingController extends Controller
      */
     public function show(Booking $booking)
     {
+        // Get the time elapsed from the checkout date
+        $timeElapsedSinceBooking = now()->diffInDays($booking->checkout_date, false);
+        $canShowHostDetails = $timeElapsedSinceBooking > 0;
+
         // Get the booking data
         $booking = $booking->load([
             'property',
@@ -110,6 +114,9 @@ class BookingController extends Controller
             'payments:id,account_number,amount,is_paid,booking_id,created_at'
         ]);
 
+        $booking->canShowHostDetails = $canShowHostDetails;
+
+        // Check if the guest can cancel
         $canCancel = $this->canCancelBooking($booking);
 
         $cancellationChargesBreakdown = $this->getCancellationChargesBreakdown($booking);
@@ -422,6 +429,15 @@ class BookingController extends Controller
             ]);
 
         if (!$booking || !is_null($booking->cancelled_at) || !$booking->is_paid) {
+            throw ValidationException::withMessages([
+                'booking' => 'Invalid booking provided or payment already refund.'
+            ]);
+        }
+
+        // Check if the user can cancel the booking
+        $canCancel = $this->canCancelBooking($booking);
+
+        if (!$canCancel) {
             throw ValidationException::withMessages([
                 'booking' => 'Invalid booking provided or payment already refund.'
             ]);
