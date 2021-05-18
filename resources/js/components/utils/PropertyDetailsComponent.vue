@@ -182,17 +182,30 @@
                                                                 }}
                                                             </p>
 
-                                                            <p
-                                                                class="p-padding"
+                                                            <a
+                                                                :href="
+                                                                    whatsappLink
+                                                                "
+                                                                target="_blank"
                                                             >
-                                                                <i
-                                                                    class="fa fa-phone icons"
-                                                                ></i>
+                                                                <p
+                                                                    class="p-padding"
+                                                                >
+                                                                    <i
+                                                                        class="fa fa-phone icons"
+                                                                    ></i>
 
-                                                                {{
-                                                                    owner.phone_number
-                                                                }}
-                                                            </p>
+                                                                    {{
+                                                                        owner.phone_number
+                                                                    }}
+                                                                    <strong
+                                                                        >(Click
+                                                                        to chat
+                                                                        on
+                                                                        WhatsApp)</strong
+                                                                    >
+                                                                </p>
+                                                            </a>
 
                                                             <p
                                                                 class="p-padding"
@@ -245,6 +258,17 @@ export default {
         },
         cancellationPolicy() {
             return this.property.cancellation_policy;
+        },
+        whatsappLink() {
+            let { phone_number } = this.property.owner;
+
+            phone_number = phone_number.substr(1, 12);
+
+            const text = encodeURI(
+                `Hello. I'm inquiring about ${this.property.name}`
+            );
+
+            return `https://wa.me/${phone_number}?text=${text}`;
         },
     },
 };
