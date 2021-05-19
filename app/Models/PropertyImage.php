@@ -32,6 +32,8 @@ use Illuminate\Support\Carbon;
  * @method static Builder|PropertyImage onlyTrashed()
  * @method static Builder|PropertyImage withTrashed()
  * @method static Builder|PropertyImage withoutTrashed()
+ * @property int $uploaded_to_cloud_storage
+ * @method static \Illuminate\Database\Eloquent\Builder|PropertyImage whereUploadedToCloudStorage($value)
  */
 class PropertyImage extends Model
 {

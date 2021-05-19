@@ -68,6 +68,8 @@ use Illuminate\Support\Carbon;
  * @property int $is_cancelled
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereIsCancelled($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment wherePaypalOrderId($value)
+ * @property int $payment_channel_id
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment wherePaymentChannelId($value)
  */
 class Payment extends Model
 {
@@ -96,6 +98,7 @@ class Payment extends Model
         'property_id',
         'user_id',
         'paypal_order_id',
+        'payment_channel_id',
         'is_cancelled',
     ];
 

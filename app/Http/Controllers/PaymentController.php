@@ -194,7 +194,8 @@ class PaymentController extends Controller
                     'checkout_request_id' => $checkoutRequestID,
                     'phone_number' => $phoneNumber,
                     'request_response_data' => json_encode($response),
-                    'is_successful' => $isSuccessful
+                    'is_successful' => $isSuccessful,
+                    'payment_channel_id' => 1 // M-Pesa
                 ]);
             } catch (Exception $exception) {
                 throw new Exception($exception->getMessage());
