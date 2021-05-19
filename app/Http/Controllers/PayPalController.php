@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Booking;
 use App\Models\Payment;
 use DB;
 use Exception;
@@ -44,12 +45,17 @@ class PayPalController extends Controller
         return new PayPalHttpClient($environment);
     }
 
-    public static function createOrderRequest(): array
+    /**
+     * Returns an array with the order data for paypal
+     * @param int $bookingID
+     * @return array
+     */
+    public static function createOrderRequest(int $bookingID): array
     {
         $request = new OrdersCreateRequest();
         $request->prefer('return=representation');
 
-        $request->body = self::buildRequestBody();
+        $request->body = self::buildRequestBody($bookingID);
 
         $client = self::client();
         $response = $client->execute($request);
@@ -63,10 +69,18 @@ class PayPalController extends Controller
 
     /**
      * Returns the data wo be used on the cart section
+     * @param int $bookingID
      * @return array
      */
-    private static function buildRequestBody(): array
+    private static function buildRequestBody(int $bookingID): array
     {
+        $booking = Booking::with('property:id,name', 'unsuccessfulPayments')
+            ->find($bookingID, [
+                'id', 'uuid', 'number_of_nights', 'property_id'
+            ]);
+
+        $amountToPay = number_format($booking->unsuccessfulPayments[0]->amount, 2);
+        $property = $booking->property;
 
         return [
             'intent' => 'CAPTURE',
@@ -80,18 +94,18 @@ class PayPalController extends Controller
             ],
             'purchase_units' => [
                 0 => [
-                    'reference_id' => 'PUHF',
-                    'description' => 'Sporting Goods',
-                    'custom_id' => 'CUST-HighFashions',
-                    'soft_descriptor' => 'HighFashions',
+                    'reference_id' => $booking->uuid,
+                    'description' => $property->name,
+                    'custom_id' => $property->id,
+                    'soft_descriptor' => $property->id,
                     'amount' =>
                         [
                             'currency_code' => 'USD',
-                            'value' => '1.00',
+                            'value' => $amountToPay,
                             'breakdown' => [
                                 'item_total' => [
                                     'currency_code' => 'USD',
-                                    'value' => '1.00',
+                                    'value' => $amountToPay,
                                 ]
                             ]
                         ],
@@ -99,13 +113,13 @@ class PayPalController extends Controller
                         [
                             0 =>
                                 [
-                                    'name' => 'T-Shirt',
-                                    'description' => 'Green XL',
-                                    'sku' => 'sku01',
+                                    'name' => $property->name,
+                                    'description' => sprintf('Payment for %s nights', $booking->number_of_nights),
+                                    'sku' => $property->id,
                                     'unit_amount' =>
                                         [
                                             'currency_code' => 'USD',
-                                            'value' => '1.00',
+                                            'value' => $amountToPay,
                                         ],
                                     'quantity' => '1',
                                     'category' => 'PHYSICAL_GOODS'
