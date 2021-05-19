@@ -506,7 +506,7 @@ class BookingController extends Controller
             ]);
         }
 
-        $orderResponse = PayPalController::createOrderRequest();
+        $orderResponse = PayPalController::createOrderRequest($payment->booking_id);
 
         $paypalOrderID = $orderResponse['results']->id;
 
