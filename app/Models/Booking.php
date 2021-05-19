@@ -54,6 +54,10 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|Booking whereCancelledAt($value)
  * @property object $cancellation_policy_data
  * @method static \Illuminate\Database\Eloquent\Builder|Booking whereCancellationPolicyData($value)
+ * @property bool $is_closing_booking
+ * @property int|null $admin_id
+ * @method static \Illuminate\Database\Eloquent\Builder|Booking whereAdminId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Booking whereIsClosingBooking($value)
  */
 class Booking extends Model
 {

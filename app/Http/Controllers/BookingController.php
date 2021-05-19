@@ -514,7 +514,8 @@ class BookingController extends Controller
             ->update([
                 'paypal_order_id' => $paypalOrderID,
                 'request_response_data' => json_encode($orderResponse),
-                'updated_at' => now()
+                'updated_at' => now(),
+                'payment_channel_id' => 2 // PayPal
             ]);
 
         $approveData = collect($orderResponse['links'])->where('rel', 'approve')->first();
