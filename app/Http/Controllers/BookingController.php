@@ -331,7 +331,7 @@ class BookingController extends Controller
             'is_successful' => true
         ])->latest()->first();
 
-        if (is_null($payment->callback_data)) {
+        if (!$payment || is_null($payment->callback_data)) {
             return response()->json([
                 'data' => [
                     'message' => 'Waiting for payment confirmation. Please wait..',
