@@ -37,8 +37,16 @@ return [
         'base_url' => env('MPESA_BASE_URL'),
         'short_code' => env('MPESA_SHORTCODE'),
     ],
+
     'google' => [
         'maps_api_key' => env('GOOGLE_MAPS_API_KEY'),
+    ],
+
+    'sms' => [
+        'partnerID' => env('SMS_PARTNER_ID'),
+        'apiKey' => env('SMS_API_KEY'),
+        'shortcode' => env('SMS_SHORT_CODE'),
+        'endpoint' => env('SMS_SMS_ENDPOINT'),
     ]
 
 ];

@@ -7,7 +7,6 @@ use App\Http\Controllers\SMSController;
 use App\Mail\PropertyBooked;
 use App\Models\Booking;
 use App\Models\Payment;
-use App\Models\SMSOutbox;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -79,7 +78,6 @@ class MpesaController extends Controller
      * Add an sms to the guest
      * @param object $user
      * @param string $transactionID
-     * @return SMSOutbox|Model|null
      * @throws Exception
      */
     private function createGuestSMS(object $user, string $transactionID)
@@ -97,13 +95,13 @@ class MpesaController extends Controller
         $isKenyanPhoneNumber = Str::startsWith($phoneNumber, '07') || Str::startsWith($phoneNumber, '01');
 
         if (!$isKenyanPhoneNumber) {
-            return null;
+            return;
         }
 
         $phoneNumber = sprintf("+254%s", substr($phoneNumber, 1, 10));
 
         try {
-            return (new SMSController)->create($phoneNumber, $message);
+            (new SMSController)->create($phoneNumber, $message);
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
@@ -112,24 +110,23 @@ class MpesaController extends Controller
     /**
      * Add an sms to the host
      * @param object $host
-     * @param string $guestName
+     * @param object $guest
      * @param string $propertyName
-     * @return SMSOutbox|Model
      * @throws Exception
      */
-    private function createHostSMS(object $host, string $guestName, string $propertyName)
+    private function createHostSMS(object $host, object $guest, string $propertyName)
     {
         $hostFirstName = explode(' ', $host->name)[0];
-        $guestFirstName = explode(' ', $guestName)[0];
+        $guestFirstName = explode(' ', $guest->name)[0];
 
         // Create an SMS to send to the guest
         $message = sprintf(
-            "Hello %s, property %s has been successfully booked by %s. Thanks for partnering with us.",
-            $hostFirstName, $propertyName, $guestFirstName
+            "Hello %s, property %s has been successfully booked by %s, %s. Thanks for partnering with us.",
+            $hostFirstName, $propertyName, $guestFirstName, $guest->phone_number
         );
 
         try {
-            return (new SMSController)->create($host->phone_number, $message);
+            (new SMSController)->create($host->phone_number, $message);
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
@@ -165,7 +162,7 @@ class MpesaController extends Controller
 
         try {
             // Create an SMS to send to the host
-            $this->createHostSMS($host, $guest->name, $property->name);
+            $this->createHostSMS($host, $guest, $property->name);
 
             // Create an SMS to send to the guest
             $this->createGuestSMS($guest, $payment->transaction_id);
@@ -228,8 +225,12 @@ class MpesaController extends Controller
      */
     public function lipaNaMpesaCallback(Request $request): JsonResponse
     {
+        // Extract the request data
         $response = json_decode($request->getContent());
 
+        if (!$response) {
+            return $this->rejectTransaction();
+        }
 
         $callbackData = $response->Body->stkCallback;
         $merchantRequestID = $callbackData->MerchantRequestID;
@@ -254,7 +255,7 @@ class MpesaController extends Controller
                     'paid_amount' => 0
                 ]);
             } catch (Exception $e) {
-                return $this->rejectTransaction();
+                return $this->acceptTransaction();
             }
 
             return $this->acceptTransaction();
