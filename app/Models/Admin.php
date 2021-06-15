@@ -48,6 +48,8 @@ use Illuminate\Support\Carbon;
  * @property-read ProfilePicture|null $profilePicture
  * @property string|null $phone_verification_code
  * @method static \Illuminate\Database\Eloquent\Builder|Admin wherePhoneVerificationCode($value)
+ * @property string $wallet_balance
+ * @method static \Illuminate\Database\Eloquent\Builder|Admin whereWalletBalance($value)
  */
 class Admin extends Model
 {

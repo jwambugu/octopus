@@ -70,6 +70,10 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|Payment wherePaypalOrderId($value)
  * @property int $payment_channel_id
  * @method static \Illuminate\Database\Eloquent\Builder|Payment wherePaymentChannelId($value)
+ * @property string $transaction_charges
+ * @property int|null $admin_id
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereAdminId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Payment whereTransactionCharges($value)
  */
 class Payment extends Model
 {
@@ -121,7 +125,7 @@ class Payment extends Model
     {
         return $this->belongsTo(Property::class, 'property_id')
             ->select([
-                'id', 'name', 'slug', 'cost_per_night'
+                'id', 'name', 'slug', 'cost_per_night', 'admin_id'
             ]);
     }
 
@@ -132,5 +136,14 @@ class Payment extends Model
     public function booking(): BelongsTo
     {
         return $this->belongsTo(Booking::class, 'booking_id');
+    }
+
+    /**
+     * Returns the user who made the payment.
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

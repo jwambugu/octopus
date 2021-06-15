@@ -58,6 +58,8 @@ use Illuminate\Support\Carbon;
  * @property int|null $admin_id
  * @method static \Illuminate\Database\Eloquent\Builder|Booking whereAdminId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Booking whereIsClosingBooking($value)
+ * @property int $is_cancelled_by_host
+ * @method static \Illuminate\Database\Eloquent\Builder|Booking whereIsCancelledByHost($value)
  */
 class Booking extends Model
 {
@@ -123,9 +125,10 @@ class Booking extends Model
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id')->select([
-            'id', 'name', 'email'
-        ]);
+        return $this->belongsTo(User::class, 'user_id')
+            ->select([
+                'id', 'name', 'email', 'phone_number'
+            ]);
     }
 
     /**
@@ -138,5 +141,10 @@ class Booking extends Model
             ->where('is_successful', false)->select([
                 'id', 'uuid', 'account_number', 'amount', 'booking_id'
             ]);
+    }
+
+    public function latestPayment()
+    {
+
     }
 }

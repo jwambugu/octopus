@@ -3,15 +3,19 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\SMSController;
 use App\Mail\PropertyBooked;
 use App\Models\Booking;
 use App\Models\Payment;
+use App\Models\SMSOutbox;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Str;
 use Mail;
 
 class MpesaController extends Controller
@@ -71,6 +75,105 @@ class MpesaController extends Controller
         return $transactionIDs != 0;
     }
 
+    /**
+     * Add an sms to the guest
+     * @param object $user
+     * @param string $transactionID
+     * @return SMSOutbox|Model|null
+     * @throws Exception
+     */
+    private function createGuestSMS(object $user, string $transactionID)
+    {
+        $firstName = explode(' ', $user->name)[0];
+
+        // Create an SMS to send to the guest
+        $message = sprintf(
+            "Hello %s, we have received your payment %s. Thanks for choosing to stay with us.",
+            $firstName, $transactionID
+        );
+
+        $phoneNumber = $user->phone_number;
+
+        $isKenyanPhoneNumber = Str::startsWith($phoneNumber, '07') || Str::startsWith($phoneNumber, '01');
+
+        if (!$isKenyanPhoneNumber) {
+            return null;
+        }
+
+        $phoneNumber = sprintf("+254%s", substr($phoneNumber, 1, 10));
+
+        try {
+            return (new SMSController)->create($phoneNumber, $message);
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    /**
+     * Add an sms to the host
+     * @param object $host
+     * @param string $guestName
+     * @param string $propertyName
+     * @return SMSOutbox|Model
+     * @throws Exception
+     */
+    private function createHostSMS(object $host, string $guestName, string $propertyName)
+    {
+        $hostFirstName = explode(' ', $host->name)[0];
+        $guestFirstName = explode(' ', $guestName)[0];
+
+        // Create an SMS to send to the guest
+        $message = sprintf(
+            "Hello %s, property %s has been successfully booked by %s. Thanks for partnering with us.",
+            $hostFirstName, $propertyName, $guestFirstName
+        );
+
+        try {
+            return (new SMSController)->create($host->phone_number, $message);
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    /**
+     * Returns the payment data for the id passed
+     * @param int $id
+     * @return Builder|Builder[]|Collection|Model|null
+     */
+    private function findPayment(int $id)
+    {
+        return Payment::with([
+            'property',
+            'property.owner:id,name,email,phone_number',
+            'user:id,name,phone_number'
+        ])->find($id, [
+            'id', 'transaction_id', 'property_id', 'user_id'
+        ]);
+    }
+
+    /**
+     * Create the sms to send to the host and the guest
+     * @param object $payment
+     * @throws Exception
+     */
+    private function sendSMSes(object $payment)
+    {
+        // Get the payment details
+        $guest = $payment->user;
+        $host = $payment->property->owner;
+        $property = $payment->property;
+
+        try {
+            // Create an SMS to send to the host
+            $this->createHostSMS($host, $guest->name, $property->name);
+
+            // Create an SMS to send to the guest
+            $this->createGuestSMS($guest, $payment->transaction_id);
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
 
     /**
      * Marks a transaction as either completed or failed depending on the response sent
@@ -80,8 +183,10 @@ class MpesaController extends Controller
      */
     private function updateTransactionData(object $payment, array $transactionData)
     {
+        $paymentID = $payment->id;
+
         try {
-            Payment::where('id', $payment->id)->update([
+            Payment::where('id', $paymentID)->update([
                 'paid_amount' => $transactionData['paid_amount'],
                 'is_paid' => $transactionData['is_paid'],
                 'is_successful' => $transactionData['is_paid'],
@@ -99,7 +204,17 @@ class MpesaController extends Controller
                 $booking = Booking::with('property', 'property.owner', 'user', 'property.city')
                     ->find($payment->booking_id);
 
-                Mail::to($booking->user->email)->queue(new PropertyBooked($booking));
+                // Get the guest details
+                $guest = $booking->user;
+
+                // Send an email to the guest
+                Mail::to($guest->email)->queue(new PropertyBooked($booking));
+
+                // Get the payment data
+                $paymentData = $this->findPayment($paymentID);
+
+                // Create the sms
+                $this->sendSMSes($paymentData);
             }
         } catch (Exception $exception) {
             throw new Exception($exception->getMessage());
