@@ -225,6 +225,7 @@ class BookingController extends Controller
                     'checkin_date' => $checkinDate,
                     'checkout_date' => $checkoutDate,
                     'number_of_nights' => $numberOfNights,
+                    'cost_per_night' => $property->cost_per_night,
                     'cancellation_policy_data' => $property->cancellationPolicy,
                     'property_id' => $propertyID,
                     'user_id' => $user->id,

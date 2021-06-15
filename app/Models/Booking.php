@@ -60,6 +60,10 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|Booking whereIsClosingBooking($value)
  * @property int $is_cancelled_by_host
  * @method static \Illuminate\Database\Eloquent\Builder|Booking whereIsCancelledByHost($value)
+ * @property int $cost_per_night
+ * @property string|null $reconciled_at
+ * @method static \Illuminate\Database\Eloquent\Builder|Booking whereCostPerNight($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Booking whereReconciledAt($value)
  */
 class Booking extends Model
 {
@@ -75,6 +79,7 @@ class Booking extends Model
         'checkin_date',
         'checkout_date',
         'number_of_nights',
+        'cost_per_night',
         'is_paid',
         'property_id',
         'user_id',
@@ -141,10 +146,5 @@ class Booking extends Model
             ->where('is_successful', false)->select([
                 'id', 'uuid', 'account_number', 'amount', 'booking_id'
             ]);
-    }
-
-    public function latestPayment()
-    {
-
     }
 }
