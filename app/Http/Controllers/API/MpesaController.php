@@ -156,7 +156,7 @@ class MpesaController extends Controller
      * @param object $payment
      * @throws Exception
      */
-    private function sendSMSes(object $payment)
+    private function createSMSes(object $payment)
     {
         // Get the payment details
         $guest = $payment->user;
@@ -214,7 +214,7 @@ class MpesaController extends Controller
                 $paymentData = $this->findPayment($paymentID);
 
                 // Create the sms
-                $this->sendSMSes($paymentData);
+                $this->createSMSes($paymentData);
             }
         } catch (Exception $exception) {
             throw new Exception($exception->getMessage());

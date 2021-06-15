@@ -33,6 +33,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|SMSOutbox withTrashed()
  * @method static \Illuminate\Database\Query\Builder|SMSOutbox withoutTrashed()
  * @mixin \Eloquent
+ * @property string|null $sent_at
+ * @method static \Illuminate\Database\Eloquent\Builder|SMSOutbox whereSentAt($value)
  */
 class SMSOutbox extends Model
 {

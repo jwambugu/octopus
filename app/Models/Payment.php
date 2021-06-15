@@ -74,6 +74,7 @@ use Illuminate\Support\Carbon;
  * @property int|null $admin_id
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereAdminId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Payment whereTransactionCharges($value)
+ * @property-read User|null $user
  */
 class Payment extends Model
 {
