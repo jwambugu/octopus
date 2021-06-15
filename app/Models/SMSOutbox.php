@@ -48,9 +48,12 @@ class SMSOutbox extends Model
      * @var array
      */
     protected $fillable = [
+        'uuid',
+        'message_id',
         'phone_number',
         'message',
         'status',
+        'delivery_status',
         'response_data',
         'is_sent',
         'sent_at',
