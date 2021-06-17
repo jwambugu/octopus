@@ -7,7 +7,7 @@
                 <div class="alert alert-warning override-text-transform" style="font-size: 1.8rem;"
                      role="alert">
                     <span style="margin-left: 145px; font-weight: bold; color: #000000;">
-                       <i class="fa fa-info-circle text-warning"></i> Book your vacation and pay with M-Pesa.
+                       <i class="fa fa-info-circle text-warning"></i> Book your vacation and pay with M-Pesa or PayPal.
                     </span>
                 </div>
             </div>
