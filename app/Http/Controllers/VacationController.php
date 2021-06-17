@@ -219,7 +219,9 @@ class VacationController extends Controller
         $sortBy = $cleanedRequest->get('sortBy');
 
         // Get the properties that are available and have been approved.
-        $properties = Property::with('amenities', 'images')->where([
+        $properties = Property::whereHas('owner', function ($query) {
+            return $query->where('status', 'active');
+        })->with('amenities', 'images')->where([
             'is_available' => true,
             'status' => 'approved',
         ]);
@@ -261,7 +263,17 @@ class VacationController extends Controller
      */
     public function show(Property $property)
     {
-        $property = $property->load('images', 'amenities', 'cancellationPolicy:id,title,description');
+        $property = $property->load('owner:id,status');
+
+        // Abort if the property admin is not active
+        abort_if($property->owner->status != 'active', 404);
+
+        $property = $property->load([
+            'images',
+            'amenities',
+            'cancellationPolicy:id,title,description',
+        ]);
+
         $property->booking_route = route('booking.property.view', [
             'property' => $property->slug
         ]);
@@ -385,7 +397,9 @@ class VacationController extends Controller
         $propertiesIDs = $topBookings->pluck('property_id');
 
         // Get the properties that are available and have been approved.
-        $properties = Property::with('defaultImage')->where([
+        $properties = Property::whereHas('owner', function ($query) {
+            return $query->where('status', 'active');
+        })->with('defaultImage')->where([
             'is_available' => true,
             'status' => 'approved',
         ])->select([
