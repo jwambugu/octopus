@@ -1,5 +1,8 @@
 <template>
-    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+    <div
+        class="col-lg-6 col-md-6 col-sm-6 col-xs-12 property-details-card-link"
+        @click="viewProperty"
+    >
         <div class="property">
             <div class="property-img">
                 <div class="property-tag button alt featured">Featured</div>
@@ -83,6 +86,11 @@ export default {
             return this.images[0].public_url;
         },
     },
+    methods: {
+        viewProperty() {
+            location.href = this.propertyLink;
+        },
+    },
 };
 </script>
 
@@ -98,5 +106,9 @@ export default {
 
 .facilities-list-padding {
     padding-top: 2rem;
+}
+
+.property-details-card-link:hover {
+    cursor: pointer;
 }
 </style>

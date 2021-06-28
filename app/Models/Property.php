@@ -162,4 +162,31 @@ class Property extends Model
     {
         return $this->belongsTo(CancellationPolicy::class, 'cancellation_policy_id');
     }
+
+    /**
+     * Returns all the bookings for the property
+     * @return HasMany
+     */
+    public function bookings(): HasMany
+    {
+        return $this->hasMany(Booking::class, 'property_id');
+    }
+
+    /**
+     * Returns all the dates for the active bookings
+     * @return HasMany
+     */
+    public function activeBookingsDates(): HasMany
+    {
+        return $this->bookings()->whereDate('checkout_date', '>=', today())
+            ->where([
+                'is_paid' => true,
+                'is_cancelled_by_host' => false,
+                'has_conflicts' => false,
+            ])
+            ->orWhere('is_closing_booking', true)
+            ->select([
+                'property_id', 'checkin_date', 'checkout_date'
+            ]);
+    }
 }

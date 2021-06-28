@@ -29,29 +29,29 @@
 
                 <form @submit.prevent="bookProperty">
                     <div class="form-group">
-                        <label for="checkin_date">Checkin Date</label>
+                        <label for="checkin_date">Dates to Book</label>
                         <input
                             id="checkin_date"
-                            type="date"
+                            type="text"
                             class="input-text"
-                            v-model="bookingData.checkin_date"
-                            :min="minDate"
                             required
+                            name="dates_to_book"
+                            :disabled="loadingDatePicker"
                         />
                     </div>
 
-                    <div class="form-group">
-                        <label for="checkout_date">Check Out Date</label>
-                        <input
-                            id="checkout_date"
-                            type="date"
-                            class="input-text"
-                            v-model="bookingData.checkout_date"
-                            :min="minDate"
-                            required
-                            @input="monitorCheckoutDate"
-                        />
-                    </div>
+                    <!--                    <div class="form-group">-->
+                    <!--                        <label for="checkout_date">Check Out Date</label>-->
+                    <!--                        <input-->
+                    <!--                            id="checkout_date"-->
+                    <!--                            type="date"-->
+                    <!--                            class="input-text"-->
+                    <!--                            v-model="bookingData.checkout_date"-->
+                    <!--                            :min="minDate"-->
+                    <!--                            required-->
+                    <!--                            @input="monitorCheckoutDate"-->
+                    <!--                        />-->
+                    <!--                    </div>-->
 
                     <div class="form-group" v-if="bookingData.checkout_date">
                         <span id="nights" class="">
@@ -98,17 +98,22 @@ export default {
             required: true,
             type: Object,
         },
+        bookedDates: {
+            required: true,
+            type: Array,
+        },
     },
     data() {
         return {
             bookingData: {
-                checkin_date: new Date().toISOString().slice(0, 10),
+                checkin_date: "", // new Date().toISOString().slice(0, 10)
                 checkout_date: "",
                 property_id: this.property.id,
             },
             errorMessage: "",
             successMessage: "",
             bookingProperty: false,
+            loadingDatePicker: true,
         };
     },
     computed: {
@@ -137,8 +142,47 @@ export default {
 
             return checkoutDate - checkinDate < 0;
         },
+        dateRanges() {
+            return this.bookedDates.map((date) => {
+                return {
+                    start: moment(date.checkin_date),
+                    end: moment(date.checkout_date),
+                };
+            });
+        },
+    },
+    created() {
+        setTimeout(() => {
+            this.initDatePicker();
+            this.loadingDatePicker = false;
+        }, 3000);
     },
     methods: {
+        initDatePicker() {
+            const vm = this;
+
+            $('input[name="dates_to_book"]').daterangepicker(
+                {
+                    opens: "left",
+                    minDate: new Date(),
+                    format: "YYYY-MM-DD",
+                    isInvalidDate: function (date) {
+                        return vm.dateRanges.reduce(function (bool, range) {
+                            return (
+                                bool ||
+                                (date >= range.start && date <= range.end)
+                            );
+                        }, false);
+                    },
+                },
+                function (start, end) {
+                    vm.bookingData = {
+                        checkin_date: start.format("YYYY-MM-DD"),
+                        checkout_date: end.format("YYYY-MM-DD"),
+                    };
+                }
+            );
+        },
         monitorCheckoutDate() {
             this.errorMessage = "";
 
@@ -151,6 +195,7 @@ export default {
         bookProperty() {
             this.bookingProperty = true;
             this.errorMessage = "";
+            this.bookingData.property_id = this.property.id;
 
             this.$store
                 .dispatch("BOOK_PROPERTY", this.bookingData)

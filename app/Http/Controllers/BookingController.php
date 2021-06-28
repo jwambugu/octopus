@@ -136,10 +136,18 @@ class BookingController extends Controller
     public function showPropertyBookingView(Property $property)
     {
         // Get the property amenities
-        $property = $property->load('amenities');
+        $property = $property->load('amenities', 'activeBookingsDates');
+
+        $bookedDates = $property->activeBookingsDates->map(function ($date) {
+            return [
+                'checkin_date' => $date->checkin_date,
+                'checkout_date' => $date->checkout_date,
+            ];
+        });
 
         return view('bookings.property-book')->with([
-            'property' => $property
+            'property' => $property,
+            'bookedDates' => $bookedDates
         ]);
     }
 
