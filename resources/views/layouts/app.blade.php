@@ -49,6 +49,8 @@
     <script type="text/javascript" src="{{ asset('js/html5shiv.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/respond.min.js') }}"></script>
     <![endif]-->
+
+    @stack('styles')
 </head>
 <body>
 
@@ -83,6 +85,8 @@
 
 
 <script src="{{ asset('js/ie10-viewport-bug-workaround.js') }}"></script>
+
+@stack('scripts')
 
 </body>
 </html>

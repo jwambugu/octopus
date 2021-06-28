@@ -12,6 +12,13 @@
                 </div>
                 <div class="clearfix"></div>
                 <h3>Recover Password</h3>
+
+                @if(session()->has('status'))
+                    <div class="alert alert-success override-text-transform" style="font-size: 1.5rem" role="alert">
+                        {{ session()->get('status') }}
+                    </div>
+                @endif
+
                 <form method="POST" action="{{ route('password.email') }}">
                     @csrf
                     <div class="form-group">
