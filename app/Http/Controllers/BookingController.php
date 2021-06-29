@@ -220,7 +220,7 @@ class BookingController extends Controller
                 $checkoutDate = $request['checkout_date'];
 
                 $property = Property::with('cancellationPolicy')->find($propertyID, [
-                    'id', 'cost_per_night', 'cancellation_policy_id'
+                    'id', 'cost_per_night', 'cancellation_policy_id', 'admin_id'
                 ]);
 
                 $numberOfNights = $numberOfNights == 0 ? 1 : $numberOfNights;
@@ -237,6 +237,7 @@ class BookingController extends Controller
                     'cancellation_policy_data' => $property->cancellationPolicy,
                     'property_id' => $propertyID,
                     'user_id' => $user->id,
+                    'admin_id' => $property->admin_id,
                 ]);
 
                 // Add payment
