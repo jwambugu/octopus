@@ -1,7 +1,6 @@
 <template>
     <div
         class="col-lg-6 col-md-6 col-sm-6 col-xs-12 property-details-card-link"
-        @click="viewProperty"
     >
         <div class="property">
             <div class="property-img">
@@ -71,7 +70,7 @@ export default {
     },
     methods: {
         viewProperty() {
-            // location.href = this.propertyLink;
+            location.href = this.propertyLink;
         },
     },
 };

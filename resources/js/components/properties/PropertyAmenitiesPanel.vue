@@ -1,5 +1,5 @@
 <template>
-    <div class="panel-box" style="margin-top: -15px">
+    <div class="panel-box" style="margin-top: 0">
         <div class="panel with-nav-tabs panel-default">
             <div class="panel-body">
                 <div class="tab-content">
