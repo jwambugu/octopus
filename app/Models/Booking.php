@@ -83,6 +83,7 @@ class Booking extends Model
         'is_paid',
         'property_id',
         'user_id',
+        'admin_id',
         'cancelled_at',
         'cancellation_policy_data',
     ];
