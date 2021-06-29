@@ -32,40 +32,23 @@
                             {{ property.name | ucWords }}
                         </a>
                     </h1>
-
-                    <!--                    <h3 class="property-address property-address-height">-->
-                    <!--                        <a :href="propertyLink">-->
-                    <!--                            <i class="fa fa-map-marker"></i>-->
-                    <!--                            {{ property.address }}-->
-                    <!--                        </a>-->
-                    <!--                    </h3>-->
-
-                    <ul
-                        class="facilities-list clearfix facilities-list-padding"
-                    >
-                        <li v-for="(amenity, index) in amenities" :key="index">
-                            <i :class="amenity.amenity.icon"></i>
-                            <span style="margin-left: 7px">{{
-                                amenity.amenity.name
-                            }}</span>
-                        </li>
-                    </ul>
                 </div>
-
-                <!--                <div class="property-footer" style="margin-bottom: 30px">-->
-                <!--                    <span class="left"> </span>-->
-                <!--                    <span class="right">-->
-                <!--                        <i class="fa fa-heart-o"></i> Add to favorites-->
-                <!--                    </span>-->
-                <!--                </div>-->
             </div>
+
+            <property-amenities-panel
+                :property="property"
+                :amenities="amenities"
+            ></property-amenities-panel>
         </div>
     </div>
 </template>
 
 <script>
+import PropertyAmenitiesPanel from "./PropertyAmenitiesPanel";
+
 export default {
     name: "PropertyGridCard",
+    components: { PropertyAmenitiesPanel },
     props: {
         property: {
             required: true,
@@ -88,7 +71,7 @@ export default {
     },
     methods: {
         viewProperty() {
-            location.href = this.propertyLink;
+            // location.href = this.propertyLink;
         },
     },
 };
