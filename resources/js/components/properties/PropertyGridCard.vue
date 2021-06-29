@@ -1,6 +1,7 @@
 <template>
     <div
         class="col-lg-6 col-md-6 col-sm-6 col-xs-12 property-details-card-link"
+        @click="viewProperty"
     >
         <div class="property">
             <div class="property-img">
@@ -33,21 +34,13 @@
                     </h1>
                 </div>
             </div>
-
-            <property-amenities-panel
-                :property="property"
-                :amenities="amenities"
-            ></property-amenities-panel>
         </div>
     </div>
 </template>
 
 <script>
-import PropertyAmenitiesPanel from "./PropertyAmenitiesPanel";
-
 export default {
     name: "PropertyGridCard",
-    components: { PropertyAmenitiesPanel },
     props: {
         property: {
             required: true,
