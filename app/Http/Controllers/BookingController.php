@@ -186,8 +186,10 @@ class BookingController extends Controller
      */
     public function bookProperty(BookPropertyRequest $request): JsonResponse
     {
+        // Get the request data
         $checkinDate = Carbon::parse($request['checkin_date']);
         $checkoutDate = Carbon::parse($request['checkout_date']);
+        $propertyID = $request['property_id'];
 
         $numberOfNights = $checkinDate->diffInDays($checkoutDate, false);
 
@@ -199,7 +201,10 @@ class BookingController extends Controller
 
         // Check if we have any bookings between the selected dates
         $bookingsBetween = Booking::query()
-            ->where('is_paid', true)
+            ->where([
+                'property_id' => $propertyID,
+                'is_paid' => true,
+            ])
             ->whereBetween('checkin_date', [
                 $request['checkin_date'], $request['checkout_date']
             ])
@@ -212,9 +217,8 @@ class BookingController extends Controller
         }
 
         try {
-            $booking = DB::transaction(function () use ($request, $numberOfNights) {
+            $booking = DB::transaction(function () use ($request, $numberOfNights, $propertyID) {
                 // Get the request data
-                $propertyID = $request['property_id'];
                 $user = $request->user();
                 $checkinDate = $request['checkin_date'];
                 $checkoutDate = $request['checkout_date'];

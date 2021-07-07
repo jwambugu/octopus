@@ -80,6 +80,7 @@ class PayPalController extends Controller
             ]);
 
         $amountToPay = number_format($booking->unsuccessfulPayments[0]->amount, 2);
+        $amountToPay = $amountToPay / 100; // TODO USE CURRENT CONVERSION RATES
         $property = $booking->property;
 
         return [
