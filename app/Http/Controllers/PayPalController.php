@@ -79,8 +79,8 @@ class PayPalController extends Controller
                 'id', 'uuid', 'number_of_nights', 'property_id'
             ]);
 
-        $amountToPay = number_format($booking->unsuccessfulPayments[0]->amount, 2);
-        $amountToPay = $amountToPay / 100; // TODO USE CURRENT CONVERSION RATES
+        $amountToPay = $booking->unsuccessfulPayments[0]->amount;
+        $amountToPay = number_format($amountToPay / 100); // TODO USE CURRENT CONVERSION RATES
         $property = $booking->property;
 
         return [
