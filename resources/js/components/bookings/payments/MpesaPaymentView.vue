@@ -129,75 +129,76 @@
                     </div>
                 </div>
             </div>
-            <div class="panel panel-default">
-                <a
-                    data-toggle="collapse"
-                    data-parent="#accordion"
-                    href="#collapseTwo"
-                >
-                    <div class="panel-heading">
-                        <div>
-                            <img
-                                src="/images/paypal-logo.png"
-                                class="img img-responsive payment-channels-logos"
-                                alt=""
-                            />
 
-                            <h4 class="panel-heading-title">Pay with Paypal</h4>
-                            <br /><br />
-                        </div>
-                    </div>
-                </a>
-                <div id="collapseTwo" class="panel-collapse collapse">
-                    <div class="panel-body">
-                        <div class="my-address">
-                            <div
-                                class="alert alert-info override-alert-text-transform"
-                                style="
-                                    background-color: #014d9e;
-                                    color: #ffffff;
-                                "
-                            >
-                                We will redirect you to PayPal to complete the
-                                transaction of
-                                <strong class="text-white">
-                                    KES
-                                    {{ payment.amount | numberFormat }}
-                                </strong>
-                                for your vacation booking.
-                                <br />
-                            </div>
+            <!--            <div class="panel panel-default">-->
+            <!--                <a-->
+            <!--                    data-toggle="collapse"-->
+            <!--                    data-parent="#accordion"-->
+            <!--                    href="#collapseTwo"-->
+            <!--                >-->
+            <!--                    <div class="panel-heading">-->
+            <!--                        <div>-->
+            <!--                            <img-->
+            <!--                                src="/images/paypal-logo.png"-->
+            <!--                                class="img img-responsive payment-channels-logos"-->
+            <!--                                alt=""-->
+            <!--                            />-->
 
-                            <button
-                                type="button"
-                                class="btn button-md btn-block button-theme"
-                                @click="makePayPalPayment"
-                                v-if="!makingPayment && !hasSelectedMpesa"
-                            >
-                                Pay With Paypal
-                            </button>
+            <!--                            <h4 class="panel-heading-title">Pay with Paypal</h4>-->
+            <!--                            <br /><br />-->
+            <!--                        </div>-->
+            <!--                    </div>-->
+            <!--                </a>-->
+            <!--                <div id="collapseTwo" class="panel-collapse collapse">-->
+            <!--                    <div class="panel-body">-->
+            <!--                        <div class="my-address">-->
+            <!--                            <div-->
+            <!--                                class="alert alert-info override-alert-text-transform"-->
+            <!--                                style="-->
+            <!--                                    background-color: #014d9e;-->
+            <!--                                    color: #ffffff;-->
+            <!--                                "-->
+            <!--                            >-->
+            <!--                                We will redirect you to PayPal to complete the-->
+            <!--                                transaction of-->
+            <!--                                <strong class="text-white">-->
+            <!--                                    KES-->
+            <!--                                    {{ payment.amount | numberFormat }}-->
+            <!--                                </strong>-->
+            <!--                                for your vacation booking.-->
+            <!--                                <br />-->
+            <!--                            </div>-->
 
-                            <button
-                                type="submit"
-                                class="btn button-md btn-block button-theme"
-                                disabled
-                                v-if="makingPayment"
-                            >
-                                <i class="fa fa-spinner fa-spin fa-1x"></i>
-                            </button>
+            <!--                            <button-->
+            <!--                                type="button"-->
+            <!--                                class="btn button-md btn-block button-theme"-->
+            <!--                                @click="makePayPalPayment"-->
+            <!--                                v-if="!makingPayment && !hasSelectedMpesa"-->
+            <!--                            >-->
+            <!--                                Pay With Paypal-->
+            <!--                            </button>-->
 
-                            <button
-                                type="button"
-                                class="btn button-md btn-block button-theme"
-                                disabled
-                                v-if="hasSelectedMpesa"
-                            >
-                                Pay With Paypal
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <!--                            <button-->
+            <!--                                type="submit"-->
+            <!--                                class="btn button-md btn-block button-theme"-->
+            <!--                                disabled-->
+            <!--                                v-if="makingPayment"-->
+            <!--                            >-->
+            <!--                                <i class="fa fa-spinner fa-spin fa-1x"></i>-->
+            <!--                            </button>-->
+
+            <!--                            <button-->
+            <!--                                type="button"-->
+            <!--                                class="btn button-md btn-block button-theme"-->
+            <!--                                disabled-->
+            <!--                                v-if="hasSelectedMpesa"-->
+            <!--                            >-->
+            <!--                                Pay With Paypal-->
+            <!--                            </button>-->
+            <!--                        </div>-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--            </div>-->
         </div>
 
         <div v-if="!hasUnsuccessfulPayments">
