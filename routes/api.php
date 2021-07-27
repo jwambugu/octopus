@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\MpesaController;
+use App\Http\Controllers\API\PropertyController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,4 +24,12 @@ Route::group([
     'namespace' => 'API',
 ], function () {
     Route::post('lnm-callback', [MpesaController::class, 'lipaNaMpesaCallback'])->name('lnm-callback');
+});
+
+Route::group([
+    'prefix' => 'internal',
+    'namespace' => 'API',
+], function () {
+    Route::get('property/{id}/booked-dates', [PropertyController::class, 'getBookedDates'])
+        ->name('property.booked-dates');
 });
