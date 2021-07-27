@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\Controller;
 use App\Models\Property;
 use Illuminate\Http\JsonResponse;
@@ -14,7 +15,7 @@ class PropertyController extends Controller
      * @param int $id
      * @return JsonResponse
      */
-    public function getBookedDates(int $id): JsonResponse
+    public function getBookedDates(int $id)
     {
         $property = Property::find($id);
 
@@ -25,12 +26,7 @@ class PropertyController extends Controller
             ], Response::HTTP_NOT_FOUND);
         }
 
-        $bookedDates = $property->activeBookingsDates->map(function ($date) {
-            return [
-                'checkin_date' => $date->checkin_date,
-                'checkout_date' => $date->checkout_date,
-            ];
-        });
+        $bookedDates = BookingController::getPropertyBookedDates($property);
 
         return response()->json([
             'status' => Response::HTTP_OK,

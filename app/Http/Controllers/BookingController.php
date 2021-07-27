@@ -138,12 +138,7 @@ class BookingController extends Controller
         // Get the property amenities
         $property = $property->load('amenities', 'activeBookingsDates');
 
-        $bookedDates = $property->activeBookingsDates->map(function ($date) {
-            return [
-                'checkin_date' => $date->checkin_date,
-                'checkout_date' => $date->checkout_date,
-            ];
-        });
+        $bookedDates = self::getPropertyBookedDates($property);
 
         return view('bookings.property-book')->with([
             'property' => $property,
@@ -539,5 +534,22 @@ class BookingController extends Controller
                 'next' => $approveData->href
             ]
         ]);
+    }
+
+    /**
+     * Returns the booked dates for a property
+     * @param Property $property
+     * @return mixed
+     */
+    public static function getPropertyBookedDates(Property $property)
+    {
+        return $property->activeBookingsDates
+            ->where('checkout_date', '>=', today())
+            ->map(function ($date) {
+                return [
+                    'checkin_date' => $date->checkin_date,
+                    'checkout_date' => $date->checkout_date,
+                ];
+            });
     }
 }
