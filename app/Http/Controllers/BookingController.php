@@ -550,6 +550,6 @@ class BookingController extends Controller
                     'checkin_date' => $date->checkin_date,
                     'checkout_date' => $date->checkout_date,
                 ];
-            });
+            })->values();
     }
 }
