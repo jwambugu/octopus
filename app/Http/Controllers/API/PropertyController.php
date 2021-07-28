@@ -17,7 +17,7 @@ class PropertyController extends Controller
      */
     public function getBookedDates(int $id)
     {
-        $property = Property::find($id);
+        return $property = Property::find($id);
 
         if (!$property) {
             return response()->json([
