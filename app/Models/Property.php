@@ -184,7 +184,7 @@ class Property extends Model
                 'is_cancelled_by_host' => false,
                 'has_conflicts' => false,
             ])
-            ->orWhere('is_closing_booking', true)
+//            ->orWhere('is_closing_booking', true)
             ->select([
                 'property_id', 'checkin_date', 'checkout_date'
             ]);
