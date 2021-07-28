@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\Controller;
 use App\Models\Property;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 
 class PropertyController extends Controller
@@ -12,14 +13,13 @@ class PropertyController extends Controller
     /**
      * Fetch the booked dates for a property
      * @param int $id
+     * @return JsonResponse
      */
     public function getBookedDates(int $id)
     {
         $property = Property::find($id);
 
-        return [
-            $property, $property->activeBookingsDates
-        ];
+        return $property->activeBookingsDates;
 
         if (!$property) {
             return response()->json([
