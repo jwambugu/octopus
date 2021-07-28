@@ -15,11 +15,9 @@ class PropertyController extends Controller
      * @param int $id
      * @return JsonResponse
      */
-    public function getBookedDates(int $id)
+    public function getBookedDates(int $id): JsonResponse
     {
         $property = Property::find($id);
-
-        return $property->activeBookingsDates;
 
         if (!$property) {
             return response()->json([
