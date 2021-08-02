@@ -13,6 +13,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
 class HomeController extends Controller
@@ -30,12 +31,14 @@ class HomeController extends Controller
     /**
      * Show the application dashboard.
      *
+     * @param Request $request
      * @return Renderable
      */
-    public function index(): Renderable
+    public function index(Request $request): Renderable
     {
         // Get the auth user
-        $user = auth()->user();
+        $user = $request->user();
+        $user->first_name = $user->getFirstName();
 
         return view('home')->with([
             'user' => $user

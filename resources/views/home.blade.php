@@ -7,7 +7,12 @@
             <div class="row">
                 @include('partials._profile-aside')
 
-                <edit-profile :user="{{ $user }}"></edit-profile>
+                <div class="col-lg-8 col-md-8 col-sm-12">
+                    <referral-program :user="{{ $user }}"></referral-program>
+
+                    <edit-profile :user="{{ $user }}"></edit-profile>
+                </div>
+
             </div>
         </div>
     </div>
