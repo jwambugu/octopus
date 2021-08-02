@@ -40,8 +40,15 @@ class HomeController extends Controller
         $user = $request->user();
         $user->first_name = $user->getFirstName();
 
+        // Create the registration links
+        $links = [
+            'guest' => route('register'),
+            'host' => sprintf('%s%s', config('services.backend.url'), 'signup'),
+        ];
+
         return view('home')->with([
-            'user' => $user
+            'user' => $user,
+            'links' => $links
         ]);
     }
 
@@ -142,6 +149,7 @@ class HomeController extends Controller
      * @param ChangePasswordRequest $request
      * @return JsonResponse
      * @throws ValidationException
+     * @throws Exception
      */
     public function changePassword(ChangePasswordRequest $request): JsonResponse
     {
@@ -177,6 +185,22 @@ class HomeController extends Controller
         return response()->json([
             'data' => [
                 'message' => 'Password changed successfully.'
+            ]
+        ]);
+    }
+
+    /**
+     * Returns the current referral code for the auth user
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getReferralCode(Request $request): JsonResponse
+    {
+        sleep(rand(2, 5));
+
+        return response()->json([
+            'data' => [
+                'code' => (new PaymentController)->generateAccountNumber()
             ]
         ]);
     }

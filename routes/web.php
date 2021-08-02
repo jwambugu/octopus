@@ -35,6 +35,8 @@ Route::get('/change-password', [HomeController::class, 'changePasswordView'])->n
 
 Route::put('/change-password', [HomeController::class, 'changePassword'])->name('change-password-request');
 
+Route::get('/get-referral-code', [HomeController::class, 'getReferralCode'])->name('get-referral-code');
+
 /**
  * Vacation routes
  */

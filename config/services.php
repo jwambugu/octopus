@@ -47,6 +47,9 @@ return [
         'apiKey' => env('SMS_API_KEY'),
         'shortcode' => env('SMS_SHORT_CODE'),
         'endpoint' => env('SMS_SMS_ENDPOINT'),
-    ]
+    ],
 
+    'backend' => [
+        'url' => env('BACKEND_BASE_URL', 'https://account.lomu-homes.com/'),
+    ]
 ];
