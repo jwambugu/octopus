@@ -14,7 +14,7 @@
                 <div class="media">
                     <div class="media-left">
                         <img
-                            class="media-object"
+                            class="media-object media-img-constraint img-rounded"
                             :src="vacation.default_image.public_url"
                             :alt="vacation.name"
                         />
@@ -26,10 +26,10 @@
                             </a>
                         </h3>
                         <div class="listing-post-meta">
-                            <a href="#"
+                            <a :href="`/vacations/${vacation.slug}`"
                                 >KES
-                                {{ vacation.cost_per_night | numberFormat }}</a
-                            >
+                                {{ vacation.cost_per_night | numberFormat }}
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -70,4 +70,9 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.media-img-constraint {
+    height: 60px;
+    object-fit: cover;
+}
+</style>

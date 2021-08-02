@@ -4,8 +4,8 @@
         @click="viewProperty"
     >
         <div class="property">
-            <div class="property-img">
-                <div class="property-tag button alt featured">Featured</div>
+            <div class="property-img constrained-property-img">
+                <!--                <div class="property-tag button alt featured">Featured</div>-->
                 <div class="property-tag button sale">Available</div>
                 <div class="property-price">
                     KES {{ property.cost_per_night | numberFormat }}
@@ -14,24 +14,23 @@
                 <img
                     :src="image"
                     :alt="property.slug"
-                    class="img-responsive"
-                    style="max-height: 300px"
+                    class="img-rounded img-responsive"
                 />
 
-                <div class="property-overlay">
+                <div class="property-overlay img-rounded">
                     <a :href="propertyLink" class="overlay-link">
                         <i class="fa fa-link"></i>
                     </a>
                 </div>
             </div>
 
-            <div class="property-content">
-                <div class="info mb-3">
-                    <h1 class="title title-height">
+            <div class="property-content property-content-info">
+                <div class="info">
+                    <h3 class="title title-height">
                         <a :href="propertyLink">
                             {{ property.name | ucWords }}
                         </a>
-                    </h1>
+                    </h3>
                 </div>
             </div>
         </div>
@@ -85,5 +84,13 @@ export default {
 
 .property-details-card-link:hover {
     cursor: pointer;
+}
+
+.constrained-property-img {
+    max-height: 200px;
+}
+
+.property-content-info {
+    margin-bottom: 2rem;
 }
 </style>

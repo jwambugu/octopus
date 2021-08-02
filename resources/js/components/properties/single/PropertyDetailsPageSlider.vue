@@ -12,9 +12,8 @@
                     >
                         <img
                             :src="image.public_url"
-                            class="thumb-preview"
+                            class="img-rounded thumb-preview thumb-preview-img-constraint"
                             :alt="slug"
-                            style="max-height: 500px"
                         />
                     </div>
                 </div>
@@ -49,6 +48,8 @@
                 </a>
             </div>
 
+            <hr />
+
             <ol class="carousel-indicators thumbs visible-lg visible-md">
                 <li
                     data-target="#carousel-custom"
@@ -59,9 +60,8 @@
                 >
                     <img
                         :src="image.public_url"
-                        class="thumb-preview"
+                        class="thumb-preview slider-preview-img-constraint"
                         :alt="slug"
-                        style="max-height: 100px"
                     />
                 </li>
             </ol>
@@ -85,4 +85,14 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.thumb-preview-img-constraint {
+    max-height: 400px;
+    object-fit: cover;
+}
+
+.slider-preview-img-constraint {
+    height: 80px;
+    object-fit: cover;
+}
+</style>
