@@ -28,8 +28,11 @@ Route::get('/contact-us', [PageController::class, 'contactUs'])->name('contact-u
 Auth::routes();
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
+
 Route::put('/update-profile', [HomeController::class, 'updateProfile'])->name('update-profile');
+
 Route::get('/change-password', [HomeController::class, 'changePasswordView'])->name('change-password');
+
 Route::put('/change-password', [HomeController::class, 'changePassword'])->name('change-password-request');
 
 /**
@@ -109,6 +112,7 @@ Route::group([
     'as' => 'paypal.'
 ], function () {
     Route::get('/cancel-url', [PayPalController::class, 'cancelURL'])->name('cancel-url');
+
     Route::get('/return-url', [PayPalController::class, 'returnURL'])->name('return-url');
 });
 

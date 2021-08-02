@@ -103,4 +103,13 @@ class User extends Authenticatable
     {
         return $this->hasMany(Property::class);
     }
+
+    /**
+     * Returns the user first name
+     * @return string
+     */
+    public function getFirstName(): string
+    {
+        return ucwords(explode(' ', $this->name)[0]);
+    }
 }

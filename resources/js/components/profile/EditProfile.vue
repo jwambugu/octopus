@@ -1,72 +1,70 @@
 <template>
-    <div class="col-lg-8 col-md-8 col-sm-12">
-        <div class="my-address">
-            <div
-                class="alert alert-success text-center override-alert-text-transform"
-                role="alert"
-                v-if="successMessage"
-            >
-                {{ successMessage }}
-            </div>
-
-            <div
-                class="alert alert-danger text-center override-alert-text-transform"
-                role="alert"
-                v-if="errorMessage"
-            >
-                {{ errorMessage }}
-            </div>
-
-            <div class="main-title-2">
-                <h1>Update Profile</h1>
-            </div>
-
-            <form @submit.prevent="updateProfile">
-                <div class="form-group">
-                    <label for="name">Name</label>
-                    <input
-                        id="name"
-                        type="text"
-                        class="input-text"
-                        v-model="profile.name"
-                    />
-                </div>
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input
-                        id="email"
-                        type="email"
-                        class="input-text"
-                        v-model="profile.email"
-                    />
-                </div>
-                <div class="form-group">
-                    <label for="phone_number">Phone Number</label>
-                    <input
-                        id="phone_number"
-                        type="text"
-                        class="input-text"
-                        v-model="profile.phone_number"
-                    />
-                </div>
-                <div class="form-group">
-                    <button
-                        class="btn button-md button-theme btn-block"
-                        v-if="!updatingProfile"
-                    >
-                        Update Profile
-                    </button>
-                    <button
-                        type="submit"
-                        class="btn button-md btn-block button-theme"
-                        disabled
-                        v-else
-                    >
-                        <i class="fa fa-spinner fa-spin fa-1x"></i>
-                    </button>
-                </div>
-            </form>
+    <div class="my-address">
+        <div
+            class="alert alert-success text-center override-alert-text-transform"
+            role="alert"
+            v-if="successMessage"
+        >
+            {{ successMessage }}
         </div>
+
+        <div
+            class="alert alert-danger text-center override-alert-text-transform"
+            role="alert"
+            v-if="errorMessage"
+        >
+            {{ errorMessage }}
+        </div>
+
+        <div class="main-title-2">
+            <h1>Update Profile</h1>
+        </div>
+
+        <form @submit.prevent="updateProfile">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input
+                    id="name"
+                    type="text"
+                    class="input-text"
+                    v-model="profile.name"
+                />
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input
+                    id="email"
+                    type="email"
+                    class="input-text"
+                    v-model="profile.email"
+                />
+            </div>
+            <div class="form-group">
+                <label for="phone_number">Phone Number</label>
+                <input
+                    id="phone_number"
+                    type="text"
+                    class="input-text"
+                    v-model="profile.phone_number"
+                />
+            </div>
+            <div class="form-group">
+                <button
+                    class="btn button-md button-theme btn-block"
+                    v-if="!updatingProfile"
+                >
+                    Update Profile
+                </button>
+                <button
+                    type="submit"
+                    class="btn button-md btn-block button-theme"
+                    disabled
+                    v-else
+                >
+                    <i class="fa fa-spinner fa-spin fa-1x"></i>
+                </button>
+            </div>
+        </form>
     </div>
 </template>
 
