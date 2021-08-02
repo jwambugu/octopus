@@ -38,7 +38,16 @@ const actions = {
                     password_confirmation,
                 })
                 .then(({ data }) => {
-                    console.log(data);
+                    resolve(data.data);
+                })
+                .catch((error) => reject(errorHandler(error)));
+        });
+    },
+    GET_REFERRAL_CODE: () => {
+        return new Promise((resolve, reject) => {
+            axios
+                .get("/get-referral-code")
+                .then(({ data }) => {
                     resolve(data.data);
                 })
                 .catch((error) => reject(errorHandler(error)));

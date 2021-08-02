@@ -103,6 +103,15 @@ class RegisterController extends Controller
         // Create a new user
         $user = $this->create($request->all());
 
+        // Check if we have the referral query param
+        $isReferred = $request->query->has('_ref');
+
+        if ($isReferred) {
+            $referralCode = $request->query->get('_ref');
+
+            // TODO verify the code
+        }
+
         // Login the user
         auth()->loginUsingId($user->id, true);
 

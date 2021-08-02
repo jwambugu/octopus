@@ -16,7 +16,7 @@ class PaymentController extends Controller
      * Crates a random alphanumeric string to be used as an account number
      * @return false|string
      */
-    private function generateAccountNumber()
+    public function generateAccountNumber()
     {
         $pool = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
