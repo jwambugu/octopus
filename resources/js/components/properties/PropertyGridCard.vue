@@ -4,7 +4,7 @@
         @click="viewProperty"
     >
         <div class="property">
-            <div class="property-img constrained-property-img">
+            <div class="property-img">
                 <!--                <div class="property-tag button alt featured">Featured</div>-->
                 <div class="property-tag button sale">Available</div>
                 <div class="property-price">
@@ -14,7 +14,7 @@
                 <img
                     :src="image"
                     :alt="property.slug"
-                    class="img-rounded img-responsive"
+                    class="img-rounded img-responsive constrained-property-img"
                 />
 
                 <div class="property-overlay img-rounded">
@@ -87,7 +87,8 @@ export default {
 }
 
 .constrained-property-img {
-    max-height: 200px;
+    object-fit: fill !important;
+    max-height: 230px !important;
 }
 
 .property-content-info {
