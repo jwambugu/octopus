@@ -191,16 +191,17 @@ class HomeController extends Controller
 
     /**
      * Returns the current referral code for the auth user
-     * @param Request $request
      * @return JsonResponse
      */
-    public function getReferralCode(Request $request): JsonResponse
+    public function getReferralCode(): JsonResponse
     {
-        sleep(rand(2, 5));
+        $userID = auth()->id();
+
+        $referralCode = sprintf('%s-g-%d-%s-%d', date('y'), $userID, date('m'), date('d'));
 
         return response()->json([
             'data' => [
-                'code' => (new PaymentController)->generateAccountNumber()
+                'code' => $referralCode
             ]
         ]);
     }

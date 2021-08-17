@@ -50,6 +50,8 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|Admin wherePhoneVerificationCode($value)
  * @property string $wallet_balance
  * @method static \Illuminate\Database\Eloquent\Builder|Admin whereWalletBalance($value)
+ * @property int|null $referral_code_id
+ * @method static \Illuminate\Database\Eloquent\Builder|Admin whereReferralCodeId($value)
  */
 class Admin extends Model
 {

@@ -17,6 +17,7 @@
                     @csrf
 
                     <input type="hidden" name="_next" value="{{ $next }}">
+                    <input type="hidden" name="_referral_code" value="{{ $referralCode }}">
 
                     <div class="form-group">
                         <label for="name" class="hidden"></label>

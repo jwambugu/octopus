@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\SMSOutbox
@@ -14,27 +17,33 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string|null $status
  * @property array|null $response_data
  * @property bool $is_sent
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @method static \Illuminate\Database\Eloquent\Builder|SMSOutbox newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|SMSOutbox newQuery()
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
+ * @method static Builder|SMSOutbox newModelQuery()
+ * @method static Builder|SMSOutbox newQuery()
  * @method static \Illuminate\Database\Query\Builder|SMSOutbox onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|SMSOutbox query()
- * @method static \Illuminate\Database\Eloquent\Builder|SMSOutbox whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SMSOutbox whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SMSOutbox whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SMSOutbox whereIsSent($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SMSOutbox whereMessage($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SMSOutbox wherePhoneNumber($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SMSOutbox whereResponseData($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SMSOutbox whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SMSOutbox whereUpdatedAt($value)
+ * @method static Builder|SMSOutbox query()
+ * @method static Builder|SMSOutbox whereCreatedAt($value)
+ * @method static Builder|SMSOutbox whereDeletedAt($value)
+ * @method static Builder|SMSOutbox whereId($value)
+ * @method static Builder|SMSOutbox whereIsSent($value)
+ * @method static Builder|SMSOutbox whereMessage($value)
+ * @method static Builder|SMSOutbox wherePhoneNumber($value)
+ * @method static Builder|SMSOutbox whereResponseData($value)
+ * @method static Builder|SMSOutbox whereStatus($value)
+ * @method static Builder|SMSOutbox whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|SMSOutbox withTrashed()
  * @method static \Illuminate\Database\Query\Builder|SMSOutbox withoutTrashed()
- * @mixin \Eloquent
+ * @mixin Eloquent
  * @property string|null $sent_at
- * @method static \Illuminate\Database\Eloquent\Builder|SMSOutbox whereSentAt($value)
+ * @method static Builder|SMSOutbox whereSentAt($value)
+ * @property string $uuid
+ * @property string|null $message_id
+ * @property string|null $delivery_status
+ * @method static Builder|SMSOutbox whereDeliveryStatus($value)
+ * @method static Builder|SMSOutbox whereMessageId($value)
+ * @method static Builder|SMSOutbox whereUuid($value)
  */
 class SMSOutbox extends Model
 {
