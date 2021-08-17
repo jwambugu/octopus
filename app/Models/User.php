@@ -48,6 +48,8 @@ use Illuminate\Support\Carbon;
  * @property-read Collection|Property[] $properties
  * @property-read int|null $properties_count
  * @method static \Database\Factories\UserFactory factory(...$parameters)
+ * @property int|null $referral_code_id
+ * @method static Builder|User whereReferralCodeId($value)
  */
 class User extends Authenticatable
 {
@@ -63,6 +65,7 @@ class User extends Authenticatable
         'email',
         'password',
         'phone_number',
+        'referral_code_id',
     ];
 
     /**

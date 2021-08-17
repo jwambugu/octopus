@@ -64,6 +64,8 @@ use Illuminate\Support\Carbon;
  * @property string|null $reconciled_at
  * @method static \Illuminate\Database\Eloquent\Builder|Booking whereCostPerNight($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Booking whereReconciledAt($value)
+ * @property int $has_conflicts
+ * @method static \Illuminate\Database\Eloquent\Builder|Booking whereHasConflicts($value)
  */
 class Booking extends Model
 {
