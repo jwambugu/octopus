@@ -112,17 +112,18 @@ class MpesaController extends Controller
      * @param object $host
      * @param object $guest
      * @param string $propertyName
+     * @param object $booking
      * @throws Exception
      */
-    private function createHostSMS(object $host, object $guest, string $propertyName)
+    private function createHostSMS(object $host, object $guest, string $propertyName, object $booking)
     {
         $hostFirstName = explode(' ', $host->name)[0];
         $guestFirstName = explode(' ', $guest->name)[0];
 
         // Create an SMS to send to the guest
         $message = sprintf(
-            "Hello %s, property %s has been successfully booked by %s, %s. Thanks for partnering with us.",
-            $hostFirstName, $propertyName, $guestFirstName, $guest->phone_number
+            "Hello %s, property %s has been successfully booked by %s, %s. Checkin date %s, checkout date %s. Thanks for partnering with us.",
+            $hostFirstName, $propertyName, $guestFirstName, $guest->phone_number, $booking->checkin_date, $booking->checkout_date
         );
 
         try {
@@ -142,9 +143,10 @@ class MpesaController extends Controller
         return Payment::with([
             'property',
             'property.owner:id,name,email,phone_number',
-            'user:id,name,phone_number'
+            'user:id,name,phone_number',
+            'booking:id,checkin_date,checkout_date'
         ])->find($id, [
-            'id', 'transaction_id', 'property_id', 'user_id'
+            'id', 'transaction_id', 'property_id', 'user_id', 'booking_id'
         ]);
     }
 
@@ -159,10 +161,11 @@ class MpesaController extends Controller
         $guest = $payment->user;
         $host = $payment->property->owner;
         $property = $payment->property;
+        $booking = $payment->booking;
 
         try {
             // Create an SMS to send to the host
-            $this->createHostSMS($host, $guest, $property->name);
+            $this->createHostSMS($host, $guest, $property->name, $booking);
 
             // Create an SMS to send to the guest
             $this->createGuestSMS($guest, $payment->transaction_id);
