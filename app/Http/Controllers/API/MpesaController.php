@@ -119,11 +119,13 @@ class MpesaController extends Controller
     {
         $hostFirstName = explode(' ', $host->name)[0];
         $guestFirstName = explode(' ', $guest->name)[0];
+        $checkinDate = date('Y-m-d', $booking->checkin_date);
+        $checkoutDate = date('Y-m-d', $booking->checkout_date);
 
         // Create an SMS to send to the guest
         $message = sprintf(
             "Hello %s, property %s has been successfully booked by %s, %s. Checkin date %s, checkout date %s. Thanks for partnering with us.",
-            $hostFirstName, $propertyName, $guestFirstName, $guest->phone_number, $booking->checkin_date, $booking->checkout_date
+            $hostFirstName, $propertyName, $guestFirstName, $guest->phone_number, $checkinDate, $checkoutDate
         );
 
         try {
