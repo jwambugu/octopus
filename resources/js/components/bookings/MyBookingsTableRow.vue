@@ -1,11 +1,11 @@
 <template>
     <tr :class="{ 'b-none': isLastProperty }">
         <td class="title-container booking-link" @click="viewBooking">
-            <img
-                :src="image"
-                :alt="property.name"
-                class="img-responsive hidden-xs"
-            />
+            <!--            <img-->
+            <!--                :src="image"-->
+            <!--                :alt="property.name"-->
+            <!--                class="img-responsive hidden-xs"-->
+            <!--            />-->
             <div class="title">
                 <h4>
                     <a :href="viewBookingLink"

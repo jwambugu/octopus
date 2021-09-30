@@ -40,15 +40,8 @@ class HomeController extends Controller
         $user = $request->user();
         $user->first_name = $user->getFirstName();
 
-        // Create the registration links
-        $links = [
-            'guest' => route('register'),
-            'host' => sprintf('%s%s', config('services.backend.url'), 'signup'),
-        ];
-
         return view('home')->with([
             'user' => $user,
-            'links' => $links
         ]);
     }
 
