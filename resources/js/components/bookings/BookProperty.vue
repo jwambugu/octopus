@@ -106,8 +106,12 @@ export default {
     data() {
         return {
             bookingData: {
-                checkin_date: "", // new Date().toISOString().slice(0, 10)
-                checkout_date: "",
+                checkin_date: new Date().toISOString().slice(0, 10), // new Date().toISOString().slice(0, 10)
+                checkout_date: new Date(
+                    new Date().setDate(new Date().getDate() + 1)
+                )
+                    .toISOString()
+                    .slice(0, 10),
                 property_id: this.property.id,
             },
             errorMessage: "",
@@ -166,6 +170,8 @@ export default {
                     opens: "left",
                     minDate: new Date(),
                     format: "YYYY-MM-DD",
+                    endDate: moment().add(1, "day"),
+
                     isInvalidDate: function (date) {
                         return vm.dateRanges.reduce(function (bool, range) {
                             return (

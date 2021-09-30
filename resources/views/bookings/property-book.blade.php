@@ -6,6 +6,16 @@
 
 @section('content')
 
+    @auth
+        <div class="container-fluid" style="margin-top: 10px">
+            <div class="row">
+                <div class="col-md-12">
+                    @include('partials._referrals_links')
+                </div>
+            </div>
+        </div>
+    @endauth
+
     <div class="content-area my-profile" style="margin-top: -50px">
         <div class="container">
             <div class="row">
