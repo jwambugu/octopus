@@ -70,7 +70,9 @@
                             type="submit"
                             class="btn button-md btn-block button-theme"
                             v-if="!bookingProperty"
-                            :disabled="!bookingData.checkout_date"
+                            :disabled="
+                                !bookingData.checkout_date && loadingDatePicker
+                            "
                         >
                             Book Property
                         </button>
