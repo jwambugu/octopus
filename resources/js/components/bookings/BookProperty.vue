@@ -53,7 +53,10 @@
                     <!--                        />-->
                     <!--                    </div>-->
 
-                    <div class="form-group" v-if="bookingData.checkout_date">
+                    <div
+                        class="form-group"
+                        v-if="bookingData.checkout_date && !loadingDatePicker"
+                    >
                         <span id="nights" class="">
                             <i
                                 >Booking for {{ nightsBooked }}
