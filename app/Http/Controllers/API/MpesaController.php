@@ -174,12 +174,17 @@ class MpesaController extends Controller
         try {
             // Create an SMS to send to the host
             $this->createHostSMS($host, $guest, $property->name, $booking);
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
 
+        try {
             // Create an SMS to send to the guest
             $this->createGuestSMS($guest, $payment->transaction_id);
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
+
     }
 
 
