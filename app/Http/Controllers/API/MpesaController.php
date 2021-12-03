@@ -85,10 +85,12 @@ class MpesaController extends Controller
         $firstName = explode(' ', $user->name)[0];
 
         // Create an SMS to send to the guest
-        $message = sprintf(
-            "Hello %s, we have received your payment %s. Thanks for choosing to stay with us.",
-            $firstName, $transactionID
-        );
+//        $message = sprintf(
+//            "Hello %s, we have received your payment %s. Thanks for choosing to stay with us.",
+//            $firstName, $transactionID
+//        );
+
+        $message = sprintf('Hello %s\n,Thank you for your vacation stays.Book next vacation at %s & make extra cash by REFERRING A GUEST / HOST & GET %s.\n Check your referral link on portal. Many Thanks!', $firstName, config('app.url'), '10%');
 
         info('guest sms', [$message]);
 
