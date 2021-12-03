@@ -93,8 +93,6 @@ class MpesaController extends Controller
         $message = sprintf("Hello %s,\nThank you for your vacation stays.Book next vacation at %s & make extra cash by REFERRING A GUEST / HOST & GET %s.\nCheck your referral link on portal. Many Thanks!",
             $firstName, 'lomu-homes.com', '10%');
 
-        info('guest sms', [$message]);
-
         $phoneNumber = $user->phone_number;
 
         $isKenyanPhoneNumber = Str::startsWith($phoneNumber, '07') || Str::startsWith($phoneNumber, '01');
@@ -124,13 +122,9 @@ class MpesaController extends Controller
     {
 
         $hostFirstName = explode(' ', $host->name)[0];
-        info('createHostSMS', [$hostFirstName]);
-
         $guestFirstName = explode(' ', $guest->name)[0];
         $checkinDate = $booking->checkin_date->format('Y-m-d');
         $checkoutDate = $booking->checkout_date->format('Y-m-d');
-
-        info('createHostSMS', [$hostFirstName, $guestFirstName, $propertyName, $checkinDate, $checkoutDate]);
 
         // Create an SMS to send to the guest
         $message = sprintf(
@@ -138,7 +132,6 @@ class MpesaController extends Controller
             $hostFirstName, $propertyName, $guestFirstName, $guest->phone_number, $checkinDate, $checkoutDate
         );
 
-        info('host sms', [$message]);
         try {
             (new SMSController)->create($host->phone_number, $message);
         } catch (Exception $e) {
@@ -176,7 +169,7 @@ class MpesaController extends Controller
         $host = $payment->property->owner;
         $property = $payment->property;
         $booking = $payment->booking;
-        info('creating sms', [$payment]);
+
         try {
             // Create an SMS to send to the host
             $this->createHostSMS($host, $guest, $property->name, $booking);
@@ -204,7 +197,6 @@ class MpesaController extends Controller
     {
         $paymentID = $payment->id;
 
-        info('updateTransactionData(_) transaction_data', [$transactionData]);
 
         try {
             Payment::where('id', $paymentID)->update([
@@ -225,16 +217,11 @@ class MpesaController extends Controller
                 $booking = Booking::with('property', 'property.owner', 'user', 'property.city')
                     ->find($payment->booking_id);
 
-
-                info('updateTransactionData(_) booking', [$booking]);
-
                 // Get the guest details
                 $guest = $booking->user;
 
                 // Get the payment data
                 $paymentData = $this->findPayment($paymentID);
-
-                info('updateTransactionData(_) paymentData', [$paymentData]);
 
                 // Create the sms
                 $this->createSMSes($paymentData);
@@ -270,11 +257,8 @@ class MpesaController extends Controller
         $payment = $this->validateTransaction($merchantRequestID, $checkoutRequestID);
 
         if (!$payment) {
-            info('lipaNaMpesaCallback(_) no payment', [$payment]);
             return $this->rejectTransaction();
         }
-
-        info('lipaNaMpesaCallback(_) payment', [$payment]);
 
 
         // Check if the transaction was successful. All successful transactions have a result code of 0
