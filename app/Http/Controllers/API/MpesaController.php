@@ -90,7 +90,7 @@ class MpesaController extends Controller
 //            $firstName, $transactionID
 //        );
 
-        $message = sprintf('Hello %s\n,Thank you for your vacation stays.Book next vacation at %s & make extra cash by REFERRING A GUEST / HOST & GET %s.\n Check your referral link on portal. Many Thanks!',
+        $message = sprintf("Hello %s \n,Thank you for your vacation stays.Book next vacation at %s & make extra cash by REFERRING A GUEST / HOST & GET %s.\n Check your referral link on portal. Many Thanks!",
             $firstName, 'lomu-homes.com', '10%');
 
         info('guest sms', [$message]);
