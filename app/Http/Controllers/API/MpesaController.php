@@ -119,12 +119,13 @@ class MpesaController extends Controller
      */
     private function createHostSMS(object $host, object $guest, string $propertyName, object $booking)
     {
-        info('createHostSMS', [$host, $guest, $propertyName, $booking]);
 
         $hostFirstName = explode(' ', $host->name)[0];
+        info('createHostSMS', [$hostFirstName]);
+
         $guestFirstName = explode(' ', $guest->name)[0];
-        $checkinDate = date('Y-m-d', $booking->checkin_date);
-        $checkoutDate = date('Y-m-d', $booking->checkout_date);
+        $checkinDate = $booking->checkin_date->format('Y-m-d');
+        $checkoutDate = $booking->checkout_date->format('Y-m-d');
 
         info('createHostSMS', [$hostFirstName, $guestFirstName, $propertyName, $checkinDate, $checkoutDate]);
 
