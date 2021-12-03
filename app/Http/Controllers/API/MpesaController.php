@@ -124,6 +124,8 @@ class MpesaController extends Controller
         $checkinDate = date('Y-m-d', $booking->checkin_date);
         $checkoutDate = date('Y-m-d', $booking->checkout_date);
 
+        info('createHostSMS', [$hostFirstName, $guestFirstName, $propertyName, $checkinDate, $checkoutDate]);
+
         // Create an SMS to send to the guest
         $message = sprintf(
             "Hello %s, property %s has been successfully booked by %s, %s. Checkin date %s, checkout date %s. Thanks for partnering with us.",
