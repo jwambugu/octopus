@@ -162,6 +162,7 @@ class MpesaController extends Controller
      */
     private function createSMSes(object $payment)
     {
+        info('creating sms', [$payment]);
         // Get the payment details
         $guest = $payment->user;
         $host = $payment->property->owner;
