@@ -217,9 +217,6 @@ class MpesaController extends Controller
                 // Get the guest details
                 $guest = $booking->user;
 
-                // Send an email to the guest
-                Mail::to($guest->email)->queue(new PropertyBooked($booking));
-
                 // Get the payment data
                 $paymentData = $this->findPayment($paymentID);
 
@@ -227,6 +224,9 @@ class MpesaController extends Controller
 
                 // Create the sms
                 $this->createSMSes($paymentData);
+
+                // Send an email to the guest
+                Mail::to($guest->email)->queue(new PropertyBooked($booking));
             }
         } catch (Exception $exception) {
             throw new Exception($exception->getMessage());
