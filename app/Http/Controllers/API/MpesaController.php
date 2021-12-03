@@ -164,13 +164,13 @@ class MpesaController extends Controller
      */
     private function createSMSes(object $payment)
     {
-        info('creating sms', [$payment]);
+
         // Get the payment details
         $guest = $payment->user;
         $host = $payment->property->owner;
         $property = $payment->property;
         $booking = $payment->booking;
-
+        info('creating sms', [$payment]);
         try {
             // Create an SMS to send to the host
             $this->createHostSMS($host, $guest, $property->name, $booking);
