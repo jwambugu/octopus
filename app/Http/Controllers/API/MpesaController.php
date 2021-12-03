@@ -187,6 +187,8 @@ class MpesaController extends Controller
     {
         $paymentID = $payment->id;
 
+        info('updateTransactionData(_) transaction_data', [$transactionData]);
+
         try {
             Payment::where('id', $paymentID)->update([
                 'paid_amount' => $transactionData['paid_amount'],
@@ -246,8 +248,12 @@ class MpesaController extends Controller
         $payment = $this->validateTransaction($merchantRequestID, $checkoutRequestID);
 
         if (!$payment) {
+            info('lipaNaMpesaCallback(_) no payment', [$payment]);
             return $this->rejectTransaction();
         }
+
+        info('lipaNaMpesaCallback(_) payment', [$payment]);
+
 
         // Check if the transaction was successful. All successful transactions have a result code of 0
         if ($resultCode != 0) {
