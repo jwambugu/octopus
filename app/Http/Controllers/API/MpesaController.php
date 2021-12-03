@@ -90,6 +90,8 @@ class MpesaController extends Controller
             $firstName, $transactionID
         );
 
+        info('guest sms', [$message]);
+
         $phoneNumber = $user->phone_number;
 
         $isKenyanPhoneNumber = Str::startsWith($phoneNumber, '07') || Str::startsWith($phoneNumber, '01');
@@ -128,6 +130,7 @@ class MpesaController extends Controller
             $hostFirstName, $propertyName, $guestFirstName, $guest->phone_number, $checkinDate, $checkoutDate
         );
 
+        info('host sms', [$message]);
         try {
             (new SMSController)->create($host->phone_number, $message);
         } catch (Exception $e) {
@@ -219,6 +222,8 @@ class MpesaController extends Controller
 
                 // Get the payment data
                 $paymentData = $this->findPayment($paymentID);
+
+                info('updateTransactionData(_) paymentData', [$paymentData]);
 
                 // Create the sms
                 $this->createSMSes($paymentData);

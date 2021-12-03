@@ -33,6 +33,7 @@ class PropertyBooked extends Mailable
      */
     public function build()
     {
+        info('sending email');
         return $this->view('emails.booking.success');
     }
 }
