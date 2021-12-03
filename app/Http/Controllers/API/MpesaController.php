@@ -208,6 +208,9 @@ class MpesaController extends Controller
                 $booking = Booking::with('property', 'property.owner', 'user', 'property.city')
                     ->find($payment->booking_id);
 
+
+                info('updateTransactionData(_) booking', [$booking]);
+
                 // Get the guest details
                 $guest = $booking->user;
 
