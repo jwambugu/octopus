@@ -17,13 +17,19 @@ class PropertyBooked extends Mailable
     public $booking;
 
     /**
+     * @var $isHost
+     */
+    public $isHost;
+
+    /**
      * Create a new message instance.
      *
      * @param object $booking
      */
-    public function __construct(object $booking)
+    public function __construct(object $booking, bool $isHost)
     {
         $this->booking = $booking;
+        $this->isHost = $isHost;
     }
 
     /**
@@ -33,6 +39,6 @@ class PropertyBooked extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.booking.success');
+        return !$this->isHost ? $this->view('emails.booking.success') : $this->view('emails.booking.success-host');
     }
 }

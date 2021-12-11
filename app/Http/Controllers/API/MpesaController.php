@@ -208,9 +208,10 @@ class MpesaController extends Controller
 
                 // Get the guest details
                 $guest = $booking->user;
+                $host = $booking->property->owner;
 
-                // Send an email to the guest
-                Mail::to($guest->email)->queue(new PropertyBooked($booking));
+                Mail::to($guest->email)->queue(new PropertyBooked($booking, false));
+                Mail::to($host->email)->queue(new PropertyBooked($booking, true));
 
                 // Get the payment data
                 $paymentData = $this->findPayment($paymentID);
