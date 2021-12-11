@@ -85,10 +85,13 @@ class MpesaController extends Controller
         $firstName = explode(' ', $user->name)[0];
 
         // Create an SMS to send to the guest
-        $message = sprintf(
-            "Hello %s, we have received your payment %s. Thanks for choosing to stay with us.",
-            $firstName, $transactionID
-        );
+//        $message = sprintf(
+//            "Hello %s, we have received your payment %s. Thanks for choosing to stay with us.",
+//            $firstName, $transactionID
+//        );
+
+        $message = sprintf("Hello %s,\nThank you for your vacation stays.Book next vacation at %s & make extra cash by REFERRING A GUEST / HOST & GET %s.\nCheck your referral link on portal. Many Thanks!",
+            $firstName, 'lomu-homes.com', '10%');
 
         $phoneNumber = $user->phone_number;
 
@@ -117,10 +120,11 @@ class MpesaController extends Controller
      */
     private function createHostSMS(object $host, object $guest, string $propertyName, object $booking)
     {
+
         $hostFirstName = explode(' ', $host->name)[0];
         $guestFirstName = explode(' ', $guest->name)[0];
-        $checkinDate = date('Y-m-d', $booking->checkin_date);
-        $checkoutDate = date('Y-m-d', $booking->checkout_date);
+        $checkinDate = $booking->checkin_date->format('Y-m-d');
+        $checkoutDate = $booking->checkout_date->format('Y-m-d');
 
         // Create an SMS to send to the guest
         $message = sprintf(
@@ -159,6 +163,7 @@ class MpesaController extends Controller
      */
     private function createSMSes(object $payment)
     {
+
         // Get the payment details
         $guest = $payment->user;
         $host = $payment->property->owner;
@@ -168,12 +173,17 @@ class MpesaController extends Controller
         try {
             // Create an SMS to send to the host
             $this->createHostSMS($host, $guest, $property->name, $booking);
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
 
+        try {
             // Create an SMS to send to the guest
             $this->createGuestSMS($guest, $payment->transaction_id);
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
+
     }
 
 
@@ -186,6 +196,7 @@ class MpesaController extends Controller
     private function updateTransactionData(object $payment, array $transactionData)
     {
         $paymentID = $payment->id;
+
 
         try {
             Payment::where('id', $paymentID)->update([
@@ -218,6 +229,9 @@ class MpesaController extends Controller
 
                 // Create the sms
                 $this->createSMSes($paymentData);
+
+                // Send an email to the guest
+                Mail::to($guest->email)->queue(new PropertyBooked($booking));
             }
         } catch (Exception $exception) {
             throw new Exception($exception->getMessage());
@@ -249,6 +263,7 @@ class MpesaController extends Controller
         if (!$payment) {
             return $this->rejectTransaction();
         }
+
 
         // Check if the transaction was successful. All successful transactions have a result code of 0
         if ($resultCode != 0) {
