@@ -1,24 +1,17 @@
 <template>
     <div>
         <div class="col-lg-8 col-md-8 col-xs-12">
-            <properties-filter></properties-filter>
+            <properties-filter
+                :property-type-data="propertyTypeData"
+            ></properties-filter>
 
             <div class="clearfix"></div>
 
             <div v-if="hasProperties">
-                <!--     List view       -->
-                <property-list-card
-                    v-for="(property, index) in properties"
-                    :property="property"
-                    :key="index"
-                    v-if="isListView"
-                ></property-list-card>
-
-                <!--     Grid view       -->
-                <div class="row" v-if="!isListView">
+                <div class="row">
                     <property-grid-card
-                        v-for="(property, index) in properties"
-                        :key="index"
+                        v-for="property in properties"
+                        :key="property.id"
                         :property="property"
                     ></property-grid-card>
                 </div>
@@ -34,7 +27,7 @@
                     role="alert"
                 >
                     Sorry. No properties were found. If you were filtering,
-                    please adjust your search filters.
+                    please adjust your filters.
                 </div>
             </div>
         </div>
@@ -54,11 +47,16 @@ export default {
         PropertyListCard,
         PropertiesFilter,
     },
+    props: {
+        propertyTypeData: {
+            required: true,
+            type: Object,
+        },
+    },
     computed: {
         ...mapGetters({
             links: "getPaginationLinks",
             properties: "getProperties",
-            isListView: "getIsListView",
         }),
         hasProperties() {
             return this.properties.length !== 0;

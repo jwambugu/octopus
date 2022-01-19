@@ -23,9 +23,7 @@
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="property_types">
-                                    Vacation Type
-                                </label>
+                                <label> Vacation Type </label>
                                 <select
                                     class="selectpicker search-fields"
                                     data-live-search="true"
@@ -48,7 +46,7 @@
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="bedrooms">Bedrooms</label>
+                                <label>Bedrooms</label>
                                 <select
                                     class="selectpicker search-fields"
                                     data-live-search="true"
