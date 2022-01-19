@@ -2,17 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BookingRating;
-use App\Models\Property;
-use App\Models\PropertyType;
-use App\Models\Rating;
+use App\Models\{BookingRating, Property, PropertyType, Rating};
 use Exception;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
+use Illuminate\Contracts\{Foundation\Application, View\Factory, View\View};
+use Illuminate\Http\{JsonResponse, RedirectResponse, Request};
 use Illuminate\Support\Facades\DB;
 use RuntimeException;
 
@@ -75,17 +68,23 @@ class VacationController extends Controller
     public function index(Request $request)
     {
         $query = $request->query;
-        $page = $query->has('page') ? $query->get('page') : 1;
+        $page = $query->has('page') ? (int)$query->get('page') : 1;
 
         $filters = $this->vacationsFilterData();
         $queryParams = $this->createVacationsQueryParameters($request);
         $mapsApiKey = config('services.google.maps_api_key');
 
+        $propertyTypeData = [
+            'type' => Property::TYPE_VACATION,
+            'name' => 'Vacations',
+        ];
+
         return view('vacations.index')->with([
             'page' => $page,
             'filters' => $filters,
             'queryParams' => $queryParams,
-            'key' => $mapsApiKey
+            'key' => $mapsApiKey,
+            'propertyTypeData' => $propertyTypeData
         ]);
     }
 
@@ -370,8 +369,8 @@ class VacationController extends Controller
             ->where([
                 'p.is_available' => true,
                 'p.status' => 'approved',
-                'type' => Property::TYPE_VACATION,
-//                'b.is_paid' => true
+                'p.type' => Property::TYPE_VACATION,
+                'b.is_paid' => true
             ])
             ->groupBy(['property_id'])
             ->orderByDesc('count')

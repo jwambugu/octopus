@@ -1,11 +1,6 @@
 <template>
     <div>
-        <div
-            :class="
-                isListView ? 'properties-section-body' : 'properties-section'
-            "
-            class="content-area"
-        >
+        <div class="properties-section content-area">
             <div class="container">
                 <div class="row">
                     <properties-list-search-component
@@ -17,7 +12,10 @@
                 </div>
 
                 <div class="row">
-                    <properties-list v-if="!loading"></properties-list>
+                    <properties-list
+                        v-if="!loading"
+                        :property-type-data="propertyTypeData"
+                    ></properties-list>
 
                     <div class="col-lg-8 col-md-8 col-xs-12" v-if="loading">
                         <div class="sidebar-widget">
@@ -77,6 +75,10 @@ export default {
             required: true,
             type: String,
         },
+        propertyTypeData: {
+            required: true,
+            type: Object,
+        },
     },
     data() {
         return {
@@ -86,7 +88,6 @@ export default {
     computed: {
         ...mapGetters({
             loading: "getLoadingProperties",
-            isListView: "getIsListView",
         }),
     },
 };

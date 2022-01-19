@@ -7,7 +7,9 @@
                         <span class="heading-icon">
                             <i class="fa fa-th-list"></i>
                         </span>
-                        <span class="hidden-xs">Vacations</span>
+                        <span class="hidden-xs text-capitalize">
+                            {{ propertyTypeData.name }}
+                        </span>
                     </h4>
                 </div>
                 <div class="col-lg-6 col-md-7 col-sm-7 col-xs-10 cod-pad">
@@ -28,20 +30,6 @@
                                 </option>
                             </select>
                         </label>
-                        <!--                        <button-->
-                        <!--                            class="change-view-btn active-view-btn"-->
-                        <!--                            v-if="isListView"-->
-                        <!--                            @click="changeView(false)"-->
-                        <!--                        >-->
-                        <!--                            <i class="fa fa-th-list"></i>-->
-                        <!--                        </button>-->
-                        <!--                        <button-->
-                        <!--                            class="change-view-btn"-->
-                        <!--                            v-else-->
-                        <!--                            @click="changeView(true)"-->
-                        <!--                        >-->
-                        <!--                            <i class="fa fa-th-large"></i>-->
-                        <!--                        </button>-->
                     </div>
                 </div>
             </div>
@@ -50,10 +38,14 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-
 export default {
     name: "PropertiesFilter",
+    props: {
+        propertyTypeData: {
+            required: true,
+            type: Object,
+        },
+    },
     data() {
         return {
             sortOptions: [
@@ -77,21 +69,7 @@ export default {
             sortBy: "",
         };
     },
-    computed: {
-        ...mapGetters({
-            isListView: "getIsListView",
-        }),
-    },
     methods: {
-        changeView(isListView) {
-            if (isListView === this.isListView) {
-                return;
-            }
-
-            this.$store.dispatch("SET_IS_LIST_VIEW", {
-                isListView: isListView,
-            });
-        },
         changeSortByOption() {
             this.$store.dispatch("GET_PROPERTIES", {
                 sortBy: this.sortBy,
