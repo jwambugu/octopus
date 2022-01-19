@@ -27,12 +27,9 @@ class VacationController extends Controller
             ->orderBy('bedrooms')
             ->pluck('bedrooms');
 
-        $cities = DB::table('cities')
-            ->whereNull('deleted_at')
-            ->get(['id', 'name', 'slug']);
 
         return [
-            'cities' => $cities,
+            'cities' => [],
             'bedrooms' => $bedrooms,
             'propertyTypes' => $propertyTypes
         ];
@@ -133,101 +130,13 @@ class VacationController extends Controller
     }
 
     /**
-     * Apply any of the filters if we have any
-     * @param object $request
-     * @param $properties
-     * @return mixed
-     */
-    private function applyVacationFiltersIfAny(object $request, $properties)
-    {
-
-        if ($request->has('property_types')) {
-            $propertyType = PropertyType::whereSlug($request->get('property_types'))->first([
-                'id'
-            ]);
-
-            if ($propertyType) {
-                $properties = $properties->whereIn('property_type_id', [$propertyType->id]);
-            }
-        }
-
-        if ($request->has('bedrooms')) {
-            $properties = $properties->whereIn('bedrooms', [$request->get('bedrooms')]);
-        }
-
-//        if ($request->has('city')) {
-//            $city = City::whereSlug($request->get('city'))->first([
-//                'id'
-//            ]);
-//
-//
-//            if ($city) {
-//                $properties = $properties->whereIn('city_id', [$city->id]);
-//            }
-//        }
-
-        if ($request->has('address')) {
-            $address = $request->get('address');
-
-            $properties = $properties->where('address', 'like', '%' . $address . '%');
-        }
-
-        return $properties;
-    }
-
-    /**
-     * Sorts the properties as per the filter applied.
-     * @param string $sortOption
-     * @param object $properties
-     * @return object
-     */
-    private function applySortingFilter(string $sortOption, object $properties): object
-    {
-        switch ($sortOption) {
-            case '_price_asc':
-            {
-                return $properties->orderBy('cost_per_night');
-            }
-            case '_price_desc':
-            {
-                return $properties->orderByDesc('cost_per_night');
-            }
-            case '_time_added_asc' :
-            {
-                return $properties->orderBy('created_at');
-            }
-            case '_time_added_desc' :
-            {
-                return $properties->orderByDesc('created_at');
-            }
-            default:
-            {
-                return $properties;
-            }
-        }
-    }
-
-    /**
      * Returns the data for the available properties.
      * @param Request $request
      * @return JsonResponse
      */
     public function getVacations(Request $request): JsonResponse
     {
-        // Remove all the empty route parameters
-        $cleanedRequest = collect(array_filter($request->all()));
-        $sortBy = $cleanedRequest->get('sortBy');
-
-        $properties = Property::ofType(Property::TYPE_VACATION);
-        $properties = $this->applyVacationFiltersIfAny($cleanedRequest, $properties);
-
-        if ($cleanedRequest->has('sortBy')) {
-            $properties = $this->applySortingFilter($sortBy, $properties);
-        }
-
-        $properties = $properties->orderByDesc('id')
-            ->simplePaginate(30)
-            ->appends($cleanedRequest->all());
+        $properties = PropertyController::getProperties($request, Property::TYPE_VACATION);
 
         $apiRoute = route('vacations.fetch-vacations');
         $viewRoute = route('index');
