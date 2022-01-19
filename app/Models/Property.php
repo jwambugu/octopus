@@ -221,7 +221,7 @@ class Property extends Model
         return $query->select('id', 'name', 'type', 'slug', 'address', 'cost_per_night', 'property_type_id')
             ->whereHas('owner', function ($query) {
                 return $query->where('status', 'active')->select('id');
-            })->with('amenities', 'images')
+            })->with('defaultImage')
             ->where([
                 'is_available' => true,
                 'status' => 'approved',
