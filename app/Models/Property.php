@@ -92,10 +92,16 @@ use Illuminate\Support\Carbon;
  * @property int $price
  * @method static Builder|Property wherePrice($value)
  * @method static Builder|Property whereType($value)
+ * @method static Builder|Property byType(string $type)
+ * @method static Builder|Property ofType(string $type)
  */
 class Property extends Model
 {
     use SoftDeletes;
+
+    public const TYPE_VACATION = 'vacation';
+    public const TYPE_LEASE = 'lease';
+    public const TYPE_SALE = 'sale';
 
     /**
      * The attributes that should be cast to native types.
@@ -192,9 +198,27 @@ class Property extends Model
                 'is_cancelled_by_host' => false,
                 'has_conflicts' => false,
             ])
-//            ->orWhere('is_closing_booking', true)
             ->select([
                 'property_id', 'checkin_date', 'checkout_date'
+            ]);
+    }
+
+    /**
+     * Scope a query to only include properties of a given type.
+     * @param Builder $query
+     * @param string $type
+     * @return Builder
+     */
+    public function scopeOfType(Builder $query, string $type): Builder
+    {
+        return $query->select('id', 'name', 'type', 'slug', 'address', 'cost_per_night', 'property_type_id')
+            ->whereHas('owner', function ($query) {
+                return $query->where('status', 'active')->select('id');
+            })->with('amenities', 'images')
+            ->where([
+                'is_available' => true,
+                'status' => 'approved',
+                'type' => $type,
             ]);
     }
 }

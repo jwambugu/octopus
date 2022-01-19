@@ -6,7 +6,7 @@
         <div class="property">
             <div class="property-img">
                 <!--                <div class="property-tag button alt featured">Featured</div>-->
-                <div class="property-tag button sale">Available</div>
+                <div class="property-tag button sale">{{ property.type }}</div>
                 <div class="property-price">
                     KES {{ property.cost_per_night | numberFormat }}
                 </div>

@@ -14,6 +14,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use RuntimeException;
 
 class VacationController extends Controller
 {
@@ -23,23 +24,19 @@ class VacationController extends Controller
      */
     private function vacationsFilterData(): array
     {
-        // Get the property types
         $propertyTypes = DB::table('property_types')
             ->whereNull('deleted_at')
             ->get(['id', 'name', 'slug']);
 
-        // Get the distinct bedrooms we have in the db
         $bedrooms = DB::table('properties')
             ->whereNull('deleted_at')
             ->distinct('bedrooms')
             ->orderBy('bedrooms')
             ->pluck('bedrooms');
 
-        // Get the available cities
         $cities = DB::table('cities')
             ->whereNull('deleted_at')
             ->get(['id', 'name', 'slug']);
-
 
         return [
             'cities' => $cities,
@@ -58,11 +55,8 @@ class VacationController extends Controller
         $query = $request->query;
 
         $propertyTypes = $query->has('property_types') ? $query->get('property_types') : "";
-
         $bedrooms = $query->has('bedrooms') ? $query->get('bedrooms') : 0;
-
         $city = $query->has('city') ? $query->get('city') : "";
-
         $address = $query->has('address') ? $query->get('address') : "";
 
         return [
@@ -80,16 +74,11 @@ class VacationController extends Controller
      */
     public function index(Request $request)
     {
-        // Check if we have any query parameters
         $query = $request->query;
-
         $page = $query->has('page') ? $query->get('page') : 1;
 
-        // Get the filter data
         $filters = $this->vacationsFilterData();
-
         $queryParams = $this->createVacationsQueryParameters($request);
-
         $mapsApiKey = config('services.google.maps_api_key');
 
         return view('vacations.index')->with([
@@ -106,12 +95,13 @@ class VacationController extends Controller
      */
     public function getAvailableVacationTypes(): JsonResponse
     {
-        // Get the properties which are active. Also get the count of the properties
-        $vacationTypes = PropertyType::whereHas('properties')
-            ->where('is_active', true)
+        $vacationTypes = PropertyType::query()
             ->select([
                 'id', 'name', 'slug'
-            ])->withCount('properties')
+            ])
+            ->whereHas('properties')
+            ->where('is_active', true)
+            ->withCount('properties')
             ->get()
             ->map(function ($propertyType) {
                 $name = ucwords(strtolower($propertyType->name));
@@ -229,26 +219,14 @@ class VacationController extends Controller
         $cleanedRequest = collect(array_filter($request->all()));
         $sortBy = $cleanedRequest->get('sortBy');
 
-        // Get the properties that are available and have been approved.
-        $properties = Property::whereHas('owner', function ($query) {
-            return $query->where('status', 'active');
-        })->with('amenities', 'images')->where([
-            'is_available' => true,
-            'status' => 'approved',
-        ]);
-
-        // Apply any filters if we have any
+        $properties = Property::ofType(Property::TYPE_VACATION);
         $properties = $this->applyVacationFiltersIfAny($cleanedRequest, $properties);
 
-        // Apply any sort filters if we have any
         if ($cleanedRequest->has('sortBy')) {
             $properties = $this->applySortingFilter($sortBy, $properties);
         }
 
-        // Sort the properties by the option provided
-        $properties = $properties->select([
-            'id', 'name', 'slug', 'address', 'cost_per_night', 'property_type_id'
-        ])->orderByDesc('id')
+        $properties = $properties->orderByDesc('id')
             ->simplePaginate(30)
             ->appends($cleanedRequest->all());
 
@@ -260,8 +238,6 @@ class VacationController extends Controller
             'data' => [
                 'properties' => $properties->items(),
                 'total' => $properties->count(),
-//                'lastPage' => $properties->lastPage(),
-//                'currentPage' => $properties->currentPage(),
                 'links' => (string)$links
             ]
         ]);
@@ -271,13 +247,14 @@ class VacationController extends Controller
      * Shows a single property
      * @param Property $property
      * @return Application|Factory|View
+     * @noinspection CallableParameterUseCaseInTypeContextInspection
+     * @noinspection PhpUndefinedFieldInspection
      */
     public function show(Property $property)
     {
         $property = $property->load('owner:id,status');
 
-        // Abort if the property admin is not active
-        abort_if($property->owner->status != 'active', 404);
+        abort_if($property->owner->status !== 'active', 404);
 
         $property = $property->load([
             'images',
@@ -290,7 +267,6 @@ class VacationController extends Controller
         ]);
 
         $property->description = ucfirst($property->description);
-
         $property->checkin_time = date('H:i', strtotime($property->checkin_time));
         $property->checkout_time = date('H:i', strtotime($property->checkout_time));
 
@@ -313,25 +289,24 @@ class VacationController extends Controller
      * @param Request $request
      * @param Property $property
      * @return Application|Factory|View|RedirectResponse
+     * @noinspection CallableParameterUseCaseInTypeContextInspection
      */
     public function createPropertyBookingRatingView(Request $request, Property $property)
     {
-        // Extract the request data
         $ratingUUID = $request->query->get('uuid');
         $type = $request->query->get('type');
 
-        // Get the rating data
         $rating = Rating::whereUuid($ratingUUID)->first();
 
         if (!$rating) {
             return redirect()->route('index');
         }
 
-        if ($type == 'guest' && !is_null($rating->guest_ratings)) {
+        if ($type === 'guest' && !is_null($rating->guest_ratings)) {
             return redirect()->route('index');
         }
 
-        if ($type == 'host' && !is_null($rating->host_ratings)) {
+        if ($type === 'host' && !is_null($rating->host_ratings)) {
             return redirect()->route('index');
         }
 
@@ -349,7 +324,7 @@ class VacationController extends Controller
             'owner.profilePicture:id,admin_id,public_url',
         ]);
 
-        return \view('bookings.ratings.create')->with([
+        return view('bookings.ratings.create')->with([
             'property' => $property,
             'uuid' => $ratingUUID,
             'ratings' => $ratings
@@ -364,17 +339,16 @@ class VacationController extends Controller
      */
     public function createPropertyBookingRating(Request $request): JsonResponse
     {
-        // Extract the request data
         $ratings = $request['ratings'];
         $uuid = $request['uuid'];
 
         try {
             DB::table('ratings')->where('uuid', $uuid)->update([
-                'guest_ratings' => json_encode($ratings),
+                'guest_ratings' => json_encode($ratings, JSON_THROW_ON_ERROR),
                 'updated_at' => now()
             ]);
         } catch (Exception $e) {
-            throw new Exception($e->getMessage());
+            throw new RuntimeException($e->getMessage());
         }
 
         return response()->json([
@@ -390,13 +364,13 @@ class VacationController extends Controller
      */
     public function getPopularVacations(): JsonResponse
     {
-        // Get the properties with the highest count of paid bookings
         $topBookings = DB::table('bookings AS b')
             ->select('b.property_id', DB::raw('COUNT(b.property_id) AS count'))
             ->join('properties AS p', 'b.property_id', '=', 'p.id')
             ->where([
                 'p.is_available' => true,
                 'p.status' => 'approved',
+                'type' => Property::TYPE_VACATION,
 //                'b.is_paid' => true
             ])
             ->groupBy(['property_id'])
@@ -404,15 +378,14 @@ class VacationController extends Controller
             ->take(5)
             ->get();
 
-        // Get the property_id
         $propertiesIDs = $topBookings->pluck('property_id');
 
-        // Get the properties that are available and have been approved.
-        $properties = Property::whereHas('owner', function ($query) {
+        $properties = Property::whereHas('owner', static function ($query) {
             return $query->where('status', 'active');
         })->with('defaultImage')->where([
             'is_available' => true,
             'status' => 'approved',
+            'type' => Property::TYPE_VACATION,
         ])->select([
             'id', 'name', 'slug', 'address', 'cost_per_night', 'property_type_id'
         ])->whereIn('id', $propertiesIDs)
