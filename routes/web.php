@@ -1,11 +1,12 @@
 <?php
 
-use App\Http\Controllers\BookingController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\PageController;
-use App\Http\Controllers\PayPalController;
-use App\Http\Controllers\PropertyController;
-use App\Http\Controllers\VacationController;
+use App\Http\Controllers\{BookingController,
+    HomeController,
+    PageController,
+    PayPalController,
+    PropertyController,
+    VacationController
+};
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -43,7 +44,7 @@ Route::get('/get-referral-code', [HomeController::class, 'getReferralCode'])->na
 Route::group([
     'prefix' => 'vacations',
     'as' => 'vacations.',
-], function () {
+], static function () {
     Route::get('/', [VacationController::class, 'index'])->name('index');
 
     Route::get('/fetch-vacations', [VacationController::class, 'getVacations'])->name('fetch-vacations');
@@ -69,7 +70,7 @@ Route::group([
 Route::group([
     'prefix' => 'properties',
     'as' => 'properties.',
-], function () {
+], static function () {
     Route::get('/', [PropertyController::class, 'index'])->name('index');
 
 });
@@ -80,7 +81,7 @@ Route::group([
 Route::group([
     'prefix' => 'bookings',
     'as' => 'booking.',
-], function () {
+], static function () {
     Route::get('/', [BookingController::class, 'index'])->name('index');
 
     Route::get('/{booking:uuid}', [BookingController::class, 'show'])->name('show');
@@ -112,7 +113,7 @@ Route::group([
 Route::group([
     'prefix' => 'paypal',
     'as' => 'paypal.'
-], function () {
+], static function () {
     Route::get('/cancel-url', [PayPalController::class, 'cancelURL'])->name('cancel-url');
 
     Route::get('/return-url', [PayPalController::class, 'returnURL'])->name('return-url');

@@ -103,6 +103,13 @@ class Property extends Model
     public const TYPE_LEASE = 'lease';
     public const TYPE_SALE = 'sale';
 
+    public const SORTING_OPTIONS = [
+        '_price_asc' => 'cost_per_night:asc',
+        '_price_desc' => 'cost_per_night:desc',
+        '_time_added_asc' => 'created_at:desc',
+        '_time_added_desc' => 'created_at:desc',
+    ];
+
     /**
      * The attributes that should be cast to native types.
      *
