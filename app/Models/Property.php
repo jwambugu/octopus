@@ -84,10 +84,14 @@ use Illuminate\Support\Carbon;
  * @property string $checkout_time
  * @method static Builder|Property whereCheckinTime($value)
  * @method static Builder|Property whereCheckoutTime($value)
- * @property-read Collection|\App\Models\Booking[] $activeBookingsDates
+ * @property-read Collection|Booking[] $activeBookingsDates
  * @property-read int|null $active_bookings_dates_count
- * @property-read Collection|\App\Models\Booking[] $bookings
+ * @property-read Collection|Booking[] $bookings
  * @property-read int|null $bookings_count
+ * @property string $type
+ * @property int $price
+ * @method static Builder|Property wherePrice($value)
+ * @method static Builder|Property whereType($value)
  */
 class Property extends Model
 {
