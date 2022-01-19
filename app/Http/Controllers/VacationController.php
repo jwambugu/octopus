@@ -288,16 +288,10 @@ class VacationController extends Controller
 
         $propertiesIDs = $topBookings->pluck('property_id');
 
-        $properties = Property::whereHas('owner', static function ($query) {
-            return $query->where('status', 'active');
-        })->with('defaultImage')->where([
-            'is_available' => true,
-            'status' => 'approved',
-            'type' => Property::TYPE_VACATION,
-        ])->select([
-            'id', 'name', 'slug', 'address', 'cost_per_night', 'property_type_id'
-        ])->whereIn('id', $propertiesIDs)
+        $properties = Property::ofType(Property::TYPE_VACATION)
+            ->whereIn('properties.id', $propertiesIDs)
             ->get();
+
 
         return response()->json([
             'data' => [
