@@ -50,14 +50,8 @@ export default {
         propertyLink() {
             return `/vacations/${this.property.slug}`;
         },
-        amenities() {
-            return this.property.amenities.slice(0, 3);
-        },
-        images() {
-            return this.property.images;
-        },
         image() {
-            return this.images[0].public_url;
+            return this.property.default_image.public_url;
         },
     },
     methods: {
