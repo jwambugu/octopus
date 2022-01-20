@@ -8,6 +8,7 @@
                         :query-params="queryParams"
                         :page="page"
                         :maps-key="mapsKey"
+                        :property-type-data="propertyTypeData"
                     ></properties-list-search-component>
                 </div>
 

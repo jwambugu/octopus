@@ -138,15 +138,15 @@ class VacationController extends Controller
     {
         $properties = PropertyController::getProperties($request, Property::TYPE_VACATION);
 
-        $apiRoute = route('vacations.fetch-vacations');
-        $viewRoute = route('index');
-        $links = str_replace($apiRoute, $viewRoute, (string)$properties->links());
+        $links = PropertyController::replaceAPIRoutesOnLinks(
+            $properties->links(), route('vacations.fetch-vacations'), route('index')
+        );
 
         return response()->json([
             'data' => [
                 'properties' => $properties->items(),
                 'total' => $properties->count(),
-                'links' => (string)$links
+                'links' => $links
             ]
         ]);
     }

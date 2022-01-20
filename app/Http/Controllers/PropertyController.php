@@ -57,4 +57,15 @@ class PropertyController extends Controller
             ->simplePaginate(30)
             ->appends($cleanedRequest->all());
     }
+
+    /**
+     * @param object $links
+     * @param string $from
+     * @param string $to
+     * @return string
+     */
+    public static function replaceAPIRoutesOnLinks(object $links, string $from, string $to): string
+    {
+        return (string)str_replace($from, $to, (string)$links);
+    }
 }

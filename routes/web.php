@@ -47,13 +47,12 @@ Route::group([
 ], static function () {
     Route::get('/', [VacationController::class, 'index'])->name('index');
 
-    Route::get('/fetch-vacations', [VacationController::class, 'getVacations'])->name('fetch-vacations');
+    Route::get('/get-vacations', [VacationController::class, 'getVacations'])->name('fetch-vacations');
 
-    Route::get('/get-available-vacations', [VacationController::class, 'getAvailableVacationTypes'])
-        ->name('get-available-vacations');
+    Route::get('/available-types', [VacationController::class, 'getAvailableVacationTypes'])
+        ->name('available.types');
 
-    Route::get('/get-popular-vacations', [VacationController::class, 'getPopularVacations'])
-        ->name('get-popular-vacations');
+    Route::get('/popular', [VacationController::class, 'getPopularVacations'])->name('popular');
 
     Route::get('/{property:slug}', [VacationController::class, 'show'])->name('show');
 
