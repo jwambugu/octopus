@@ -93,7 +93,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Property wherePrice($value)
  * @method static Builder|Property whereType($value)
  * @method static Builder|Property byType(string $type)
- * @method static Builder|Property ofType(string $type)
+ * @method static Builder|Property ofType(array $types)
  */
 class Property extends Model
 {
@@ -211,21 +211,22 @@ class Property extends Model
     }
 
     /**
-     * Scope a query to only include properties of a given type.
+     * Scope a query to only include properties of given types.
      * @param Builder $query
-     * @param string $type
+     * @param array $types
      * @return Builder
      */
-    public function scopeOfType(Builder $query, string $type): Builder
+    public function scopeOfType(Builder $query, array $types): Builder
     {
         return $query->select('id', 'name', 'type', 'slug', 'address', 'cost_per_night', 'property_type_id')
             ->whereHas('owner', function ($query) {
                 return $query->where('status', 'active')->select('id');
-            })->with('defaultImage')
+            })
+            ->with('defaultImage')
             ->where([
                 'is_available' => true,
                 'status' => 'approved',
-                'type' => $type,
-            ]);
+            ])
+            ->whereIn('type', $types);
     }
 }

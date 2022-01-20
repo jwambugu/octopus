@@ -11,51 +11,6 @@ use RuntimeException;
 
 class VacationController extends Controller
 {
-    /**
-     * Returns the data to use on the properties filter
-     * @return array
-     */
-    private function vacationsFilterData(): array
-    {
-        $propertyTypes = DB::table('property_types')
-            ->whereNull('deleted_at')
-            ->get(['id', 'name', 'slug']);
-
-        $bedrooms = DB::table('properties')
-            ->whereNull('deleted_at')
-            ->distinct('bedrooms')
-            ->orderBy('bedrooms')
-            ->pluck('bedrooms');
-
-
-        return [
-            'cities' => [],
-            'bedrooms' => $bedrooms,
-            'propertyTypes' => $propertyTypes
-        ];
-    }
-
-    /**
-     * Returns an array with query params if any.
-     * @param Request $request
-     * @return array
-     */
-    public function createVacationsQueryParameters(Request $request): array
-    {
-        $query = $request->query;
-
-        $propertyTypes = $query->has('property_types') ? $query->get('property_types') : "";
-        $bedrooms = $query->has('bedrooms') ? $query->get('bedrooms') : 0;
-        $city = $query->has('city') ? $query->get('city') : "";
-        $address = $query->has('address') ? $query->get('address') : "";
-
-        return [
-            'propertyTypes' => $propertyTypes,
-            'bedrooms' => $bedrooms,
-            'city' => $city,
-            'address' => $address
-        ];
-    }
 
     /**
      * Render the properties index page
@@ -64,25 +19,7 @@ class VacationController extends Controller
      */
     public function index(Request $request)
     {
-        $query = $request->query;
-        $page = $query->has('page') ? (int)$query->get('page') : 1;
-
-        $filters = $this->vacationsFilterData();
-        $queryParams = $this->createVacationsQueryParameters($request);
-        $mapsApiKey = config('services.google.maps_api_key');
-
-        $propertyTypeData = [
-            'type' => Property::TYPE_VACATION,
-            'name' => 'Vacations',
-        ];
-
-        return view('vacations.index')->with([
-            'page' => $page,
-            'filters' => $filters,
-            'queryParams' => $queryParams,
-            'key' => $mapsApiKey,
-            'propertyTypeData' => $propertyTypeData
-        ]);
+        return PropertyController::getPropertiesView($request, Property::TYPE_VACATION);
     }
 
     /**
@@ -130,13 +67,13 @@ class VacationController extends Controller
     }
 
     /**
-     * Returns the data for the available properties.
+     * Returns the data for the available vacations.
      * @param Request $request
      * @return JsonResponse
      */
     public function getVacations(Request $request): JsonResponse
     {
-        $properties = PropertyController::getProperties($request, Property::TYPE_VACATION);
+        $properties = PropertyController::getProperties($request, [Property::TYPE_VACATION]);
 
         $links = PropertyController::replaceAPIRoutesOnLinks(
             $properties->links(), route('vacations.fetch-vacations'), route('index')
@@ -288,10 +225,9 @@ class VacationController extends Controller
 
         $propertiesIDs = $topBookings->pluck('property_id');
 
-        $properties = Property::ofType(Property::TYPE_VACATION)
+        $properties = Property::ofType([Property::TYPE_VACATION])
             ->whereIn('properties.id', $propertiesIDs)
             ->get();
-
 
         return response()->json([
             'data' => [

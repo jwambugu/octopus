@@ -1,19 +1,18 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container" style="padding-top: 3rem; margin-bottom: 2.4rem; padding-bottom: 100px">
+    <div class="">
         <div class="row">
-            <div class="col-lg-12">
-                <div class="error404-content">
-                    <h2>Coming Soon</h2>
-                    <p>Watch out for best deals on properties.</p>
-
-                    <a href="{{ route('index') }}" class="button-sm out-line-btn override-text-transform"
-                       style="margin-top: 10px">
-                        Back to home page
-                    </a>
+            <div class="col-md-12">
+                <div class="alert alert-warning override-text-transform" style="font-size: 1.8rem;"
+                     role="alert">
+                    <span style="margin-left: 145px; font-weight: bold; color: #000000;">
+                       <i class="fa fa-info-circle text-warning"></i> Easily find properties for lease or on sale.
+                    </span>
                 </div>
             </div>
         </div>
     </div>
+
+    @include('partials._properties_list')
 @endsection

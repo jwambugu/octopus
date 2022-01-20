@@ -72,6 +72,8 @@ Route::group([
 ], static function () {
     Route::get('/', [PropertyController::class, 'index'])->name('index');
 
+    Route::get('/get-properties', [PropertyController::class, 'getAvailableProperties'])
+        ->name('get-properties');
 });
 
 /**
