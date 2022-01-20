@@ -93,39 +93,11 @@ class VacationController extends Controller
      * @param Property $property
      * @return Application|Factory|View
      * @noinspection CallableParameterUseCaseInTypeContextInspection
-     * @noinspection PhpUndefinedFieldInspection
      */
     public function show(Property $property)
     {
-        $property = $property->load('owner:id,status');
-
-        abort_if($property->owner->status !== 'active', 404);
-
-        $property = $property->load([
-            'images',
-            'amenities',
-            'cancellationPolicy:id,title,description',
-        ]);
-
-        $property->booking_route = route('booking.property.view', [
-            'property' => $property->slug
-        ]);
-
-        $property->description = ucfirst($property->description);
-        $property->checkin_time = date('H:i', strtotime($property->checkin_time));
-        $property->checkout_time = date('H:i', strtotime($property->checkout_time));
-
-        $placeID = $property->google_place_id;
-
-        if (!is_null($placeID)) {
-            $coordinates = CacheController::cachedPlaceDetails($placeID);
-
-            $property->coordinates = $coordinates;
-            $property->maps_api_key = config('services.google.maps_api_key');
-        }
-
         return view('vacations.show')->with([
-            'property' => $property
+            'property' => PropertyController::getProperty($property)
         ]);
     }
 

@@ -167,4 +167,53 @@ class PropertyController extends Controller
             ]
         ]);
     }
+
+    /**
+     * @param Property $property
+     * @return Property
+     * @noinspection CallableParameterUseCaseInTypeContextInspection
+     * @noinspection PhpUndefinedFieldInspection
+     */
+    public static function getProperty(Property $property): Property
+    {
+        $property = $property->load('owner:id,status');
+
+        abort_if($property->owner->status !== 'active', 404);
+
+        $property = $property->load([
+            'images',
+            'amenities',
+            'cancellationPolicy:id,title,description',
+        ]);
+
+        $property->booking_route = route('booking.property.view', [
+            'property' => $property->slug
+        ]);
+
+        $property->description = ucfirst($property->description);
+        $property->checkin_time = date('H:i', strtotime($property->checkin_time));
+        $property->checkout_time = date('H:i', strtotime($property->checkout_time));
+
+        if (!is_null($property->google_place_id)) {
+            $coordinates = CacheController::cachedPlaceDetails($property->google_place_id);
+
+            $property->coordinates = $coordinates;
+            $property->maps_api_key = config('services.google.maps_api_key');
+        }
+
+        return $property;
+    }
+
+    /**
+     * Shows a single property
+     * @param Property $property
+     * @return Application|Factory|View
+     * @noinspection CallableParameterUseCaseInTypeContextInspection
+     */
+    public function show(Property $property)
+    {
+        return view('properties.show')->with([
+            'property' => self::getProperty($property)
+        ]);
+    }
 }
