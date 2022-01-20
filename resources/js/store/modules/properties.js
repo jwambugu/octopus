@@ -63,10 +63,16 @@ const actions = {
                 city,
                 sortBy,
                 address,
+                type,
             } = payload;
 
+            const url =
+                type === "vacation"
+                    ? "/vacations/get-vacations"
+                    : "/api/properties";
+
             axios
-                .get("/vacations/fetch-vacations", {
+                .get(url, {
                     params: {
                         page,
                         property_types,
@@ -108,7 +114,7 @@ const actions = {
     GET_AVAILABLE_VACATION_TYPES: ({ commit }) => {
         return new Promise((resolve, reject) => {
             axios
-                .get(`/vacations/get-available-vacations`)
+                .get(`/vacations/available-types`)
                 .then(({ data }) => {
                     const { vacationTypes } = data.data;
 
@@ -123,7 +129,7 @@ const actions = {
     GET_POPULAR_VACATIONS: ({ commit }) => {
         return new Promise((resolve, reject) => {
             axios
-                .get(`/vacations/get-popular-vacations`)
+                .get(`/vacations/popular`)
                 .then(({ data }) => {
                     const { properties } = data.data;
 

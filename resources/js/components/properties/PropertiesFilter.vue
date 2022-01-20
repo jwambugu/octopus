@@ -71,8 +71,11 @@ export default {
     },
     methods: {
         changeSortByOption() {
+            const { type } = this.propertyTypeData;
+
             this.$store.dispatch("GET_PROPERTIES", {
                 sortBy: this.sortBy,
+                type,
             });
         },
     },

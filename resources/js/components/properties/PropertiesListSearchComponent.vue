@@ -114,6 +114,10 @@ export default {
             required: true,
             type: String,
         },
+        propertyTypeData: {
+            required: true,
+            type: Object,
+        },
     },
     data() {
         return {
@@ -173,6 +177,7 @@ export default {
             this.filtering = true;
 
             const { property_types, bedrooms, city, address } = this.filterData;
+            const { type } = this.propertyTypeData;
 
             this.$store
                 .dispatch("GET_PROPERTIES", {
@@ -181,6 +186,7 @@ export default {
                     bedrooms,
                     city,
                     address,
+                    type,
                 })
                 .then(() => {
                     this.filtering = false;
