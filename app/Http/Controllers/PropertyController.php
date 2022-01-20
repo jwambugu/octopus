@@ -3,26 +3,58 @@
 namespace App\Http\Controllers;
 
 use App\Models\{Property, PropertyType};
-use Illuminate\Contracts\Pagination\Paginator;
-use Illuminate\Http\Request;
+use Illuminate\Contracts\{Foundation\Application, Pagination\Paginator, View\Factory, View\View};
+use Illuminate\Http\{JsonResponse, Request};
+use Illuminate\Support\Facades\DB;
 
 class PropertyController extends Controller
 {
-    public function index()
+    /**
+     * @param Request $request
+     * @param string $type
+     * @return Application|Factory|View
+     */
+    public static function getPropertiesView(Request $request, string $type)
     {
-        return view('properties.index');
+        $page = $request->filled('page') ? (int)$request['page'] : 1;
+        $name = $type === Property::TYPE_VACATION ? 'Vacations' : 'Leasing / On Sale';
+
+        $propertyTypeData = [
+            'type' => $type,
+            'name' => $name,
+        ];
+
+        $view = $type === Property::TYPE_VACATION ? 'vacations.index' : 'properties.index';
+
+        return view($view)->with([
+            'page' => $page,
+            'filters' => self::filterData(),
+            'queryParams' => self::getPropertiesQueryParameters($request),
+            'key' => config('services.google.maps_api_key'),
+            'propertyTypeData' => $propertyTypeData
+        ]);
+    }
+
+    /**
+     * Render the properties index page
+     * @param Request $request
+     * @return Application|Factory|View
+     */
+    public function index(Request $request)
+    {
+        return self::getPropertiesView($request, Property::TYPE_SALE);
     }
 
     /**
      * @param Request $request
-     * @param string $type
+     * @param array $types
      * @return Paginator
      */
-    public static function getProperties(Request $request, string $type): Paginator
+    public static function getProperties(Request $request, array $types): Paginator
     {
         $request['bedrooms'] = (int)$request['bedrooms'] === 0 ? '' : (int)$request['bedrooms'];
 
-        $properties = Property::ofType($type)
+        $properties = Property::ofType($types)
             ->when($request->filled('property_types'), function ($query) use ($request) {
                 $propertyType = PropertyType::query()
                     ->select('id')
@@ -67,5 +99,72 @@ class PropertyController extends Controller
     public static function replaceAPIRoutesOnLinks(object $links, string $from, string $to): string
     {
         return (string)str_replace($from, $to, (string)$links);
+    }
+
+    /**
+     * Returns the data to use on the properties filter
+     * @return array
+     */
+    public static function filterData(): array
+    {
+        $propertyTypes = DB::table('property_types')
+            ->whereNull('deleted_at')
+            ->get(['id', 'name', 'slug']);
+
+        $bedrooms = DB::table('properties')
+            ->whereNull('deleted_at')
+            ->distinct('bedrooms')
+            ->orderBy('bedrooms')
+            ->pluck('bedrooms');
+
+
+        return [
+            'cities' => [],
+            'bedrooms' => $bedrooms,
+            'propertyTypes' => $propertyTypes
+        ];
+    }
+
+    /**
+     * Returns an array with query params if any.
+     * @param Request $request
+     * @return array
+     */
+    public static function getPropertiesQueryParameters(Request $request): array
+    {
+        $query = $request->query;
+
+        $propertyTypes = $query->has('property_types') ? $query->get('property_types') : "";
+        $bedrooms = $query->has('bedrooms') ? $query->get('bedrooms') : 0;
+        $address = $query->has('address') ? $query->get('address') : "";
+
+        return [
+            'propertyTypes' => $propertyTypes,
+            'bedrooms' => $bedrooms,
+            'city' => "",
+            'address' => $address
+        ];
+    }
+
+    /**
+     * Returns the data for the available properties.
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getAvailableProperties(Request $request): JsonResponse
+    {
+        $properties = self::getProperties($request, [Property::TYPE_SALE, Property::TYPE_LEASE]);
+
+        $links = self::replaceAPIRoutesOnLinks(
+            $properties->links(), route('properties.get-properties'), route('properties.index')
+        );
+
+        return response()->json([
+            'data' => [
+                'properties' => $properties->items(),
+                'total' => $properties->count(),
+                'links' => $links
+            ]
+        ]);
     }
 }

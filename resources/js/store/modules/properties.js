@@ -69,7 +69,7 @@ const actions = {
             const url =
                 type === "vacation"
                     ? "/vacations/get-vacations"
-                    : "/api/properties";
+                    : "/properties/get-properties";
 
             axios
                 .get(url, {
