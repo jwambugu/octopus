@@ -4,7 +4,7 @@
             <div class="sidebar-widget">
                 <form>
                     <div class="row">
-                        <div class="col-md-3">
+                        <div :class="isVacation ? 'col-md-3' : 'col-md-4'">
                             <div class="form-group">
                                 <label for="location"
                                     >Where do you want to stay?</label
@@ -21,7 +21,7 @@
                                 />
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div v-if="isVacation" class="col-md-3">
                             <div class="form-group">
                                 <label> Vacation Type </label>
                                 <select
@@ -44,7 +44,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div :class="isVacation ? 'col-md-3' : 'col-md-4'">
                             <div class="form-group">
                                 <label>Bedrooms</label>
                                 <select
@@ -75,7 +75,7 @@
                                 @click="filterProperties"
                                 v-if="!filtering"
                             >
-                                Find Vacations
+                                Find {{ filterButtonText }}
                             </button>
                             <button
                                 type="submit"
@@ -130,6 +130,14 @@ export default {
             filtering: false,
             showPanel: false,
         };
+    },
+    computed: {
+        isVacation() {
+            return this.propertyTypeData.type === "vacation";
+        },
+        filterButtonText() {
+            return this.isVacation ? "Vacations" : "Properties";
+        },
     },
     created() {
         const { propertyTypes, bedrooms, city, address } = this.queryParams;
