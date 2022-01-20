@@ -23,7 +23,7 @@
                         </li>
                     @else
                         <li>
-                            <a href="{{ route('login') }}" class="sign-in override-text-transform"
+                            <a href="#" class="sign-in override-text-transform"
                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                 Logout
                             </a>

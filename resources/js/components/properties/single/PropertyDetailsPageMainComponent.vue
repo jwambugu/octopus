@@ -18,7 +18,7 @@
                                         }}
                                     </span>
                                 </h3>
-                                <h5>Per Night</h5>
+                                <h5>Per {{ costTypeText }}</h5>
                             </div>
                         </div>
 
@@ -45,7 +45,7 @@
                                 </div>
                                 <div class="row">
                                     <div
-                                        class="col-lg-4 col-md-4 col-sm-4 col-xs-12"
+                                        class="col-lg-6 col-md-6 col-sm-6 col-xs-12"
                                         v-for="(amenity, index) in amenities"
                                         :key="index"
                                     >
@@ -65,7 +65,7 @@
 
                             <hr />
 
-                            <div class="floor-plans">
+                            <div v-if="isVacation" class="floor-plans">
                                 <div class="main-title-2">
                                     <h1><span>House Rules</span></h1>
                                 </div>
@@ -142,8 +142,9 @@
                                             :href="bookingRoute"
                                             class="btn button-theme btn-lg pull-right"
                                             style="color: #ffffff"
-                                            >Reserve</a
                                         >
+                                            {{ bookingButtonText }}
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -163,7 +164,7 @@ import PropertyDetailsPageSlider from "./PropertyDetailsPageSlider";
 import PropertiesVacationSidebar from "../sidebar/PropertiesVacationSidebar";
 
 export default {
-    name: "PropertiesDetailsPageMainComponent",
+    name: "PropertyDetailsPageMainComponent",
     components: {
         PropertiesVacationSidebar,
         PropertyDetailsPageSlider,
@@ -193,6 +194,15 @@ export default {
         cancellationPolicy() {
             return this.property.cancellation_policy;
         },
+        isVacation() {
+            return this.property.type === "vacation";
+        },
+        costTypeText() {
+            return this.isVacation ? "Night" : "Visit";
+        },
+        bookingButtonText() {
+            return this.isVacation ? "Reserve" : "Schedule Visit";
+        },
     },
     mounted() {
         this.initMap();
@@ -210,9 +220,7 @@ export default {
             }
 
             let script = document.createElement("script");
-
             script.src = `https://maps.googleapis.com/maps/api/js?key=${maps_api_key}&callback=initMap`;
-
             script.async = true;
 
             window.initMap = function () {
@@ -221,14 +229,12 @@ export default {
                     zoom: 15,
                 });
 
-                // The marker, positioned at Uluru
                 const marker = new google.maps.Marker({
                     position: coordinates,
                     map: map,
                     visible: false,
                 });
 
-                // Add circle overlay and bind to marker
                 const circle = new google.maps.Circle({
                     map: map,
                     radius: 500,
@@ -240,7 +246,6 @@ export default {
             };
 
             document.head.appendChild(script);
-
             this.creatingMap = false;
         },
     },

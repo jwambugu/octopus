@@ -74,6 +74,8 @@ Route::group([
 
     Route::get('/get-properties', [PropertyController::class, 'getAvailableProperties'])
         ->name('get-properties');
+
+    Route::get('/{property:slug}', [PropertyController::class, 'show'])->name('show');
 });
 
 /**

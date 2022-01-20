@@ -48,7 +48,10 @@ export default {
     },
     computed: {
         propertyLink() {
-            return `/vacations/${this.property.slug}`;
+            const type =
+                this.property.type === "vacation" ? "vacations" : "properties";
+
+            return `/${type}/${this.property.slug}`;
         },
         image() {
             return this.property.default_image.public_url;
