@@ -18,3 +18,4 @@ routes.txt
 **/.DS_Store
 out/
 .env.production
+.env.staging
