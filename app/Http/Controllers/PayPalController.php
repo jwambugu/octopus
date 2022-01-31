@@ -8,11 +8,13 @@ use DB;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use JetBrains\PhpStorm\ArrayShape;
 use PayPalCheckoutSdk\Core\PayPalHttpClient;
 use PayPalCheckoutSdk\Core\ProductionEnvironment;
 use PayPalCheckoutSdk\Core\SandboxEnvironment;
 use PayPalCheckoutSdk\Orders\OrdersCaptureRequest;
 use PayPalCheckoutSdk\Orders\OrdersCreateRequest;
+use RuntimeException;
 
 
 class PayPalController extends Controller
@@ -22,13 +24,13 @@ class PayPalController extends Controller
      *
      * @return ProductionEnvironment|SandboxEnvironment
      */
-    private static function environment()
+    private static function environment(): ProductionEnvironment|SandboxEnvironment
     {
         $environment = config('paypal.current_environment');
 
         $config = config('paypal.environment');
 
-        return $environment != 'sandbox' ?
+        return $environment !== 'sandbox' ?
             new ProductionEnvironment($config['production']['client_id'], $config['production']['client_secret']) :
             new SandboxEnvironment($config['sandbox']['client_id'], $config['sandbox']['client_secret']);
 
@@ -49,8 +51,9 @@ class PayPalController extends Controller
      * Returns an array with the order data for paypal
      * @param int $bookingID
      * @return array
+     * @noinspection PhpUndefinedFieldInspection
      */
-    public static function createOrderRequest(int $bookingID): array
+    #[ArrayShape(['statusCode' => "int", 'results' => "array|string", 'links' => "mixed"])] public static function createOrderRequest(int $bookingID): array
     {
         $request = new OrdersCreateRequest();
         $request->prefer('return=representation');
@@ -72,9 +75,10 @@ class PayPalController extends Controller
      * @param int $bookingID
      * @return array
      */
-    private static function buildRequestBody(int $bookingID): array
+    #[ArrayShape(['intent' => "string", 'application_context' => "array", 'purchase_units' => "array[]"])] private static function buildRequestBody(int $bookingID): array
     {
-        $booking = Booking::with('property:id,name', 'unsuccessfulPayments')
+        $booking = Booking::query()
+            ->with('property:id,name', 'unsuccessfulPayments')
             ->find($bookingID, [
                 'id', 'uuid', 'number_of_nights', 'property_id'
             ]);
@@ -157,24 +161,25 @@ class PayPalController extends Controller
             $captureRequest = new OrdersCaptureRequest($orderID);
 
             $response = $client->execute($captureRequest);
-        } catch (Exception $e) {
+        } catch (Exception) {
             return redirect()->route('index');
         }
 
+        /** @noinspection PhpUndefinedFieldInspection */
         $status = $response->result->status;
 
-        $isCompletedSuccessfully = $status == 'COMPLETED';
+        $isCompletedSuccessfully = $status === 'COMPLETED';
 
         try {
             DB::table('payments')->where('paypal_order_id', $orderID)
                 ->update([
-                    'callback_data' => json_encode($response),
+                    'callback_data' => json_encode($response, JSON_THROW_ON_ERROR),
                     'is_successful' => $isCompletedSuccessfully,
                     'is_paid' => $isCompletedSuccessfully,
                     'updated_at' => now()
                 ]);
         } catch (Exception $e) {
-            throw new Exception($e->getMessage());
+            throw new RuntimeException($e->getMessage());
         }
 
         return redirect()->route('booking.show', $payment->booking->uuid);
@@ -189,15 +194,12 @@ class PayPalController extends Controller
     public function cancelURL(Request $request): RedirectResponse
     {
         try {
-            $payment = Payment::where('paypal_order_id', $request['token']);
-
-            if ($payment) {
-                $payment->update([
+            Payment::where('paypal_order_id', $request['token'])
+                ->update([
                     'is_cancelled' => true
                 ]);
-            }
         } catch (Exception $e) {
-            throw new Exception($e->getMessage());
+            throw new RuntimeException($e->getMessage());
         }
 
         return redirect()->route('booking.index');

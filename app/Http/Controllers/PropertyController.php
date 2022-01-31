@@ -6,6 +6,7 @@ use App\Models\{Property, PropertyType};
 use Illuminate\Contracts\{Foundation\Application, Pagination\Paginator, View\Factory, View\View};
 use Illuminate\Http\{JsonResponse, Request};
 use Illuminate\Support\Facades\DB;
+use JetBrains\PhpStorm\ArrayShape;
 
 class PropertyController extends Controller
 {
@@ -14,7 +15,7 @@ class PropertyController extends Controller
      * @param string $type
      * @return Application|Factory|View
      */
-    public static function getPropertiesView(Request $request, string $type)
+    public static function getPropertiesView(Request $request, string $type): View|Factory|Application
     {
         $page = $request->filled('page') ? (int)$request['page'] : 1;
         $name = $type === Property::TYPE_VACATION ? 'Vacations' : 'Leasing / On Sale';
@@ -40,7 +41,7 @@ class PropertyController extends Controller
      * @param Request $request
      * @return Application|Factory|View
      */
-    public function index(Request $request)
+    public function index(Request $request): View|Factory|Application
     {
         return self::getPropertiesView($request, Property::TYPE_SALE);
     }
@@ -105,6 +106,7 @@ class PropertyController extends Controller
      * Returns the data to use on the properties filter
      * @return array
      */
+    #[ArrayShape(['cities' => "array", 'bedrooms' => "\Illuminate\Support\Collection", 'propertyTypes' => "\Illuminate\Support\Collection"])]
     public static function filterData(): array
     {
         $propertyTypes = DB::table('property_types')
@@ -130,6 +132,7 @@ class PropertyController extends Controller
      * @param Request $request
      * @return array
      */
+    #[ArrayShape(['propertyTypes' => "mixed", 'bedrooms' => "mixed", 'city' => "string", 'address' => "mixed"])]
     public static function getPropertiesQueryParameters(Request $request): array
     {
         $query = $request->query;
@@ -210,7 +213,7 @@ class PropertyController extends Controller
      * @return Application|Factory|View
      * @noinspection CallableParameterUseCaseInTypeContextInspection
      */
-    public function show(Property $property)
+    public function show(Property $property): View|Factory|Application
     {
         return view('properties.show')->with([
             'property' => self::getProperty($property)

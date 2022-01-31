@@ -14,7 +14,7 @@ class PageController extends Controller
      * @param Request $request
      * @return Application|Factory|View
      */
-    public function index(Request $request)
+    public function index(Request $request): Factory|View|Application
     {
         return (new VacationController)->index($request);
     }
@@ -23,7 +23,7 @@ class PageController extends Controller
      * Render the application about us page.
      * @return Application|Factory|View
      */
-    public function aboutUs()
+    public function aboutUs(): View|Factory|Application
     {
         return view('pages.about-us');
     }
@@ -32,7 +32,7 @@ class PageController extends Controller
      * Render the application contact us page.
      * @return Application|Factory|View
      */
-    public function contactUs()
+    public function contactUs(): View|Factory|Application
     {
         return view('pages.contact-us');
 
