@@ -4,8 +4,8 @@
             <h3>Referral Program</h3>
 
             <p v-if="!hasError">
-                Hello, {{ user.first_name }}. We are pleased to share with you
-                about our referral program. Share with your friends and earn 10%
+                Hello, {{ user.name }}. We are pleased to share with you about
+                our referral program. Share with your friends and earn 10%
                 commission on their first booking.
                 <a href="#" class="terms-link">Terms and conditions apply</a>
             </p>
