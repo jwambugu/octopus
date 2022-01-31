@@ -98,11 +98,9 @@ class BookingController extends Controller
      */
     public function show(Booking $booking): View|Factory|Application
     {
-        // Get the time elapsed from the checkout date
         $timeElapsedSinceBooking = now()->diffInDays($booking->checkout_date, false);
         $canShowHostDetails = $timeElapsedSinceBooking > 0;
 
-        // Get the booking data
         /** @noinspection CallableParameterUseCaseInTypeContextInspection */
         $booking = $booking->load([
             'property',
@@ -528,6 +526,10 @@ class BookingController extends Controller
      */
     public static function getPropertyBookedDates(Property $property): array
     {
+        if ($property->type !== Property::TYPE_VACATION) {
+            return [];
+        }
+
         return $property->activeBookingsDates
             ->where('checkout_date', '>=', today())
             ->map(function ($date) {
