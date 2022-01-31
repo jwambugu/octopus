@@ -79,11 +79,9 @@
                         </div>
                         <div class="modal-body">
                             <p class="bold-text">
-                                Are you sure you want to cancel?
-                            </p>
-
-                            <p class="bold-text">
-                                Here is a summary of the charges incurred
+                                Are you sure you want to
+                                <strong>cancel</strong>? Here is a summary of
+                                the charges to be incurred.
                             </p>
 
                             <div class="tables mb-50">

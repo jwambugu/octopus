@@ -12,11 +12,13 @@ class CacheController extends Controller
      * @param string $placeID
      * @return mixed
      */
-    public static function cachedPlaceDetails(string $placeID)
+    public static function cachedPlaceDetails(string $placeID): mixed
     {
-        return Cache::remember($placeID, now()->addMonths(), function () use ($placeID) {
+        return Cache::remember($placeID, now()->addMonths(), static function () use ($placeID) {
+            $key = config('services.google.maps_api_key');
+
             $url = sprintf('https://maps.googleapis.com/maps/api/place/details/json?place_id=%s&key=%s',
-                $placeID, config('services.google.maps_api_key'));
+                $placeID, $key);
 
             $response = Http::retry(3)->get($url)->json();
 

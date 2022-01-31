@@ -6,8 +6,11 @@ use App\Models\SMSOutbox;
 use DB;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
+use JetBrains\PhpStorm\ArrayShape;
 use Ramsey\Uuid\Uuid;
+use RuntimeException;
 
 class SMSController extends Controller
 {
@@ -18,7 +21,7 @@ class SMSController extends Controller
      * @return SMSOutbox|Model
      * @throws Exception
      */
-    public function create(string $phoneNumber, string $message)
+    public function create(string $phoneNumber, string $message): Model|SMSOutbox
     {
         try {
             return SMSOutbox::create([
@@ -27,11 +30,14 @@ class SMSController extends Controller
                 'message' => $message,
             ]);
         } catch (Exception $e) {
-            throw new Exception($e->getMessage());
+            throw new RuntimeException($e->getMessage());
         }
     }
 
-    private static function unsent()
+    /**
+     * @return Collection
+     */
+    private static function unsent(): Collection
     {
         $chunks = SMSOutbox::whereNull('status')
             ->whereNull('status')
@@ -57,6 +63,7 @@ class SMSController extends Controller
      * @param array $messages
      * @return array
      */
+    #[ArrayShape(['count' => "int", 'smslist' => "array"])]
     private static function createBulkRequestBody(array $messages): array
     {
         $config = config('services.sms');
@@ -71,7 +78,7 @@ class SMSController extends Controller
                 'message' => $message['message'],
                 'shortcode' => $config['shortcode'],
             ];
-        });
+        })->toArray();
 
         return [
             'count' => count($smsList),
@@ -82,12 +89,14 @@ class SMSController extends Controller
     /**
      * Updates the SMS data depending on the response sent back
      * @param $response
+     * @throws Exception
      */
-    private static function processRequestResponse($response)
+    private static function processRequestResponse($response): void
     {
         collect($response['responses'])->each(function ($response) {
             $messageUUID = $response['clientsmsid'];
             $responseCode = $response['response-code'];
+            /** @noinspection TypeUnsafeComparisonInspection */
             $messageID = $responseCode != 200 ? 'NO MESSAGE ID' : $response['messageid'];
             $responseDescription = $response['response-description'];
 
@@ -99,7 +108,7 @@ class SMSController extends Controller
                     'status' => $responseDescription,
                     'delivery_status' => $responseCode,
                     'is_sent' => true,
-                    'response_data' => json_encode($response),
+                    'response_data' => json_encode($response, JSON_THROW_ON_ERROR),
                     'updated_at' => $currentTime,
                     'sent_at' => $currentTime,
                 ]);
@@ -109,8 +118,9 @@ class SMSController extends Controller
 
     /**
      * Process the task of sending bulk sms
+     * @throws Exception
      */
-    public static function sendBulk()
+    public static function sendBulk(): void
     {
         $unsentMessages = self::unsent();
 

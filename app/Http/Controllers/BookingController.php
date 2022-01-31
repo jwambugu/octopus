@@ -19,6 +19,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Ramsey\Uuid\Uuid;
+use RuntimeException;
 use Throwable;
 use URL;
 
@@ -39,9 +40,8 @@ class BookingController extends Controller
      * @param Request $request
      * @return Application|Factory|View
      */
-    public function index(Request $request)
+    public function index(Request $request): View|Factory|Application
     {
-        // Get the auth user data
         $user = $request->user();
 
         // Get the user bookings
@@ -81,16 +81,14 @@ class BookingController extends Controller
 
         $cancellationTimeFrame = $booking->property->cancellationPolicy->timeframe_in_hours;
 
-        if ($cancellationTimeFrame == 0) {
+        if ($cancellationTimeFrame === 0) {
             return true;
         }
 
         $timeFrame = now()->subHours($cancellationTimeFrame);
-
-        // Check if the user can cancel the booking
         $diffInHours = Carbon::parse($timeFrame)->diffInHours($booking->created_at);
 
-        return $diffInHours != 0;
+        return $diffInHours !== 0;
     }
 
     /**
@@ -98,13 +96,14 @@ class BookingController extends Controller
      * @param Booking $booking
      * @return Application|Factory|View
      */
-    public function show(Booking $booking)
+    public function show(Booking $booking): View|Factory|Application
     {
         // Get the time elapsed from the checkout date
         $timeElapsedSinceBooking = now()->diffInDays($booking->checkout_date, false);
         $canShowHostDetails = $timeElapsedSinceBooking > 0;
 
         // Get the booking data
+        /** @noinspection CallableParameterUseCaseInTypeContextInspection */
         $booking = $booking->load([
             'property',
             'property.owner:id,name,email,phone_number,description',
@@ -114,14 +113,13 @@ class BookingController extends Controller
             'payments:id,account_number,amount,is_paid,booking_id,created_at'
         ]);
 
+        /** @noinspection PhpUndefinedFieldInspection */
         $booking->canShowHostDetails = $canShowHostDetails;
 
-        // Check if the guest can cancel
         $canCancel = $this->canCancelBooking($booking);
-
         $cancellationChargesBreakdown = $this->getCancellationChargesBreakdown($booking);
 
-        return \view('bookings.show')->with([
+        return view('bookings.show')->with([
             'booking' => $booking,
             'canCancel' => $canCancel,
             'cancellationChargesBreakdown' => $cancellationChargesBreakdown
@@ -133,9 +131,9 @@ class BookingController extends Controller
      * @param Property $property
      * @return Application|Factory|View
      */
-    public function showPropertyBookingView(Property $property)
+    public function showPropertyBookingView(Property $property): View|Factory|Application
     {
-        // Get the property amenities
+        /** @noinspection CallableParameterUseCaseInTypeContextInspection */
         $property = $property->load('amenities', 'activeBookingsDates');
 
         $bookedDates = self::getPropertyBookedDates($property);
@@ -154,22 +152,19 @@ class BookingController extends Controller
      */
     private function createBookingRating(Booking $booking): void
     {
-        // Get the data for the property being booked
+        /** @noinspection CallableParameterUseCaseInTypeContextInspection */
         $booking = $booking->load('property:id,admin_id');
-
-        // Generate a new uuid
-        $uuid = Uuid::uuid4();
 
         try {
             Rating::create([
-                'uuid' => $uuid,
+                'uuid' => Uuid::uuid4(),
                 'booking_id' => $booking->id,
                 'user_id' => $booking->user_id,
                 'admin_id' => $booking->property->admin_id,
             ]);
             return;
         } catch (Exception $e) {
-            throw new Exception($e->getMessage());
+            throw new RuntimeException($e->getMessage());
         }
     }
 
@@ -181,7 +176,6 @@ class BookingController extends Controller
      */
     public function bookProperty(BookPropertyRequest $request): JsonResponse
     {
-        // Get the request data
         $checkinDate = Carbon::parse($request['checkin_date']);
         $checkoutDate = Carbon::parse($request['checkout_date']);
         $propertyID = $request['property_id'];
@@ -194,16 +188,14 @@ class BookingController extends Controller
             ]);
         }
 
-        // Check if we have any bookings between the selected dates
         $bookingsBetween = Booking::query()
             ->where([
                 'property_id' => $propertyID,
                 'is_paid' => true,
             ])
-            ->whereBetween('checkin_date', [
-                $request['checkin_date'], $request['checkout_date']
-            ])
+            ->whereBetween('checkin_date', [$checkinDate, $checkoutDate])
             ->first(['id']);
+
 
         if ($bookingsBetween) {
             throw ValidationException::withMessages([
@@ -212,43 +204,36 @@ class BookingController extends Controller
         }
 
         try {
-            $booking = DB::transaction(function () use ($request, $numberOfNights, $propertyID) {
-                // Get the request data
-                $user = $request->user();
-                $checkinDate = $request['checkin_date'];
-                $checkoutDate = $request['checkout_date'];
+            $booking = DB::transaction(function () use ($numberOfNights, $checkinDate, $checkoutDate, $propertyID) {
+                $userID = auth()->id();
 
-                $property = Property::with('cancellationPolicy')->find($propertyID, [
-                    'id', 'cost_per_night', 'cancellation_policy_id', 'admin_id'
-                ]);
+                $property = Property::query()
+                    ->with('cancellationPolicy')
+                    ->find($propertyID, [
+                        'id', 'cost_per_night', 'cancellation_policy_id', 'admin_id'
+                    ]);
 
-                $numberOfNights = $numberOfNights == 0 ? 1 : $numberOfNights;
-
-                // Generate a new uuid
-                $uuid = Uuid::uuid4();
+                $numberOfNights = $numberOfNights === 0 ? 1 : $numberOfNights;
 
                 $booking = Booking::create([
-                    'uuid' => $uuid,
+                    'uuid' => Uuid::uuid4(),
                     'checkin_date' => $checkinDate,
                     'checkout_date' => $checkoutDate,
                     'number_of_nights' => $numberOfNights,
                     'cost_per_night' => $property->cost_per_night,
                     'cancellation_policy_data' => $property->cancellationPolicy,
                     'property_id' => $propertyID,
-                    'user_id' => $user->id,
+                    'user_id' => $userID,
                     'admin_id' => $property->admin_id,
                 ]);
 
-                // Add payment
-                PaymentController::createBookingPayment($numberOfNights, $property, $booking->id, $user->id);
-
-                // Create the booking rating data
+                PaymentController::createBookingPayment($numberOfNights, $property, $booking->id, $userID);
                 $this->createBookingRating($booking);
 
                 return $booking;
             });
         } catch (Throwable $e) {
-            throw new Exception($e->getMessage());
+            throw new RuntimeException($e->getMessage());
         }
 
         return response()->json([
@@ -267,18 +252,16 @@ class BookingController extends Controller
      * @param Booking $booking
      * @return Application|Factory|View
      */
-    public function renderMpesaPaymentView(Request $request, Booking $booking)
+    public function renderMpesaPaymentView(Request $request, Booking $booking): View|Factory|Application
     {
-        // Get the request data
         $user = $request->user();
-
-        // Find the payment using the uuid
+        /** @noinspection CallableParameterUseCaseInTypeContextInspection */
         $booking = $booking->load('unsuccessfulPayments', 'property');
 
         if (!$booking) {
             abort(404);
         }
-        return \view('bookings.payments.mpesa')->with([
+        return view('bookings.payments.mpesa')->with([
             'booking' => $booking,
             'user' => $user,
         ]);
@@ -293,14 +276,15 @@ class BookingController extends Controller
      */
     public function processMpesaPaymentRequest(MpesaPaymentRequest $request): JsonResponse
     {
-        // Get the request data
+
         $paymentID = $request['payment_id'];
         $phoneNumber = $request['phone_number'];
 
-        // Find the payment using the id
-        $payment = Payment::query()->with('booking')->find($paymentID, [
-            'id', 'account_number', 'amount', 'booking_id', 'property_id', 'user_id',
-        ]);
+        $payment = Payment::query()
+            ->with('booking')
+            ->find($paymentID, [
+                'id', 'account_number', 'amount', 'booking_id', 'property_id', 'user_id',
+            ]);
 
         if (!$payment) {
             throw ValidationException::withMessages([
@@ -309,10 +293,9 @@ class BookingController extends Controller
         }
 
         try {
-            // Initiate an STK push request
             $isSuccessful = PaymentController::lipaNaMpesaOnline($phoneNumber, $payment);
         } catch (Exception $e) {
-            throw new Exception($e->getMessage());
+            throw new RuntimeException($e->getMessage());
         }
 
         $message = $isSuccessful ?
@@ -334,11 +317,13 @@ class BookingController extends Controller
      */
     public function confirmBookingPayment(Booking $booking): JsonResponse
     {
-        // Get the booking payment that was recently created and was successful
-        $payment = Payment::with('booking')->where([
-            'booking_id' => $booking->id,
-            'is_successful' => true
-        ])->latest()->first();
+        $payment = Payment::query()
+            ->with('booking')
+            ->where([
+                'booking_id' => $booking->id,
+                'is_successful' => true
+            ])->latest()->first();
+
 
         if (!$payment || is_null($payment->callback_data)) {
             return response()->json([
@@ -382,23 +367,21 @@ class BookingController extends Controller
     private function getCancellationChargesBreakdown(object $booking): array
     {
         $cancellationPolicy = (object)$booking->cancellation_policy_data;
-
         $commissionPercentage = $cancellationPolicy->percentage_to_refund / 100;
 
-        // Get the amount to refund from the payments.
-        // Only get the successful transactions
-        $payment = DB::table('payments')->where([
-            'is_paid' => true,
-            'booking_id' => $booking->id
-        ])->first('amount');
+        $payment = Payment::query()
+            ->where([
+                'is_paid' => true,
+                'booking_id' => $booking->id,
+            ])
+            ->first('amount');
 
         if (!$payment) {
             return [];
         }
 
         $bookingAmount = $payment->amount;
-
-        $commission = floor($commissionPercentage * $bookingAmount);
+        $commission = (int)floor($commissionPercentage * $bookingAmount);
 
         $transactionCharges = DB::table('transaction_charges')
             ->whereRaw('? BETWEEN minimum_amount AND maximum_amount', [$bookingAmount])
@@ -406,19 +389,22 @@ class BookingController extends Controller
                 'charges'
             ]);
 
-        $charges = ceil($transactionCharges->charges);
+        if (!$transactionCharges) {
+            return [];
+        }
 
-        $refundableAmount = floor($bookingAmount - ($commission + $charges));
+        $charges = ceil($transactionCharges->charges);
+        $refundableAmount = (int)floor($bookingAmount - ($commission + $charges));
 
         // For non refundable payments the time frame will be 0, meaning the guest will not be refunded
-        $refundableAmount = $cancellationPolicy->timeframe_in_hours != 0 ? $refundableAmount : 0;
+        $refundableAmount = (int)$cancellationPolicy->timeframe_in_hours !== 0 ? $refundableAmount : 0;
 
         return [
             'bookingAmount' => (int)$bookingAmount,
             'commission' => $commission,
-            'transactionCharges' => (float)$charges,
+            'transactionCharges' => $charges,
             'refundableAmount' => $refundableAmount,
-            'isRefundable' => $refundableAmount != 0
+            'isRefundable' => $refundableAmount !== 0
         ];
     }
 
@@ -431,11 +417,11 @@ class BookingController extends Controller
      */
     public function cancelBooking(Request $request): JsonResponse
     {
-        $booking = Booking::query()->with('property:id,admin_id', 'property.owner:id')
+        $booking = Booking::query()
+            ->select(['id', 'property_id', 'cancelled_at', 'cancellation_policy_data', 'is_paid'])
+            ->with('property:id,admin_id', 'property.owner:id')
             ->whereUuid($request['uuid'])
-            ->first([
-                'id', 'property_id', 'cancelled_at', 'cancellation_policy_data', 'is_paid',
-            ]);
+            ->first();
 
         if (!$booking || !is_null($booking->cancelled_at) || !$booking->is_paid) {
             throw ValidationException::withMessages([
@@ -443,7 +429,6 @@ class BookingController extends Controller
             ]);
         }
 
-        // Check if the user can cancel the booking
         $canCancel = $this->canCancelBooking($booking);
 
         if (!$canCancel) {
@@ -462,8 +447,8 @@ class BookingController extends Controller
 
 
         try {
-            DB::transaction(function () use ($booking, $chargesBreakdown) {
-                // Set the booking as cancelled. Prevent multiple refunds requests
+            DB::transaction(static function () use ($booking, $chargesBreakdown) {
+                // Set the booking as cancelled. Prevents multiple refunds requests
                 Booking::whereId($booking->id)->update([
                     'cancelled_at' => now()
                 ]);
@@ -474,13 +459,13 @@ class BookingController extends Controller
                     'transaction_charges' => $chargesBreakdown['transactionCharges'],
                     'refundable_amount' => $chargesBreakdown['refundableAmount'],
                     'booking_id' => $booking->id,
-                    'payment_channel_id' => 1,
+                    'payment_channel_id' => Payment::ModeMpesa,
                     'user_id' => auth()->id(),
                     'admin_id' => $booking->property->owner->id
                 ]);
             });
         } catch (Throwable $e) {
-            throw new Exception($e->getMessage());
+            throw new RuntimeException($e->getMessage());
         }
 
         return response()->json([
@@ -495,18 +480,17 @@ class BookingController extends Controller
      * @param Request $request
      * @return JsonResponse
      * @throws ValidationException
+     * @noinspection PhpDocMissingThrowsInspection
      */
     public function processPaypalPaymentRequest(Request $request): JsonResponse
     {
-        // Get the request data
         $uuid = $request['uuid'];
 
-        // Find the payment using the id
         $payment = Payment::query()
-            ->with('booking')
             ->select([
                 'id', 'account_number', 'amount', 'booking_id', 'property_id', 'user_id',
             ])
+            ->with('booking')
             ->firstWhere('uuid', $uuid);
 
         if (!$payment) {
@@ -519,12 +503,13 @@ class BookingController extends Controller
 
         $paypalOrderID = $orderResponse['results']->id;
 
+        /** @noinspection PhpUnhandledExceptionInspection */
         DB::table('payments')->where('id', $payment->id)
             ->update([
                 'paypal_order_id' => $paypalOrderID,
-                'request_response_data' => json_encode($orderResponse),
+                'request_response_data' => json_encode($orderResponse, JSON_THROW_ON_ERROR),
                 'updated_at' => now(),
-                'payment_channel_id' => 2 // PayPal
+                'payment_channel_id' => Payment::ModePaypal,
             ]);
 
         $approveData = collect($orderResponse['links'])->where('rel', 'approve')->first();
@@ -539,9 +524,9 @@ class BookingController extends Controller
     /**
      * Returns the booked dates for a property
      * @param Property $property
-     * @return mixed
+     * @return array
      */
-    public static function getPropertyBookedDates(Property $property)
+    public static function getPropertyBookedDates(Property $property): array
     {
         return $property->activeBookingsDates
             ->where('checkout_date', '>=', today())
@@ -550,6 +535,8 @@ class BookingController extends Controller
                     'checkin_date' => $date->checkin_date,
                     'checkout_date' => $date->checkout_date,
                 ];
-            })->values();
+            })
+            ->values()
+            ->toArray();
     }
 }

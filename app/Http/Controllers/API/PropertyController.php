@@ -6,7 +6,7 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\Controller;
 use App\Models\Property;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response;
 
 class PropertyController extends Controller
 {

@@ -8,15 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Ramsey\Uuid\Uuid;
+use RuntimeException;
 
 
 class PaymentController extends Controller
 {
     /**
      * Crates a random alphanumeric string to be used as an account number
-     * @return false|string
+     * @return string
      */
-    public function generateAccountNumber()
+    public function generateAccountNumber(): string
     {
         $pool = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
@@ -29,71 +30,63 @@ class PaymentController extends Controller
      * @param object $property
      * @param int $bookingID
      * @param int $userID
-     * @return Payment|Model
-     * @throws Exception
+     * @return Model|Payment
      */
-    public static function createBookingPayment(int $numberOfNights, object $property, int $bookingID, int $userID)
+    public static function createBookingPayment(int $numberOfNights, object $property, int $bookingID, int $userID): Model|Payment
     {
-        // Get a new account number
-        $accountNumber = (new PaymentController)->generateAccountNumber();
-
-        // Generate a new uuid
+        $accountNumber = (new self)->generateAccountNumber();
         $uuid = Uuid::uuid4();
 
-        // Calculate the amount to be paid. This will be the total number of nights * cost_per_night
         $amount = $property->cost_per_night * $numberOfNights;
 
         // TODO: split the payments if value is greater than 70,000
 
         try {
-            return Payment::create([
-                'uuid' => $uuid,
-                'account_number' => $accountNumber,
-                'amount' => $amount,
-                'booking_id' => $bookingID,
-                'property_id' => $property->id,
-                'user_id' => $userID,
-            ]);
+            return Payment::query()
+                ->create([
+                    'uuid' => $uuid,
+                    'account_number' => $accountNumber,
+                    'amount' => $amount,
+                    'booking_id' => $bookingID,
+                    'property_id' => $property->id,
+                    'user_id' => $userID,
+                ]);
         } catch (Exception $e) {
-            throw new Exception($e->getMessage());
+            throw new RuntimeException($e->getMessage());
         }
     }
 
     /**
-     * Generates a new access token from mpesa. THe token is used to authenticate all the API calls.
-     * @return mixed
+     * Generates a new access token from mpesa.
+     * @return string
+     * @throws Exception
      */
-    private function generateAccessToken()
+    private function generateAccessToken(): string
     {
-        // Build the URL for the auth endpoint
-        $url = sprintf(
-            '%soauth/v1/generate?grant_type=client_credentials', config('services.mpesa.base_url')
-        );
+        $base = config('services.mpesa.base_url');
+        $url = sprintf('%soauth/v1/generate?grant_type=client_credentials', $base);
 
         $response = Http::withBasicAuth(
             config('services.mpesa.consumer_key'), config('services.mpesa.consumer_secret')
-        )->get($url)->json();
+        )->get($url);
 
-        // Extract the access token from the response data
-        return $response['access_token'];
+        if (!$response->successful()) {
+            throw new RuntimeException(sprintf('Could not generate access token : %s', $response->reason()));
+        }
+
+        $data = $response->json();
+        return (string)$data['access_token'];
     }
 
     /**
      * Caches the access token from 55 minutes so as to speed up the requests
      * @return mixed
      */
-    private function cachedAccessToken()
+    private function cachedAccessToken(): mixed
     {
-        // Create a cache key
-        $key = "MPESA_ACCESS_TOKEN";
-
-        if (!Cache::has($key)) {
-            Cache::remember($key, now()->addMinutes(55), function () {
-                return $this->generateAccessToken();
-            });
-        }
-
-        return Cache::get($key);
+        return Cache::remember('MPESA_ACCESS_TOKEN', now()->addMinutes(55), function () {
+            return $this->generateAccessToken();
+        });
     }
 
     /**
@@ -105,62 +98,53 @@ class PaymentController extends Controller
      */
     public static function lipaNaMpesaOnline(string $phoneNumber, object $payment): bool
     {
-        // Format the phone number to Intl format
         $phoneNumber = sprintf('254%s', substr($phoneNumber, 1, 9));
 
-        // Generate an access token
-        $accessToken = (new PaymentController())->cachedAccessToken();
-
-        // Build the URL for the lnmo endpoint
+        $accessToken = (new self)->cachedAccessToken();
         $url = sprintf('%smpesa/stkpush/v1/processrequest', config('services.mpesa.base_url'));
 
-        // Read the config data
         $shortcode = config('services.mpesa.short_code');
-
-        // Get the current timestamp YmdHis
         $timestamp = now()->format('YmdHis');
-
-        // The password for encrypting the request.
-        //This is generated by base64 encoding BusinessShortcode, Passkey and Timestamp.
         $password = base64_encode(
             sprintf('%s%s%s', $shortcode, config('services.mpesa.passkey'), $timestamp)
         );
 
-        // Make the request
+
         $response = Http::withToken($accessToken)->post($url, [
             'BusinessShortCode' => $shortcode,
             'Password' => $password,
             'Timestamp' => $timestamp,
             'TransactionType' => 'CustomerPayBillOnline',
             'Amount' => $payment->amount,
-//            'Amount' => 1,
             'PartyA' => $phoneNumber,
             'PartyB' => $shortcode,
             'PhoneNumber' => $phoneNumber,
             'CallBackURL' => route('lnm-callback'),
             'AccountReference' => $payment->account_number,
             'TransactionDesc' => 'Payment through STK push.'
-        ])->json();
+        ]);
 
-        // Keep track of the request status
-        $isSuccessful = true;
+        info($response->reason());
 
-        // Check if the request was successful
+        $response = $response->json();
+
         if (!isset($response['ResponseCode'])) {
             return false;
         }
 
+        $isSuccessful = true;
+
+        /** @noinspection TypeUnsafeComparisonInspection */
         if ($response['ResponseCode'] != "0") {
             $isSuccessful = false;
         }
 
         try {
-            // Process payment
             $data = compact('response', 'phoneNumber', 'payment', 'isSuccessful');
 
-            (new PaymentController)->updateOrCreateBookingPayment($data);
+            (new self)->updateOrCreateBookingPayment($data);
         } catch (Exception $e) {
-            throw new Exception($e->getMessage());
+            throw new RuntimeException($e->getMessage());
         }
 
         return $isSuccessful;
@@ -171,9 +155,8 @@ class PaymentController extends Controller
      * @param array $data
      * @throws Exception
      */
-    private function updateOrCreateBookingPayment(array $data)
+    private function updateOrCreateBookingPayment(array $data): void
     {
-        // Extract the data
         $response = $data['response'];
         $payment = $data['payment'];
         $isSuccessful = $data['isSuccessful'];
@@ -182,36 +165,35 @@ class PaymentController extends Controller
         $merchantRequestID = $response['MerchantRequestID'];
         $checkoutRequestID = $response['CheckoutRequestID'];
 
-        // Find the payment using the payment using the payment id
         $payment = Payment::query()->find($payment->id);
 
-        // Check if we have a merchant_request_id. If it's null, then the payment was not processed
-        // We will update it and exit
         if (is_null($payment->merchant_request_id)) {
             try {
-                Payment::query()->where('id', $payment->id)->update([
-                    'merchant_request_id' => $merchantRequestID,
-                    'checkout_request_id' => $checkoutRequestID,
-                    'phone_number' => $phoneNumber,
-                    'request_response_data' => json_encode($response),
-                    'is_successful' => $isSuccessful,
-                    'payment_channel_id' => 1 // M-Pesa
-                ]);
+                Payment::query()
+                    ->where('id', $payment->id)
+                    ->update([
+                        'merchant_request_id' => $merchantRequestID,
+                        'checkout_request_id' => $checkoutRequestID,
+                        'phone_number' => $phoneNumber,
+                        'request_response_data' => json_encode($response, JSON_THROW_ON_ERROR),
+                        'is_successful' => $isSuccessful,
+                        'payment_channel_id' => Payment::ModeMpesa
+                    ]);
             } catch (Exception $exception) {
-                throw new Exception($exception->getMessage());
+                throw new RuntimeException($exception->getMessage());
             }
 
             return;
         }
 
-        // If we get here, it means the payment had been processed early.
+        // If we get here, it means the payment had been processed earlier.
         // We will create a new payment instead with the same account number
         try {
-            $this->createBookingPayment(
-                $payment->booking->number_of_nights, $payment->property_id, $payment->booking_id, $payment->user_id
+            self::createBookingPayment(
+                $payment->booking->number_of_nights, $payment->property, $payment->booking_id, $payment->user_id
             );
         } catch (Exception $exception) {
-            throw new Exception($exception->getMessage());
+            throw new RuntimeException($exception->getMessage());
         }
     }
 }

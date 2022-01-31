@@ -15,7 +15,8 @@
             <div class="row">
                 @include('partials._profile-aside')
 
-                <book-property :property="{{ $property }}" :booked-dates="{{ $bookedDates }}"></book-property>
+                <book-property :property="{{ $property }}"
+                               :booked-dates="{{ json_encode($bookedDates, JSON_THROW_ON_ERROR) }}"></book-property>
             </div>
         </div>
     </div>

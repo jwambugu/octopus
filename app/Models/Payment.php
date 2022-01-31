@@ -82,6 +82,9 @@ class Payment extends Model
 {
     use SoftDeletes;
 
+    public const ModeMpesa = 1;
+    public const ModePaypal = 2;
+
     /**
      * The attributes that are mass assignable.
      *

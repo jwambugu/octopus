@@ -17,7 +17,7 @@ class VacationController extends Controller
      * @param Request $request
      * @return Application|Factory|View
      */
-    public function index(Request $request)
+    public function index(Request $request): Factory|View|Application
     {
         return PropertyController::getPropertiesView($request, Property::TYPE_VACATION);
     }
@@ -94,7 +94,7 @@ class VacationController extends Controller
      * @return Application|Factory|View
      * @noinspection CallableParameterUseCaseInTypeContextInspection
      */
-    public function show(Property $property)
+    public function show(Property $property): View|Factory|Application
     {
         return view('vacations.show')->with([
             'property' => PropertyController::getProperty($property)
@@ -108,7 +108,7 @@ class VacationController extends Controller
      * @return Application|Factory|View|RedirectResponse
      * @noinspection CallableParameterUseCaseInTypeContextInspection
      */
-    public function createPropertyBookingRatingView(Request $request, Property $property)
+    public function createPropertyBookingRatingView(Request $request, Property $property): View|Factory|RedirectResponse|Application
     {
         $ratingUUID = $request->query->get('uuid');
         $type = $request->query->get('type');
@@ -127,10 +127,9 @@ class VacationController extends Controller
             return redirect()->route('index');
         }
 
-        // Get the available booking ratings
         $ratings = BookingRating::where([
             'is_active' => true,
-            'type' => 'host' // TODO: use type as guest
+            'type' => 'guest'
         ])->get([
             'id', 'title', 'description', 'is_boolean'
         ]);
