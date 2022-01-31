@@ -1,3 +1,4 @@
+<!--suppress JSUnresolvedFunction -->
 <template>
     <div>
         <div class="col-lg-8 col-md-8 col-sm-12">
@@ -24,12 +25,18 @@
                 </div>
 
                 <div class="main-title-2">
-                    <h1>Book Property</h1>
+                    <h1>
+                        <span v-if="isVacation">Book Property</span>
+                        <span v-else>Schedule Visit</span>
+                    </h1>
                 </div>
 
                 <form @submit.prevent="bookProperty">
                     <div class="form-group">
-                        <label for="checkin_date">Dates to Book</label>
+                        <label for="checkin_date">
+                            <span v-if="isVacation">Dates to book</span>
+                            <span v-else>Day &amp time to visit</span>
+                        </label>
                         <input
                             id="checkin_date"
                             type="text"
@@ -37,29 +44,21 @@
                             required
                             name="dates_to_book"
                             :disabled="loadingDatePicker"
+                            autocomplete="off"
                         />
                     </div>
 
-                    <!--                    <div class="form-group">-->
-                    <!--                        <label for="checkout_date">Check Out Date</label>-->
-                    <!--                        <input-->
-                    <!--                            id="checkout_date"-->
-                    <!--                            type="date"-->
-                    <!--                            class="input-text"-->
-                    <!--                            v-model="bookingData.checkout_date"-->
-                    <!--                            :min="minDate"-->
-                    <!--                            required-->
-                    <!--                            @input="monitorCheckoutDate"-->
-                    <!--                        />-->
-                    <!--                    </div>-->
-
                     <div
                         class="form-group"
-                        v-if="bookingData.checkout_date && !loadingDatePicker"
+                        v-if="
+                            isVacation &&
+                            bookingData.checkout_date &&
+                            !loadingDatePicker
+                        "
                     >
                         <span id="nights" class="">
-                            <i
-                                >Booking for {{ nightsBooked }}
+                            <i>
+                                Booking for {{ nightsBooked }}
                                 {{ nightsBooked === 1 ? "night" : "nights" }}.
                             </i>
                         </span>
@@ -72,7 +71,8 @@
                             v-if="!bookingProperty"
                             :disabled="loadingDatePicker"
                         >
-                            Book Property
+                            <span v-if="isVacation">Book Property</span>
+                            <span v-else>Schedule Visit</span>
                         </button>
 
                         <button
@@ -109,7 +109,7 @@ export default {
     data() {
         return {
             bookingData: {
-                checkin_date: new Date().toISOString().slice(0, 10), // new Date().toISOString().slice(0, 10)
+                checkin_date: new Date().toISOString().slice(0, 10),
                 checkout_date: new Date(
                     new Date().setDate(new Date().getDate() + 1)
                 )
@@ -124,6 +124,9 @@ export default {
         };
     },
     computed: {
+        isVacation() {
+            return this.property.type === "vacation";
+        },
         minDate() {
             return new Date().toISOString().slice(0, 10);
         },
@@ -167,14 +170,20 @@ export default {
     methods: {
         initDatePicker() {
             const vm = this;
+            const isVacation = this.isVacation;
 
             $('input[name="dates_to_book"]').daterangepicker(
                 {
                     opens: "left",
                     minDate: new Date(),
-                    format: "YYYY-MM-DD",
                     endDate: moment().add(1, "day"),
-
+                    singleDatePicker: !isVacation,
+                    timePicker: !isVacation,
+                    timePicker24Hour: !isVacation,
+                    timePickerIncrement: 10,
+                    locale: {
+                        format: isVacation ? "YYYY-MM-DD" : "YYYY-MM-DD HH:mm",
+                    },
                     isInvalidDate: function (date) {
                         return vm.dateRanges.reduce(function (bool, range) {
                             return (
@@ -186,7 +195,9 @@ export default {
                 },
                 function (start, end) {
                     vm.bookingData = {
-                        checkin_date: start.format("YYYY-MM-DD"),
+                        checkin_date: isVacation
+                            ? start.format("YYYY-MM-DD")
+                            : start.format("YYYY-MM-DD HH:mm"),
                         checkout_date: end.format("YYYY-MM-DD"),
                     };
                 }
